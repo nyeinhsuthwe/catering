@@ -1,6 +1,6 @@
+import AuthLayout from "../Layout/Authlayout";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
-import AuthLayout from "../Layout/AuthLayout";
 
 const Auth = [
     {
