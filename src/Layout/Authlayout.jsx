@@ -1,14 +1,11 @@
-import React from 'react'
 import { Outlet } from 'react-router-dom'
-import Nav from '../components/ui/Nav'
 
-const Authlayout = () => {
+const AuthLayout = () => {
   return (
-    <div>
-        <Nav />
+    <>
         <Outlet/>
-    </div>
+    </>
   )
 }
 
-export default Authlayout
+export default AuthLayout;
