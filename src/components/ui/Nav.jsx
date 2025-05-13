@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+
 import {
   Button,
   Navbar,
@@ -13,23 +15,20 @@ const Nav = () => {
     <div className="">
       <Navbar fluid rounded className="bg-gray-100">
         <NavbarBrand href="https://flowbite-react.com">
-        <i className="fa-solid fa-utensils text-xl mr-3 fa-2x text-orange-500"></i>
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+        {/* <i class="fa-solid fa-pizza-slice text-xl mr-3 fa-2x text-orange-500"></i> */}
+          <span className="self-center whitespace-nowrap text-xl text-gray-600 font-bold dark:text-white">
             Catering Management System
           </span>
         </NavbarBrand>
         <div className="flex md:order-2">
-        <Button>Login</Button>
+        <Button className="">Login</Button>
         <NavbarToggle />
       </div>
         <NavbarCollapse>
-          <NavbarLink href="#" active>
-            Home
-          </NavbarLink>
-          <NavbarLink href="#">About</NavbarLink>
-          <NavbarLink href="#">Services</NavbarLink>
-          <NavbarLink href="#">Pricing</NavbarLink>
-          <NavbarLink href="#">Contact</NavbarLink>
+          <Link to="/">Home</Link>
+          <Link to="/">Home</Link>
+          <Link to="/">Home</Link>
+          <Link to="/">Home</Link>
         </NavbarCollapse>
       </Navbar>
     </div>
