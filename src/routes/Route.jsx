@@ -1,10 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import Auth from "./Auth";
-import Dashboard from "./Dashboard";
+
+import Router from "./Router";
+
 
 const router = createBrowserRouter([
     ...Auth,
-    ...Dashboard,
+    
+    ...Router,
 ])
+   
+   
 
 export default router;
