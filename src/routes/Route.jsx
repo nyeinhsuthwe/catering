@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import Auth from "./Auth";
-import Dashboard from "./Dashboard";
+import EmployeeDashboard from "./EmployeeDashboard";
 
 const router = createBrowserRouter([
     ...Auth,
-    ...Dashboard,
+    ...EmployeeDashboard
 ])
 
 export default router;
