@@ -7,23 +7,21 @@ import Customer from '../Pages/admin/Customer'
 import AdminProfile from '../Pages/admin/AdminProfile'
 import Login from '../Pages/Login'
 import AdminEditProfile from '../Pages/admin/AdminEditProfile'
+import ProtectedRoute from '../hooks/ProtectedRoute'
 
 const DashRoute = () => {
   
     {
-        path: '/admin',
-        element: (
-          <ProtectedRoute allowedRoles={['Admin']}>
+        path: '/',
+            element: (
+            <ProtectedRoute allowedRoles={['Admin']}>
             <AdminLayout />
-          </ProtectedRoute>
-        ),
+            </ProtectedRoute>
+),
+
 
         children: [
             {
-                path: '/',
-                element: <AdminLayout />,
-                children: [ 
-                    {
                         index: true,
                         element: <AdminDashboard />
                     },
@@ -55,8 +53,12 @@ const DashRoute = () => {
                         path: 'edit', 
                         element: <AdminEditProfile />   
                     },
-        ]
-}
-    }
+                ]
 
-export default DashRoute
+
+                
+
+    }
+}
+
+export default DashRoute;
