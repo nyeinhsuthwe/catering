@@ -4,7 +4,7 @@ import DashRoute from "./DashRoute"
 
 const router = createBrowserRouter([
     ...Auth,
-    ...DashRoute
+    // ...DashRoute
 ])
 
 export default router;
