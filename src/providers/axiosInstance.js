@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-const api = axios.create({
-    baseURL: 'https://fakestoreapi.com/products/',
+export const api = axios.create({
+    baseURL: 'http://localhost:8000/api/',
     timeout: 10000,
     headers: {
         'Content-Type' : 'application/json'
