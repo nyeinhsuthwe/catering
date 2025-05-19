@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 
 const AdminProfile = () => {
   // Dummy admin data – replace with real API later
@@ -31,6 +31,14 @@ return (
 
         {/* Info Table */}
         <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+        <div className="flex items-center justify-between mb-6">
+            <h1>Personal Information</h1>
+            <Link to="/edit">
+            <button className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded shadow-sm">
+                Edit
+            </button>
+            </Link>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div>
                     <span className="text-gray-500">Phone Number:</span>
@@ -49,13 +57,13 @@ return (
                     <p className="font-medium">{admin.role}</p>
                 </div>
 
-                <div className="sm:col-span-2 mt-4">
+                {/* <div className="sm:col-span-2 mt-4">
                     <a href="resetPassword"> 
                     <button className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700">
                         Reset Password
                     </button>
                     </a>
-                </div>
+                </div> */}
             </div>
         </div>
     </div>

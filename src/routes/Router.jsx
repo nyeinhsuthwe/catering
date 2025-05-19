@@ -7,6 +7,8 @@ import Reservation from '../Pages/admin/Reservation'
 import Customer from '../Pages/admin/Customer'
 import AdminProfile from '../Pages/admin/AdminProfile'
 import Login from '../Pages/Login'
+import AdminEditProfile from '../Pages/admin/AdminEditProfile'
+// import AddNewFood from '../Pages/admin/AddNewFood'
 
 const Router = [
      {
@@ -41,6 +43,14 @@ const Router = [
                     path: 'login', 
                     element: <Login />   
                 },
+                {
+                    path: 'edit', 
+                    element: <AdminEditProfile />   
+                },
+                // {
+                //     path: 'addnewfood', 
+                //     element: <AddNewFood/>
+                // },
 
 
             ]

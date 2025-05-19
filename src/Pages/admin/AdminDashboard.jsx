@@ -1,50 +1,95 @@
-import React from 'react'
+// import React, { useState } from 'react';
 
 const AdminDashboard = () => {
-  return(
-  <div className="p-6 bg-white rounded-lg shadow-md">
-  {/* Header */}
-  <h1 className="text-3xl font-bold text-gray-800 mb-6">Admin Dashboard</h1>
+  // Sample data for cards
+  const totalData = {
+    reservations: 120,
+    orders: 85,
+    customers: 45,
+  };
 
-  {/* Stats Section */}
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-    {/* Card 1 */}
-    <div className="p-4 bg-blue-100 rounded-lg shadow">
-      <h2 className="text-lg font-semibold text-blue-800">Total Reservations</h2>
-      <p className="text-2xl font-bold text-blue-900 mt-2">120</p>
-    </div>
-    {/* Card 2 */}
-    <div className="p-4 bg-green-100 rounded-lg shadow">
-      <h2 className="text-lg font-semibold text-green-800">Total Orders</h2>
-      <p className="text-2xl font-bold text-green-900 mt-2">85</p>
-    </div>
-    {/* Card 3 */}
-    <div className="p-4 bg-yellow-100 rounded-lg shadow">
-      <h2 className="text-lg font-semibold text-yellow-800">Total Customers</h2>
-      <p className="text-2xl font-bold text-yellow-900 mt-2">45</p>
-    </div>
-  </div>
-  {/* Recent Activity Section */}
-  <div className="bg-gray-50 p-4 rounded-lg shadow">
-  <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Activities</h2>
-  <ul className="space-y-3">
-    <li className="flex items-center justify-between">
-      <span className="text-gray-700">New reservation by John Doe</span>
-      <span className="text-sm text-gray-500">2 hours ago</span>
-    </li>
-    <li className="flex items-center justify-between">
-      <span className="text-gray-700">Order #123 completed</span>
-      <span className="text-sm text-gray-500">4 hours ago</span>
-    </li>
-    <li className="flex items-center justify-between">
-      <span className="text-gray-700">New customer added: Jane Smith</span>
-      <span className="text-sm text-gray-500">6 hours ago</span>
-    </li>
-  </ul>
-</div>
-</div>
+  // // Sample data for charts
+  // const [selectedPeriod, setSelectedPeriod] = useState('Month'); // Default period
+  
 
+  // Sample data for order lists
+  const orders = [
+    { no: 1, id: 'ORD001', date: '2025-01-05', customer: 'John Doe', amount: '$120', status: 'Completed' },
+    { no: 2, id: 'ORD002', date: '2025-01-12', customer: 'Jane Smith', amount: '$150', status: 'Pending' },
+    { no: 3, id: 'ORD003', date: '2025-02-10', customer: 'Alice Johnson', amount: '$200', status: 'Completed' },
+  ];
+
+  return (
+    <div className="p-6 bg-gray-100">
+      {/* Cards Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="p-4 bg-blue-100 rounded-lg shadow">
+          <h2 className="text-lg font-semibold text-gray-800">Total Reservations</h2>
+          <p className="text-2xl font-bold text-blue-600 mt-2">{totalData.reservations}</p>
+        </div>
+        <div className="p-4 bg-green-100 rounded-lg shadow">
+          <h2 className="text-lg font-semibold text-gray-800">Total Orders</h2>
+          <p className="text-2xl font-bold text-green-600 mt-2">{totalData.orders}</p>
+        </div>
+        <div className="p-4 bg-yellow-100 rounded-lg shadow">
+          <h2 className="text-lg font-semibold text-gray-800">Total Employee</h2>
+          <p className="text-2xl font-bold text-yellow-600 mt-2">{totalData.customers}</p>
+        </div>
+      </div>
+
+      
+
+      {/* Order List Section */}
+      <div className="p-4 bg-white rounded-lg shadow">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Order Lists</h2>
+       
+        
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  No.
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  ID
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Customer Name
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Amount
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order, index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                  } hover:bg-gray-100`}
+                >
+                  <td className="px-6 py-4 text-sm text-gray-700">{order.no}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{order.id}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{order.date}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{order.customer}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{order.amount}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{order.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default AdminDashboard
+export default AdminDashboard;
