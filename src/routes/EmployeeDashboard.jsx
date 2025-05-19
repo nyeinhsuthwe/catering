@@ -15,10 +15,6 @@ const EmployeeDashboard = [
              {
                 path : '/profile',
                 element: <Profile/>
-            },
-            {
-                path : '/history',
-                element : <History/>
             }
         ]
     }
