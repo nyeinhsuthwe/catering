@@ -12,7 +12,7 @@ import {
 
 const Nav = () => {
   return (
-    <div className="">
+    <div className="sticky top-0 z-50">
       <Navbar fluid rounded className="bg-gray-100">
         <NavbarBrand href="https://flowbite-react.com">
         {/* <i class="fa-solid fa-pizza-slice text-xl mr-3 fa-2x text-orange-500"></i> */}
@@ -24,12 +24,12 @@ const Nav = () => {
         <Button className="">Login</Button>
         <NavbarToggle />
       </div>
-        <NavbarCollapse>
+        {/* <NavbarCollapse>
           <Link to="/">Home</Link>
           <Link to="/">Home</Link>
           <Link to="/">Home</Link>
           <Link to="/">Home</Link>
-        </NavbarCollapse>
+        </NavbarCollapse> */}
       </Navbar>
     </div>
   );
