@@ -21,7 +21,7 @@ const Nav = () => {
           </span>
         </NavbarBrand>
         <div className="flex md:order-2">
-        <Button className="">Login</Button>
+        <Link to='/login'><Button className="">Login</Button></Link>
         <NavbarToggle />
       </div>
         {/* <NavbarCollapse>

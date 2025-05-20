@@ -5,6 +5,7 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useSelectedDatesStore } from "../../../store/dateStore";
 import History from '../History'
+import { useApiQuery } from "../../../hooks/useQuery";
 
 const locales = {
   "en-US": enUS,
@@ -37,10 +38,23 @@ const events = [
   },
 ];
 
+
 const MyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState(Views.MONTH);
   const { selectedEvents, toggleEvent } = useSelectedDatesStore();
+
+  // API
+  const {data: Foods}  = useApiQuery(
+  {
+    endpoint: "foodmonth/list"
+  },
+  {
+    queryKey: ["food"]
+  }
+)
+
+console.log(Foods)
 
   const today = new Date();
   const nextMonth = today.getMonth() + 1;
@@ -130,10 +144,8 @@ const MyCalendar = () => {
   console.log(selectedEvents)
 
   return (
-   <div className="row flex">
-     <div className="col-8 w-full p-5 bg-gray-100 h-full">
-   
-
+   <div className="flex">
+     <div className="w-2/3 p-5 bg-gray-100 h-full">
       <Calendar
         localizer={localizer}
         startAccessor="start"
@@ -152,7 +164,7 @@ const MyCalendar = () => {
         style={{ height: 600 }}
       />
     </div>
-   <div className="col-4">
+   <div className="w-1/3">
       <History/>
     </div>
    </div>

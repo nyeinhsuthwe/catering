@@ -4,6 +4,7 @@ import DashboardLayout from "../Layout/DashboardLayout";
 import Dashboard from "../Pages/Employee/Dashboard";
 import ProtectedRoute from "../hooks/ProtectedRoute";
 import Profile from "../Pages/Employee/Profile"; // Assuming this exists
+import Feedback from "../Pages/Employee/Feedback";
 
 const DashRoutes = [
   {
@@ -21,6 +22,10 @@ const DashRoutes = [
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "feedback",
+        element: <Feedback/>,
       },
     ],
   },
