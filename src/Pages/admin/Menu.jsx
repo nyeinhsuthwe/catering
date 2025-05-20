@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Popover } from "flowbite-react";
 // import FoodMenuLists from 'src/admin/FoodMenuLists'
 import { MultiSelect } from 'primereact/multiselect';
-
+import axios from "axios"
 
 
 const Menu = () => {
@@ -63,17 +63,40 @@ const Menu = () => {
 
 
   //Add menu Lists
-  const [foodOptions, setFoodOptions] = useState([
-    { name: 'Chicken', food_id: 'food_001' },
-    { name: 'Pork', food_id: 'food_002' },
-    { name: 'Beef', food_id: 'food_003' },
-    { name: 'Fish', food_id: 'food_004' },
-    { name: 'Sea Food', food_id: 'food_005' },
-  ]);
+  const [foodOptions, setFoodOptions] = useState([]);
 
   const [selectedFood, setSelectedFood] = useState(null);
   //for new food names
   const [newFoodName, setNewFoodName] = useState('');
+
+  const createMenu = async ()=>{
+    const data = await axios.post('http://192.168.100.170:8000/api/food/create',{
+      name: newFoodName.trim()
+    },{
+      header: {
+        "Content-type": 'Application/json',
+        "Accept": 'Application/json',
+        Authorization: "Bearer 15|ptY7pnqSo4szT1xsJzgjixB46XdNxpnltFPOBu4Zc7a6b55c"
+      }
+    })
+    console.log("Menu Create", data)
+  }
+
+  useEffect(()=> {
+      const MenuLists = async ()=>{
+        const response =await axios.get('http://192.168.100.170:8000/api/food/list', {
+          header: {
+            "Content-type": 'Application/json',
+            "Accept": 'Application/json',
+            Authorization: "Bearer 15|ptY7pnqSo4szT1xsJzgjixB46XdNxpnltFPOBu4Zc7a6b55c"
+          }
+        })
+        const data = response.data.data
+        setFoodOptions(data)
+      }
+
+      MenuLists()
+  }, [foodOptions]) 
  
       //add new food to multiselect
       const handleAddFood = () => {
@@ -98,13 +121,7 @@ const Menu = () => {
 
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex justify-end mb-4">
-        {/* <Link to='/addnewfood'> */}
-        {/* <button
-          className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
-          onClick={handleAddNewFood}
-        >
-          Create New Menu
-        </button> */}
+        
 
       <Popover
       aria-labelledby="profile-popover"
@@ -121,8 +138,9 @@ const Menu = () => {
         <button
           className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
           onClick={() => {
-            handleAddFood();
-            alert("Menu Added successfully");
+            createMenu()
+            // handleAddFood();
+            // alert("Menu Added successfully");
           }}
         >
           Create

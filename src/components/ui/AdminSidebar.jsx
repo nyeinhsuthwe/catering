@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTachometerAlt, FaClipboardList, FaUtensils, FaUsers, FaChartBar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaTachometerAlt, FaClipboardList, FaUtensils, FaUsers, FaChartBar, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const AdminSidebar = () => {
