@@ -10,15 +10,11 @@ import {
 } from "flowbite-react";
 import React from "react";
 import { useSelectedDatesStore } from "../../store/dateStore";
-import { foodStore } from "../../store/foodStore";
 
 const History = () => {
   const { selectedEvents , unselectEvents } = useSelectedDatesStore();
-  const {foodList} = foodStore();
 
-  console.log(selectedEvents)
-
-  const totalAmount = selectedEvents.reduce((sum, ev) => sum + (ev.price || 0), 0);
+  const totalAmount = selectedEvents.reduce((sum, ev) => parseFloat(sum) + (parseFloat(ev.price) || 0), 0);
 
   const handleCheckout = () => {
     const result = selectedEvents.map((event) => ({
@@ -31,7 +27,8 @@ const History = () => {
     console.log("Checkout data:", result);
     alert("Checkout data logged in console");
   };
-
+  
+  console.log("select event", selectedEvents)
   return (
    <div>
      <div className=" grid gap-4 mx-auto w-full pl-3">
@@ -48,9 +45,9 @@ const History = () => {
             {selectedEvents.map((data, index) => (
               <TableRow key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {data.date}
+                  {new Date(data.start).toLocaleDateString("en-GB")}
                 </TableCell>
-                <TableCell>{data.menu}</TableCell>
+                <TableCell>{data.title}</TableCell>
                 <TableCell>{data.price} ks</TableCell>
               </TableRow>
             ))}

@@ -49,7 +49,7 @@ const MyCalendar = () => {
 
   const events = (foodList || []).map((item) => ({
     id: item.id,
-    title: `${item.food_name} - ${item.price}฿`,
+    title: `${item.food_name}`,
     start: new Date(item.date),
     end: new Date(item.date),
     price: item.price,
@@ -124,14 +124,7 @@ const MyCalendar = () => {
     if (foundEvent) {
       toggleEvent(foundEvent);
     } else {
-      toggleEvent({
-        id: Date.now(),
-        title: "Custom",
-        start: clickedDate,
-        end: clickedDate,
-        menu: "Unknown",
-        price: 0,
-      });
+      return
     }
   };
 
