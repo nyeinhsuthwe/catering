@@ -1,10 +1,11 @@
-import React from 'react'
 import { Card } from "flowbite-react";
 import { Button, Label, TextInput } from "flowbite-react";
 import { Link } from 'react-router-dom';
 
 
 const Register = () => {
+
+
   return (
     <div className=''>
       <h3 className='text-3xl font-bold mt-17 text-gray-500 text-center'>Register Form</h3>
