@@ -27,10 +27,10 @@ const SideBar = () => {
             </SidebarItem>
           </Link>
           <hr className="text-gray-300"/>
-          <Link to="/history">
+          <Link to="/feedback">
           <SidebarItem>
-            <i className="fa-solid fa-clock-rotate-left me-3 text-gray-500"></i>
-            History
+            <i className="fa-solid fa-comment me-3 text-gray-500"></i>
+            Feedback
           </SidebarItem>
           </Link>
           <hr className="text-gray-300"/>
