@@ -41,7 +41,7 @@ return (
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div>
-                    <span className="text-gray-500">Phone Number:</span>
+                    <span className="text-gray-500">Phone N Number:</span>
                     <p className="font-medium">{admin.phone}</p>
                 </div>
                 <div>
