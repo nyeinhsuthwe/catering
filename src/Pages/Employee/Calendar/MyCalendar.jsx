@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import { useSelectedDatesStore } from "../../../store/dateStore";
-import History from '../History'
+import History from "../History";
 import { useApiQuery } from "../../../hooks/useQuery";
+import { foodStore } from "../../../store/foodStore";
 
 const locales = {
   "en-US": enUS,
@@ -19,42 +20,40 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const events = [
-  {
-    id: 1,
-    title: "Food",
-    start: new Date(2025, 5, 20, 10, 0),
-    end: new Date(2025, 5, 20, 11, 0),
-    menu: "Chicken",
-    price: 100,
-  },
-  {
-    id: 2,
-    title: "Beverages",
-    start: new Date(2025, 5, 21, 12, 0),
-    end: new Date(2025, 5, 21, 13, 0),
-    menu: "Juice",
-    price: 50,
-  },
-];
-
-
 const MyCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState(Views.MONTH);
   const { selectedEvents, toggleEvent } = useSelectedDatesStore();
+  const { setFoodList, foodList } = foodStore();
 
   // API
-  const {data: Foods}  = useApiQuery(
-  {
-    endpoint: "foodmonth/list"
-  },
-  {
-    queryKey: ["food"]
-  }
-)
+  const { data: Foods } = useApiQuery(
+    {
+      endpoint: "foodmonth/list",
+      queryKey: ["food"],
+    },
+    {
+      onSuccess: (data) => {
+        setFoodList(data);
+      },
+    }
+  );
 
-console.log(Foods)
+  useEffect(() => {
+    if (Foods) {
+      setFoodList(Foods);
+    }
+  }, [Foods, setFoodList]);
+
+  console.log(foodList);
+
+  const events = (foodList || []).map((item) => ({
+    id: item.id,
+    title: `${item.food_name} - ${item.price}฿`,
+    start: new Date(item.date),
+    end: new Date(item.date),
+    price: item.price,
+  }));
 
   const today = new Date();
   const nextMonth = today.getMonth() + 1;
@@ -140,34 +139,34 @@ console.log(Foods)
     toggleEvent(event);
   };
 
-
-  console.log(selectedEvents)
+  console.log(selectedEvents);
 
   return (
-   <div className="flex">
-     <div className="w-2/3 p-5 bg-gray-100 h-full">
-      <Calendar
-        localizer={localizer}
-        startAccessor="start"
-        endAccessor="end"
-        date={currentDate}
-        onNavigate={(date) => setCurrentDate(date)}
-        view={currentView}
-        onView={(view) => setCurrentView(view)}
-        events={events}
-        views={["month"]}
-        selectable="ignoreEvents"
-        onSelectSlot={handleSelectSlot}
-        onSelectEvent={handleSelectEvent}
-        dayPropGetter={dayPropGetter}
-        eventPropGetter={eventStyleGetter}
-        style={{ height: 600 }}
-      />
+    <div className="flex">
+      <div className="w-2/3 p-5 bg-gray-100 h-full">
+        <Calendar
+          localizer={localizer}
+          startAccessor="start"
+          endAccessor="end"
+          date={currentDate}
+          onNavigate={(date) => setCurrentDate(date)}
+          view={currentView}
+          onView={(view) => setCurrentView(view)}
+          events={events}
+          tooltipAccessor={(event) => `${event.title}`}
+          views={["month"]}
+          selectable="ignoreEvents"
+          onSelectSlot={handleSelectSlot}
+          onSelectEvent={handleSelectEvent}
+          dayPropGetter={dayPropGetter}
+          eventPropGetter={eventStyleGetter}
+          style={{ height: 600 }}
+        />
+      </div>
+      <div className="w-1/3">
+        <History />
+      </div>
     </div>
-   <div className="w-1/3">
-      <History/>
-    </div>
-   </div>
   );
 };
 

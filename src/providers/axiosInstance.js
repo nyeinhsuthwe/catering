@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+
 export const api = axios.create({
   baseURL: "http://192.168.100.170:8000/api/",
   timeout: 10000,
@@ -10,14 +11,12 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    console.log(config);
     try {
       const token = Cookies.get("authToken");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
 
-      // ✅ Log method, URL, and payload
       console.log("[Request]", config.method?.toUpperCase(), config.url);
       if (config.data) {
         console.log("[Payload]", config.data);
@@ -26,7 +25,7 @@ api.interceptors.request.use(
       console.log("[Request Interceptor Error]", error);
     }
 
-    return config; // ❗ MUST return config
+    return config; 
   },
   (error) => {
     console.log("[Request Setup Error]", error);
@@ -48,7 +47,7 @@ api.interceptors.response.use(
       console.log("[No response from server]");
     }
 
-    return Promise.reject(error); // ❗ Important to propagate error
+    return Promise.reject(error); 
   }
 );
 

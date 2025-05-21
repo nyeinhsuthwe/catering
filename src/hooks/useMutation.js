@@ -9,9 +9,6 @@ export const useApiMutation = (options) => {
         url: endpoint,
         method,
         data: body,
-        // headers: formdata
-        //   ? { "Content-Type": "multipart/form-data" }
-        //   : undefined,
       });
 
       return res;
