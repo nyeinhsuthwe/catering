@@ -8,7 +8,7 @@ export const useApiMutation = (options) => {
       const res = await api.request({
         url: endpoint,
         method,
-        data: body,
+        data: body,npm
         // headers: formdata
         //   ? { "Content-Type": "multipart/form-data" }
         //   : undefined,
