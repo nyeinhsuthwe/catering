@@ -5,10 +5,9 @@ export const foodStore = create(
      persist(
         (set) => ({
           food: null,
-          foodlist: null,
-    
+          foodList: null,
           setFood: (food) => set({ food }),
-          setFoodList: (foodlist) => set({ foodlist }),
+          setFoodList: (foodList) => set({ foodList }),
     
         }),
         {

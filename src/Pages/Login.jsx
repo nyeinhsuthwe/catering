@@ -10,16 +10,14 @@ import { role } from '../hooks/role';
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const {setUser, setToken, user, token} = userStore();
+  const {setUser, setToken} = userStore();
 
   const mutation = useApiMutation({
     onSuccess: (res) => {
       console.log(res)
       if (res) {
         const { token, employee } = res.data.data;
-        console.log(employee);
         Cookies.set("token",token);
-        console.log("token:", token);
         setUser(employee);
         setToken(token)
         navigate(role[employee.role || "/login"])
@@ -30,11 +28,7 @@ const Login = () => {
     }
   });
 
-  console.log(user);
-  console.log(token);
   
-  
-
   const onSubmit = (data) => {
     console.log(data);
     mutation.mutate({

@@ -6,7 +6,7 @@ export const useApiQuery = ({ endpoint, params, queryKey }, options) => {
     queryKey: queryKey ?? [endpoint, params],
     queryFn: async () => {
       const res = await api.get(endpoint, { params });
-      return res;
+      return res.data.data;
     },
     ...options,
   });

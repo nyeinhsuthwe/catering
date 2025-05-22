@@ -1,7 +1,26 @@
 import React from "react";
 import { Textarea, Button, Card } from "flowbite-react";
+// import { feedbackStore } from "../../store/feedback";
+// import { useApiMutation } from "../../hooks/useMutation";
+// import { useForm } from 'react-hook-form';
 
 const Feedback = () => {
+  // const { register, handleSubmit } = useForm();
+
+  // const {FeedBack, setFeedBack} = feedbackStore();
+  // const mutation = useApiMutation({
+  //   onSuccess : (res)=>{
+  //     console.log(res)
+  //   }
+  // })
+
+  // const onSubmit =(data)=>{
+  //   mutation.mutate({
+  //     endpoint: "feedback",
+  //     method: "POST",
+  //     body: { ...data }
+  //   })
+  // }
   return (
     <div className="w-full flex gap-[100px]">
       <div className="w-1/3 mx-auto mt-6 ">
@@ -10,6 +29,7 @@ const Feedback = () => {
           placeholder="Write your comment here..."
           rows={4}
           required
+          // {...register("")}
         />
         <Button className="bg-gray-500 hover:bg-gray-600 mt-2 justify-end">
           Submit
