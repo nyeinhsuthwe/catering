@@ -23,7 +23,7 @@ const AdminSidebar = () => {
 
       {/* Sidebar Content */}
       <div className="p-6">
-        {/* Navigation Links */}
+        {/* Navigation Link */}
         <ul className="space-y-4">
           <li>
             <Link
