@@ -27,7 +27,7 @@ const AdminSidebar = () => {
         <ul className="space-y-4">
           <li>
             <Link
-              to="/"
+              to="/admin"
               className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
             >
               <FaTachometerAlt className="text-gray-500" />
@@ -36,7 +36,7 @@ const AdminSidebar = () => {
           </li>
           <li>
             <Link
-              to="/reservation"
+              to="reservation"
               className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
             >
               <FaClipboardList className="text-gray-500" />
@@ -45,7 +45,7 @@ const AdminSidebar = () => {
           </li>
           <li>
             <Link
-              to="/menu"
+              to="menu"
               className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
             >
               <FaUtensils className="text-gray-500" />
@@ -54,7 +54,7 @@ const AdminSidebar = () => {
           </li>
           <li>
             <Link
-              to="/employee"
+              to="employee"
               className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
             >
               <FaUsers className="text-gray-500" />
