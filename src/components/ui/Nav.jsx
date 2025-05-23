@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -10,7 +10,15 @@ import {
   NavbarToggle,
 } from "flowbite-react";
 
+import Cookie from "js-cookie"
+
 const Nav = () => {
+
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    Cookie.remove("token")
+    navigate("/login")
+  }
   return (
     <div className="sticky top-0 z-50">
       <Navbar fluid rounded className="bg-gray-100">
@@ -21,7 +29,7 @@ const Nav = () => {
           </span>
         </NavbarBrand>
         <div className="flex md:order-2">
-        <Link to='/login'><Button className="">Login</Button></Link>
+        <Button onClick={handleLogout} className="">Logout</Button>
         <NavbarToggle />
       </div>
         {/* <NavbarCollapse>
