@@ -2,20 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Button, Popover } from "flowbite-react";
 // import FoodMenuLists from 'src/admin/FoodMenuLists'
 import { MultiSelect } from 'primereact/multiselect';
-import axios from "axios"
-
+import axios from "axios";
+import Cookies from 'js-cookie';
 
 const Menu = () => {
   const [menus, setMenus] = useState([]);
   const [form, setForm] = useState({ name: '', price: '', month: '' });
   const [editIndex, setEditIndex] = useState(null);
 
+  //FoodCreate
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
   
@@ -24,6 +25,8 @@ const Menu = () => {
       alert("Please select food(s), price, and month.");
       return;
     }
+
+    console.log(e)
   
     const newMenus = selectedFood.map((food) => ({
       name: food.name,
@@ -70,25 +73,24 @@ const Menu = () => {
   const [newFoodName, setNewFoodName] = useState('');
 
   const createMenu = async ()=>{
-    const data = await axios.post('http://192.168.100.170:8000/api/food/create',{
+    const data = await axios.post('http://192.168.100.170:8001/api/food/create',{
       name: newFoodName.trim()
     },{
       header: {
         "Content-type": 'Application/json',
         "Accept": 'Application/json',
-        Authorization: "Bearer 15|ptY7pnqSo4szT1xsJzgjixB46XdNxpnltFPOBu4Zc7a6b55c"
+        Authorization: `Bearer ${Cookies.get("token")}`
       }
     })
-    console.log("Menu Create", data)
   }
 
   useEffect(()=> {
       const MenuLists = async ()=>{
-        const response =await axios.get('http://192.168.100.170:8000/api/food/list', {
+        const response =await axios.get('http://192.168.100.170:8001/api/food/list', {
           header: {
             "Content-type": 'Application/json',
             "Accept": 'Application/json',
-            Authorization: "Bearer 15|ptY7pnqSo4szT1xsJzgjixB46XdNxpnltFPOBu4Zc7a6b55c"
+            Authorization: `Bearer ${Cookies.get("token")}`
           }
         })
         const data = response.data.data
@@ -118,11 +120,9 @@ const Menu = () => {
 
 
   
-
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex justify-end mb-4">
         
-
       <Popover
       aria-labelledby="profile-popover"
       content={
@@ -139,8 +139,8 @@ const Menu = () => {
           className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
           onClick={() => {
             createMenu()
-            // handleAddFood();
-            // alert("Menu Added successfully");
+            handleAddFood();
+             alert("Menu Added successfully");
           }}
         >
           Create

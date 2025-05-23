@@ -10,7 +10,9 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(
+
   async (config) => {
+    console.log("config", config)
     try {
       const token = Cookies.get("authToken");
       if (token) {
