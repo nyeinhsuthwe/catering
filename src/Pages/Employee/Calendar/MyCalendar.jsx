@@ -135,8 +135,8 @@ const MyCalendar = () => {
   console.log(selectedEvents);
 
   return (
-    <div className="flex">
-      <div className="w-2/3 p-5 bg-gray-100 h-full">
+    <div className="flex  dark:bg-black">
+      <div className="w-2/3 p-5 bg-gray-100 h-full ">
         <Calendar
           localizer={localizer}
           startAccessor="start"

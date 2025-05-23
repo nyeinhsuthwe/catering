@@ -6,7 +6,7 @@ import SideBar from "../Pages/Employee/SideBar";
 // Dashboard layout for Employee
 const DashboardLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-200">
+    <div className="flex flex-col min-h-screen bg-gray-200  dark:bg-black">
       <Nav />
       <div className="flex ">
         <SideBar />

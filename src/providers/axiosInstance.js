@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 export const api = axios.create({
   baseURL: "http://192.168.100.170:8000/api/",
@@ -25,7 +26,7 @@ api.interceptors.request.use(
       console.log("[Request Interceptor Error]", error);
     }
 
-    return config; 
+    return config;
   },
   (error) => {
     console.log("[Request Setup Error]", error);
@@ -38,16 +39,28 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log("[API Error]", error.message);
-
     if (error.response) {
-      console.log("[Response Error Data]", error.response.data);
-      console.log("[Status]", error.response.status);
+      const status = error.response.status;
+
+      switch (status) {
+        case 404:
+          toast.error("not found");
+          break;
+        case 401:
+          toast.error("Un Authorized");
+          break;
+        case 403:
+          toast.error("not found");
+          break;
+        case 500:
+          toast.error("Server Error");
+          break;
+      }
     } else {
-      console.log("[No response from server]");
+      console.log("Server Error");
     }
 
-    return Promise.reject(error); 
+    return Promise.reject(error);
   }
 );
 

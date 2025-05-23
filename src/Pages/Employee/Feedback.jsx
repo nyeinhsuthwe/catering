@@ -8,10 +8,11 @@ import Rating from "react-rating";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { useApiQuery } from "../../hooks/useQuery";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const Feedback = () => {
   const { register, handleSubmit, setValue, reset, watch } = useForm();
-  const { feedBack, addFeedback, setFeedback, removeFeedback } = feedback();
+  const { feedBack, addFeedback, setFeedback } = feedback();
   const { user } = userStore();
 
   const rating = watch("rating");
@@ -23,6 +24,7 @@ const Feedback = () => {
       queryClient.invalidateQueries({
         queryKey: ['feedback']
       })
+      toast.success("successfully created")
       addFeedback(res.data);
       reset();
     },
@@ -63,6 +65,7 @@ const Feedback = () => {
   const deleteMutation = useApiMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feedback'] })
+      toast.success("successfully deleted!");
 
     },
     onError: (error) => {
@@ -131,7 +134,7 @@ const Feedback = () => {
       <div className="w-2/3 mt-6 pr-9 flex flex-col gap-4">
         {feedBack?.length > 0 ? (
           feedBack?.map((item, index) => (
-            <Card key={item.fb_id || index} className="w-[500px]">
+            <Card key={index} className="w-[500px]">
               <p className="font-normal text-gray-700 dark:text-gray-400">
                 {item?.text}
               </p>
