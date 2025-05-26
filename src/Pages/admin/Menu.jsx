@@ -19,45 +19,52 @@ const Menu = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = (e) => {
+  e.preventDefault();
 
-    // Validation check
-    if (
-      !selectedFood ||
-      selectedFood.length === 0 ||
-      !form.price ||
-      !form.month
-    ) {
-      alert("Please select food(s), price, and month.");
-      return;
-    }
+  // Validation check before mutation
+  if (
+    !selectedFood ||
+    selectedFood.length === 0 ||
+    !form.price ||
+    !form.month
+  ) {
+    alert("Please select food(s), price, and month.");
+    return;
+  }
 
-    console.log(e);
+  // Build the correct data before sending to API
+  const newMenus = selectedFood.map((food) => ({
+    name: food.name,
+    price: form.price,
+    month: form.month,
+  }));
 
-    const newMenus = selectedFood.map((food) => ({
-      name: food.name,
+  // Call the mutation with valid data
+  menuListMutation.mutate({
+    endpoint: "/food/list",
+    method: "POST",
+    body: newMenus,
+  });
+
+  // Update local state
+  let updatedMenus = [...menus];
+  if (editIndex !== null) {
+    updatedMenus[editIndex] = {
+      name: selectedFood[0].name,
       price: form.price,
       month: form.month,
-    }));
+    };
+    setEditIndex(null);
+  } else {
+    updatedMenus = [...menus, ...newMenus];
+  }
 
-    let updatedMenus = [...menus];
-    if (editIndex !== null) {
-      // If editing, replace that one entry with the first selectedFood item
-      updatedMenus[editIndex] = {
-        name: selectedFood[0].name,
-        price: form.price,
-        month: form.month,
-      };
-      setEditIndex(null);
-    } else {
-      updatedMenus = [...menus, ...newMenus];
-    }
+  setMenus(updatedMenus);
+  setForm({ name: "", price: "", month: "" });
+  setSelectedFood(null);
+};
 
-    setMenus(updatedMenus);
-    setForm({ name: "", price: "", month: "" });
-    setSelectedFood(null);
-  };
 
   const handleEdit = (index) => {
   const selectedMenu = menus[index];
@@ -107,12 +114,12 @@ const Menu = () => {
       refetchOnWindowFocus: false,
     }
   );
-
   useEffect(() => {
-    if (foodLists) {
-      setFoodOptions(foodLists.data);
-    }
-  }, [foodLists]);
+  if (foodLists && Array.isArray(foodLists.data)) {
+    setMenus(foodLists.data);
+  }
+}, [foodLists]);
+
 
   const createMenu = async () => {
     const food = { name: newFoodName.trim() };
@@ -122,6 +129,16 @@ const Menu = () => {
       body: food,
     });
   };
+
+  const menuListMutation = useApiMutation({
+    onSuccess: (data) => {
+      console.log("successful:", data);
+      queryClient.invalidateQueries({ queryKey: ["menuList"] });
+    },
+    onError: (error) => {
+      console.error("Upload failed:", error);
+    },
+  });
 
   // useEffect(()=> {
   //     const MenuLists = async ()=>{
@@ -336,4 +353,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default Menu; 
