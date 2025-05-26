@@ -7,10 +7,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import Cookies from "js-cookie";
 
-
-
-
-
 const userRole = Cookies.get("role") || "Employee"; // get user role from cookie, default Employee
 const Customer = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -30,7 +26,6 @@ const Customer = () => {
     },
   });
 
-  
   const {
     data: employeeData,
     isLoading,
@@ -44,40 +39,51 @@ const Customer = () => {
       refetchOnWindowFocus: false,
     }
   );
+
   const availableRoles = [userRole];
-const allMonths = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
-        // Calculate available months based on userRole and employeeData
-const availableMonths = React.useMemo(() => {
-  if (userRole === "admin") {
-    return allMonths;
-  }
-  if (employeeData && Array.isArray(employeeData)) {
-    const monthsSet = new Set(
-      employeeData
-        .filter((emp) => emp.role === userRole)
-        .map((emp) => emp.month)
-        .filter(Boolean)
-    );
-    return Array.from(monthsSet);
-  }
-  return [];
-}, [userRole, employeeData]);
-  // 
+  const allMonths = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  // Calculate available months based on userRole and employeeData
+  const availableMonths = React.useMemo(() => {
+    if (userRole === "admin") {
+      return allMonths;
+    }
+    if (employeeData && Array.isArray(employeeData)) {
+      const monthsSet = new Set(
+        employeeData
+          .filter((emp) => emp.role === userRole)
+          .map((emp) => emp.month)
+          .filter(Boolean)
+      );
+      return Array.from(monthsSet);
+    }
+    return [];
+  }, [userRole, employeeData]);
+  //
   const filteredCustomers = Array.isArray(employeeData)
-  ? employeeData.filter((customer) => {
-      // restrict to current user's role only
-      if (customer.role !== userRole) return false;
+    ? employeeData.filter((customer) => {
+        // restrict to current user's role only
+        if (customer.role !== userRole) return false;
 
-      if (selectedMonth && customer.month !== selectedMonth) return false;
-      if (selectedRole && customer.role !== selectedRole) return false;
+        if (selectedMonth && customer.month !== selectedMonth) return false;
+        if (selectedRole && customer.role !== selectedRole) return false;
 
-      return true;
-    })
-  : [];
-
+        return true;
+      })
+    : [];
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -144,31 +150,32 @@ const availableMonths = React.useMemo(() => {
         </div>
       </form>
 
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Registered Employees</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Registered Employees
+      </h2>
 
       <div className="flex gap-4 flex-wrap">
         <div className="mb-4 w-full md:w-1/3">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Filter by Month
           </label>
-          
 
-<select
-  value={selectedMonth}
-  onChange={(e) => setSelectedMonth(e.target.value)}
-  className="p-2 border border-gray-300 rounded w-full"
->
-  <option value="">All Months</option>
-  {availableMonths.length > 0 ? (
-    availableMonths.map((month) => (
-      <option key={month} value={month}>
-        {month}
-      </option>
-    ))
-  ) : (
-    <option disabled>No months available</option>
-  )}
-</select>
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            className="p-2 border border-gray-300 rounded w-full"
+          >
+            <option value="">All Months</option>
+            {availableMonths.length > 0 ? (
+              availableMonths.map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))
+            ) : (
+              <option disabled>No months available</option>
+            )}
+          </select>
         </div>
 
         <div className="mb-4 w-full md:w-1/3">
@@ -176,16 +183,16 @@ const availableMonths = React.useMemo(() => {
             Filter by Role
           </label>
           <select
-  value={selectedRole}
-  onChange={(e) => setSelectedRole(e.target.value)}
-  className="p-2 border border-gray-300 rounded w-full"
->
-  {availableRoles.map((role) => (
-    <option key={role} value={role}>
-      {role}
-    </option>
-  ))}
-</select>
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            className="p-2 border border-gray-300 rounded w-full"
+          >
+            {availableRoles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
