@@ -47,7 +47,8 @@ api.interceptors.response.use(
           toast.error("not found");
           break;
         case 401:
-          toast.error("Un Authorized");
+          window.location.href = "/login";
+          Cookies.remove("authToken");
           break;
         case 403:
           toast.error("not found");

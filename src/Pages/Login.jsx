@@ -1,68 +1,107 @@
-import React from 'react'
+import React, { useState } from "react";
 import { Card, Button, Label, TextInput } from "flowbite-react";
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { useApiMutation } from '../hooks/useMutation';
-import { userStore } from '../store/userStore';
-import Cookies from 'js-cookie';
-import { role } from '../hooks/role';
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useApiMutation } from "../hooks/useMutation";
+import { userStore } from "../store/userStore";
+import Cookies from "js-cookie";
+import { role } from "../hooks/role";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const {setUser, setToken} = userStore();
+  const { setUser, setToken } = userStore();
+  const [loading, setLoading] = useState(false);
 
   const mutation = useApiMutation({
     onSuccess: (res) => {
-      console.log(res)
+      console.log(res);
       if (res) {
         const { token, employee } = res.data.data;
-        Cookies.set("token",token);
+        Cookies.set("token", token);
         setUser(employee);
-        setToken(token)
-        navigate(role[employee.role || "/login"])
+        setToken(token);
+        navigate(role[employee.role || "/login"]);
       }
     },
     onError: (err) => {
       console.error("Login failed:", err.response?.data || err.message);
-    }
+    },
   });
 
-  
-  const onSubmit = (data) => {
+  const onSubmit = (data, e) => {
     console.log(data);
+    setLoading(true);
+    e.preventDefault();
     mutation.mutate({
       endpoint: "login",
       method: "POST",
-      body: { ...data }
+      body: { ...data },
     });
   };
 
   return (
     <div>
-      <h3 className='text-3xl font-bold mt-23 text-gray-500 text-center'>Login Form</h3>
-      <Card className='max-w-md mt-6 mx-auto bg-gray-100'>
-        <div className='items-center'>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex mx-auto mt-6 mb-6 max-w-md flex-col gap-4">
+      <h3 className="text-3xl font-bold mt-23 text-gray-500 text-center">
+        Login Form
+      </h3>
+      <Card className="max-w-md mt-6 mx-auto bg-gray-100">
+        <div className="items-center">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex mx-auto mt-6 mb-6 max-w-md flex-col gap-4"
+          >
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="employeeId" className='text-gray-600'>Your ID</Label>
+                <Label htmlFor="employeeId" className="text-gray-600">
+                  Your ID
+                </Label>
               </div>
-              <TextInput {...register("employeeId")} id="employeeId" placeholder="Enter your ID" type="text" required shadow />
+              <TextInput
+                {...register("employeeId")}
+                id="employeeId"
+                placeholder="Enter your ID"
+                type="text"
+                required
+                shadow
+              />
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="password" className='text-gray-600'>Your password</Label>
+                <Label htmlFor="password" className="text-gray-600">
+                  Your password
+                </Label>
               </div>
-              <TextInput {...register("password")} id="password" placeholder="Enter your password" type="password" required shadow />
+              <TextInput
+                {...register("password")}
+                id="password"
+                placeholder="Enter your password"
+                type="password"
+                required
+                shadow
+              />
             </div>
-            <Button type="submit" className='mt-3'>
-              {mutation.isPending ? "Logging in..." : "Login"}
+            <Button type="submit" disabled={mutation.isPending}>
+              {mutation.isPending ? (
+                <div className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-white" />
+                  Logging in...
+                </div>
+              ) : (
+                "Login"
+              )}
             </Button>
+
             <div className="flex items-center gap-2">
               <Label htmlFor="agree" className="flex text-gray-600">
                 If you don't have an account
-                <Link to="register" className="text-cyan-600 hover:underline dark:text-cyan-500 ms-1"> Register</Link>
+                <Link
+                  to="register"
+                  className="text-cyan-600 hover:underline dark:text-cyan-500 ms-1"
+                >
+                  {" "}
+                  Register
+                </Link>
               </Label>
             </div>
           </form>
