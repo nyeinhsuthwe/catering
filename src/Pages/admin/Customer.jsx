@@ -7,11 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import Cookies from "js-cookie";
 
-const availableRoles = [userRole];
-const allMonths = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+
 
 
 
@@ -48,7 +44,11 @@ const Customer = () => {
       refetchOnWindowFocus: false,
     }
   );
-  
+  const availableRoles = [userRole];
+const allMonths = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
         // Calculate available months based on userRole and employeeData
 const availableMonths = React.useMemo(() => {
   if (userRole === "admin") {
