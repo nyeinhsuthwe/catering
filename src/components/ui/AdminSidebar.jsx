@@ -61,15 +61,7 @@ const AdminSidebar = () => {
               {!isCollapsed && <span className="ml-3">Employee Lists</span>}
             </Link>
           </li>
-          <li>
-            <Link
-              to="searchOrder"
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
-            >
-              <FaUsers className="text-gray-500" />
-              {!isCollapsed && <span className="ml-3">Search Orders</span>}
-            </Link>
-          </li>
+          
           <li>
             <Link
               to="/report"
