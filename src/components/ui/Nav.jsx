@@ -27,8 +27,8 @@ const Nav = () => {
   };
 
   return (
-    <div className="sticky top-0 z-50">
-      <Navbar fluid rounded className="bg-gray-100">
+    <div className="sticky top-0 z-50 ">
+      <Navbar fluid  className="bg-gray-100 [&>div]:rounded-none">
         <NavbarBrand href="#">
           <span className="self-center whitespace-nowrap text-xl text-gray-600 font-bold dark:text-white">
             Catering Management System

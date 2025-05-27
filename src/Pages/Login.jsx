@@ -6,6 +6,7 @@ import { useApiMutation } from "../hooks/useMutation";
 import { userStore } from "../store/userStore";
 import Cookies from "js-cookie";
 import { role } from "../hooks/role";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -16,6 +17,7 @@ const Login = () => {
   const mutation = useApiMutation({
     onSuccess: (res) => {
       console.log(res);
+      toast.success("successfully logged in");
       if (res) {
         const { token, employee } = res.data.data;
         Cookies.set("token", token);
@@ -29,10 +31,9 @@ const Login = () => {
     },
   });
 
-  const onSubmit = (data, e) => {
+  const onSubmit = (data) => {
     console.log(data);
     setLoading(true);
-    e.preventDefault();
     mutation.mutate({
       endpoint: "login",
       method: "POST",
@@ -57,6 +58,7 @@ const Login = () => {
                   Your ID
                 </Label>
               </div>
+
               <TextInput
                 {...register("employeeId")}
                 id="employeeId"

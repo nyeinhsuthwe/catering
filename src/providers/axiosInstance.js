@@ -44,17 +44,18 @@ api.interceptors.response.use(
 
       switch (status) {
         case 404:
-          toast.error("not found");
+          toast.error("Resource not found");
           break;
         case 401:
+          toast.error("Unauthorized, please login again");
           window.location.href = "/login";
           Cookies.remove("authToken");
           break;
         case 403:
-          toast.error("not found");
+          toast.error("Forbidden, you do not have permission to access this resource");
           break;
         case 500:
-          toast.error("Server Error");
+          toast.error("Server error, please try again later");
           break;
       }
     } else {
