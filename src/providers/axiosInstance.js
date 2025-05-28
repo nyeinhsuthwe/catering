@@ -48,8 +48,8 @@ api.interceptors.response.use(
           break;
         case 401:
           toast.error("Unauthorized, please login again");
-          window.location.href = "/login";
-          Cookies.remove("authToken");
+          // window.location.href = "/login";
+          // Cookies.remove("authToken");
           break;
         case 403:
           toast.error("Forbidden, you do not have permission to access this resource");
