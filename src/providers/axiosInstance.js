@@ -14,7 +14,7 @@ api.interceptors.request.use(
   async (config) => {
     console.log("config", config)
     try {
-      const token = Cookies.get("authToken");
+      const token = Cookies.get("token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

@@ -11,6 +11,7 @@ import Customer from '../Pages/admin/Customer'
 import AdminProfile from '../Pages/admin/AdminProfile'
 import Login from '../Pages/Login'
 import AdminEditProfile from '../Pages/admin/AdminEditProfile'
+import Announcement from '../Pages/admin/Announcement'
 
 const DashRoute = [
   {
@@ -75,10 +76,10 @@ const DashRoute = [
         path: "edit",
         element: <AdminEditProfile />,
       },
-      // {
-      //     path: 'addnewfood',
-      //     element: <AddNewFood/>
-      // },
+      {
+          path: 'announcement',
+          element: <Announcement/>
+      },
     ],
   },
 ];

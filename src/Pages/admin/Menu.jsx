@@ -107,7 +107,7 @@ const Menu = () => {
     menuListMutation.mutate({
       endpoint: "/foodmonth/create",
       method: "POST",
-      body: { items: newMenus ,price: data.price},
+      body: { items: newMenus, price: data.price },
     });
 
     let updatedMenus = [...menus];
@@ -159,6 +159,10 @@ const Menu = () => {
     }
   };
 
+
+  const [showToast, setShowToast] = useState(false);
+  
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex justify-end mb-4">
@@ -179,7 +183,15 @@ const Menu = () => {
                   onClick={() => {
                     createMenu();
                     handleAddFood();
-                    alert("Menu Added successfully");
+
+                    // Show toast
+                    setShowToast(true);
+
+                    // Hide toast after 3 seconds
+                    setTimeout(() => setShowToast(false), 3000);
+
+
+
                   }}
                 >
                   Create
@@ -255,32 +267,27 @@ const Menu = () => {
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 w-full mb-6">
             <div className="mb-6">
               <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
-                Select Price
+                Enter Price
               </label>
               <Controller
                 name="price"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
-                  <select
+                  <input
                     {...field}
+                    type="number"
                     id="price"
+                    placeholder="Enter price"
                     className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full"
                     required
-                  >
-                    <option value="">Select Price</option>
-                    {[...Array(10)].map((_, i) => {
-                      const price = (i + 1) * 1000;
-                      return (
-                        <option key={price} value={price}>
-                          {price}
-                        </option>
-                      );
-                    })}
-                  </select>
+                    min={0}
+                    step={100}
+                  />
                 )}
               />
             </div>
+
           </div>
 
 
@@ -343,23 +350,24 @@ const Menu = () => {
               </div>
             ))}
 
+            <button
+              type="button"
+              onClick={() => append({ food_name: [], created_at: "" })}
+              className="mb-4 mr-3 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 mb-2"
+            >
+              Add
+            </button>
           </div>
 
 
 
 
           <div className="md:col-span-3" >
-            <button
-              type="button"
-              onClick={() => append({ food_name: [], created_at: "" })}
-              className="mb-4 mr-3 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 mb-2"
-            >
-              Add New Menu
-            </button>
+
 
             <button
               type="submit"
-              className="mt-2 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
+              className="mt-2 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 "
             >
               {editIndex !== null ? "Update Menu" : "Add Menu"}
             </button>
