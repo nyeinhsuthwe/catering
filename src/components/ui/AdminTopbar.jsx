@@ -8,7 +8,7 @@ const AdminTopbar = () => {
            
             <div className="flex items-center gap-x-4">
 
-                <i class="fa-solid fa-bell text-xl text-gray-700 cursor-pointer" ></i>
+                <i className="fa-solid fa-bell " ></i>
 
 
                 <Dropdown label="Admin" inline>
