@@ -9,8 +9,8 @@ import {
 
 const SideBar = () => {
   return (
-   <div className="bg-gray-100 fixed h-screen z-[100]">
-     <Sidebar aria-label="Default sidebar example" className=" z-[100] ">
+   <div className="bg-gray-100  dark:bg-black fixed h-screen z-[100]">
+     <Sidebar aria-label="Default sidebar example" className=" z-[100] [&>div]:rounded-none">
       <SidebarItems >
         <SidebarItemGroup>
           <Link to="/profile">

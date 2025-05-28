@@ -8,10 +8,13 @@ import Rating from "react-rating";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { useApiQuery } from "../../hooks/useQuery";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
+
 
 const Feedback = () => {
   const { register, handleSubmit, setValue, reset, watch } = useForm();
-  const { feedBack, addFeedback, setFeedback, removeFeedback } = feedback();
+  const { feedBack, addFeedback, setFeedback } = feedback();
   const { user } = userStore();
 
   const rating = watch("rating");
@@ -23,6 +26,7 @@ const Feedback = () => {
       queryClient.invalidateQueries({
         queryKey: ['feedback']
       })
+      toast.success("successfully created")
       addFeedback(res.data);
       reset();
     },
@@ -41,28 +45,20 @@ const Feedback = () => {
   };
   
   // feedback query
-  const { data: feedbackList } = useApiQuery(
+  const { data: feedbackList, isLoading } = useApiQuery(
     {
       endpoint: `feedback/show/${user.employeeId}`,
       queryKey: ["feedback"],
-    },
-    {
-      onSuccess: (data) => {
-        setFeedback(data);
-      },
     }
   );
 
-  useEffect(() => {
-    if (feedbackList) {
-      setFeedback(feedbackList);
-    }
-  }, [feedbackList, setFeedback]);
+  console.log(feedbackList);
 
   // feedback delete mutation
   const deleteMutation = useApiMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feedback'] })
+      toast.success("successfully deleted!");
 
     },
     onError: (error) => {
@@ -83,6 +79,10 @@ const Feedback = () => {
     console.log(`Deleting feedback at: feedback/destroy/${id}`);
 
   };
+
+  if( isLoading){
+    return "Loading";
+  }
 
   return (
     <div className="w-full flex gap-[100px]">
@@ -129,9 +129,9 @@ const Feedback = () => {
       </form>
 
       <div className="w-2/3 mt-6 pr-9 flex flex-col gap-4">
-        {feedBack?.length > 0 ? (
-          feedBack?.map((item, index) => (
-            <Card key={item.fb_id || index} className="w-[500px]">
+        {feedbackList?.length > 0 ? (
+          feedbackList?.map((item, index) => (
+            <Card key={index} className="w-[500px]">
               <p className="font-normal text-gray-700 dark:text-gray-400">
                 {item?.text}
               </p>
