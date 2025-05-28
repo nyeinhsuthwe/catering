@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Outlet } from 'react-router-dom'
 import Nav from '../components/ui/Nav'
 import DarkModeToggle from '../components/ui/DarkModeToggle'
@@ -14,18 +13,4 @@ const AuthLayout = () => {
   )
 }
 
-=======
-import { Outlet } from 'react-router-dom'
-import Nav from '../components/ui/Nav'
-
-const AuthLayout = () => {
-  return (
-    <div>
-        <Nav/>
-        <Outlet/>
-    </div>
-  )
-}
-
->>>>>>> admin
 export default AuthLayout
