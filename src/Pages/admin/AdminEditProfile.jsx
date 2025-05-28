@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const AdminEditProfile = () => {
   const [formData, setFormData] = useState({
-    name: 'Hillary',
-    email: 'admin@catering.com',
-    phone: '0911223344',
-    dob: '1990-01-01',
-    role: 'Administrator',
+    name: "Hillary",
+    email: "admin@catering.com",
+    phone: "0911223344",
+    dob: "1990-01-01",
+    role: "Administrator",
   });
 
   const handleChange = (e) => {
@@ -19,15 +19,20 @@ const AdminEditProfile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: send data to backend API
-    console.log('Updated Admin Info:', formData);
-    alert('Profile updated successfully!');
+    console.log("Updated Admin Info:", formData);
+    alert("Profile updated successfully!");
   };
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold text-sky-700 mb-6">Edit Your Profile</h2>
+      <h2 className="text-2xl font-bold text-sky-700 mb-6">
+        Edit Your Profile
+      </h2>
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-lg shadow-md space-y-4"
+      >
         <div>
           <label className="block mb-1 text-gray-600">Full Name</label>
           <input

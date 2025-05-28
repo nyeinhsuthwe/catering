@@ -1,47 +1,89 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { FileInput, Label } from "flowbite-react";
 import { useForm } from "react-hook-form";
+import { useApiMutation } from "../../hooks/useMutation";
+import { useQueryClient } from "@tanstack/react-query";
+import { useApiQuery } from "../../hooks/useQuery";
+import Cookies from "js-cookie";
 
+const userRole = Cookies.get("role") || "Employee"; // get user role from cookie, default Employee
 const Customer = () => {
-  const [customers, setCustomers] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
-  const { register, handleSubmit, setValue } = useForm();
+  const { handleSubmit, setValue } = useForm();
   const [fileBase64, setFileBase64] = useState(null);
 
-  useEffect(() => {
-    const dummyCustomers = [
-      {
-        id: 1,
-        name: "John Doe",
-        email: "john@example.com",
-        role: "Employee",
-        month: "January",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        email: "jane@example.com",
-        role: "Employee",
-        month: "February",
-      },
-      {
-        id: 3,
-        name: "Alice Win",
-        email: "alice@example.com",
-        role: "Admin",
-        month: "January",
-      },
-    ];
-    setCustomers(dummyCustomers);
-  }, []);
+  const queryClient = useQueryClient();
 
-  const filteredCustomers = customers.filter((customer) => {
-    const matchesMonth = selectedMonth ? customer.month === selectedMonth : true;
-    const matchesRole = selectedRole ? customer.role === selectedRole : true;
-    return matchesMonth && matchesRole;
+  const mutation = useApiMutation({
+    onSuccess: (data) => {
+      console.log("Upload successful:", data);
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+    onError: (error) => {
+      console.error("Upload failed:", error);
+    },
   });
+
+  const {
+    data: employeeData,
+    isLoading,
+    error,
+  } = useApiQuery(
+    {
+      endpoint: "/employees/list",
+      queryKey: ["employee"],
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const availableRoles = [userRole];
+  const allMonths = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  // Calculate available months based on userRole and employeeData
+  const availableMonths = React.useMemo(() => {
+    if (userRole === "admin") {
+      return allMonths;
+    }
+    if (employeeData && Array.isArray(employeeData)) {
+      const monthsSet = new Set(
+        employeeData
+          .filter((emp) => emp.role === userRole)
+          .map((emp) => emp.month)
+          .filter(Boolean)
+      );
+      return Array.from(monthsSet);
+    }
+    return [];
+  }, [userRole, employeeData]);
+  //
+  const filteredCustomers = Array.isArray(employeeData)
+    ? employeeData.filter((customer) => {
+        // restrict to current user's role only
+        if (customer.role !== userRole) return false;
+
+        if (selectedMonth && customer.month !== selectedMonth) return false;
+        if (selectedRole && customer.role !== selectedRole) return false;
+
+        return true;
+      })
+    : [];
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -49,31 +91,22 @@ const Customer = () => {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64 = reader.result;
+      const base64 = reader.result.split(",")[1];
       setFileBase64(base64);
-      setValue("file", base64); // Set in form
+      setValue("file", base64);
     };
     reader.readAsDataURL(file);
   };
 
   const onSubmit = (data) => {
-    console.log("Submitting file as Base64:", data.file);
-    // Example POST request
-    fetch("http://127.0.0.1:8000/api/employees/import", {
+    mutation.mutate({
+      endpoint: "/employees/import",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer 15|ptY7pnqSo4szT1xsJzgjixB46XdNxpnltFPOBu4Zc7a6b55c`,
+      body: {
+        filename: "employee file",
+        file_base64: fileBase64,
       },
-      body: JSON.stringify({ file: data.file }),
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        console.log("Upload successful:", resData);
-      })
-      .catch((error) => {
-        console.error("Upload failed:", error);
-      });
+    });
   };
 
   const handleExportToExcel = () => {
@@ -93,8 +126,7 @@ const Customer = () => {
           Export
         </button>
       </div>
-      
-      {/* File Upload Form */}
+
       <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
         <div id="fileUpload" className="max-w-md mb-4">
           <Label className="mb-2 block" htmlFor="file">
@@ -102,17 +134,19 @@ const Customer = () => {
           </Label>
           <FileInput
             id="file"
+            type="file"
             onChange={handleFileUpload}
             accept=".xls,.xlsx"
           />
         </div>
-        <div className=" justify-end mb-4">
-        <button
-          type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Upload to Backend
-        </button>
+        <div className="justify-end mb-4">
+          <button
+            type="submit"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            disabled={mutation.isLoading}
+          >
+            {mutation.isLoading ? "Uploading..." : "Upload"}
+          </button>
         </div>
       </form>
 
@@ -125,24 +159,22 @@ const Customer = () => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Filter by Month
           </label>
+
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
             className="p-2 border border-gray-300 rounded w-full"
           >
             <option value="">All Months</option>
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
+            {availableMonths.length > 0 ? (
+              availableMonths.map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))
+            ) : (
+              <option disabled>No months available</option>
+            )}
           </select>
         </div>
 
@@ -155,12 +187,17 @@ const Customer = () => {
             onChange={(e) => setSelectedRole(e.target.value)}
             className="p-2 border border-gray-300 rounded w-full"
           >
-            <option value="">All Roles</option>
-            <option value="Admin">Admin</option>
-            <option value="Employee">Employee</option>
+            {availableRoles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
           </select>
         </div>
       </div>
+
+      {isLoading && <p className="text-gray-500">Loading employees...</p>}
+      {error && <p className="text-red-500">Error loading employees.</p>}
 
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
