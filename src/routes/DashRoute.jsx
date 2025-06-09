@@ -11,6 +11,8 @@ import Customer from '../Pages/admin/Customer'
 import AdminProfile from '../Pages/admin/AdminProfile'
 import Login from '../Pages/Login'
 import AdminEditProfile from '../Pages/admin/AdminEditProfile'
+import Record from '../Pages/Employee/Record';
+import Announcement from "../Pages/Employee/Announcement";
 
 const DashRoute = [
   {
@@ -33,6 +35,14 @@ const DashRoute = [
         path: "feedback",
         element: <Feedback />,
       },
+      {
+        path: "record",
+        element: <Record/>
+      },
+      {
+        path: "announcement",
+        element: <Announcement/>
+      }
     ],
   },
   {

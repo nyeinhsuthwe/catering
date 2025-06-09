@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
 export const api = axios.create({
-  baseURL: "http://192.168.100.170:8000/api/",
+  baseURL: "http://192.168.100.192:8000/api/",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -13,7 +13,7 @@ export const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     try {
-      const token = Cookies.get("authToken");
+      const token = Cookies.get("token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

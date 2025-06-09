@@ -7,36 +7,64 @@ import {
   TableRow,
   Card,
   Button,
+  Pagination
 } from "flowbite-react";
 import React from "react";
 import { useSelectedDatesStore } from "../../store/dateStore";
 import { useApiMutation } from "../../hooks/useMutation";
 import toast from "react-hot-toast";
+import { userStore } from "../../store/userStore";
+import { useState } from "react";
 
 const History = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const onPageChange = (page) => setCurrentPage(page);
+
   const { selectedEvents, unselectEvents } = useSelectedDatesStore();
   const totalDay = selectedEvents.length;
   const totalAmount = selectedEvents.reduce(
     (sum, ev) => parseFloat(sum) + (parseFloat(ev.price) || 0),
     0
   );
+  const { user } = userStore();
+  console.log(user);
+
   const handleCheckout = () => {
-    const result = selectedEvents.map((event) => ({
-      date: event.end,
-    }));
-    console.log("Checkout data:", result);
+    const formattedDates = selectedEvents.map((event) => {
+      const dateObj = new Date(event.end);
+      return `${dateObj.getFullYear()}-${
+        dateObj.getMonth() + 1
+      }-${dateObj.getDate()}`;
+    });
+
+    const payload = {
+      date: formattedDates,
+      emp_id: user.employeeId,
+      total_day: totalDay,
+      total_amount: totalAmount,
+    };
+
+    console.log("Checkout data:", payload);
 
     checkoutMutation.mutate({
       endpoint: "registered-orders/store",
       method: "POST",
-      body: result
+      body: payload,
     });
   };
+
+  const count = 10;
+  const totalPages = Math.ceil(selectedEvents.length / count);
+  const paginatedEvents = selectedEvents.slice(
+    (currentPage - 1) * count,
+    currentPage * count
+  );
 
   const checkoutMutation = useApiMutation({
     onSuccess: (data) => {
       console.log("Checkout successful:", data);
       toast.success("Checkout successful!");
+      unselectEvents();
     },
     onError: (error) => {
       console.error("Checkout failed:", error);
@@ -45,8 +73,8 @@ const History = () => {
   });
 
   return (
-    <div>
-      <div className=" grid gap-4 mx-auto w-full pl-3">
+    <div className="">
+      <div className="h-[90vh] grid gap-4 mx-auto w-full pl-3">
         <Table striped>
           <TableHead className="text-gray-600">
             <TableRow>
@@ -56,20 +84,34 @@ const History = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {selectedEvents.map((data, index) => (
-              <TableRow
-                key={index}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {new Date(data.start).toLocaleDateString("en-GB")}
-                </TableCell>
-                <TableCell>{data.title}</TableCell>
-                <TableCell>{data.price} ks</TableCell>
-              </TableRow>
-            ))}
+            {selectedEvents.length > 0 ? (
+              paginatedEvents.map((data, index) => (
+                <TableRow
+                  key={index}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {new Date(data.start).toLocaleDateString("en-GB")}
+                  </TableCell>
+                  <TableCell>{data.title}</TableCell>
+                  <TableCell>{data.price} ks</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full">
+                <p className="text-gray-500">There is no records.</p>
+              </div>
+            )}
           </TableBody>
         </Table>
+         <div className="mt-auto mx-auto w-full flex justify-center items-center">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          showIcons
+        />
+      </div>
         <Card className="bg-gray-100 text-center">
           <p className="font-normal text-gray-700 dark:text-gray-400">
             Total Days - {totalDay} Days
@@ -90,6 +132,7 @@ const History = () => {
           </Button>
         </div>
       </div>
+     
     </div>
   );
 };
