@@ -65,7 +65,7 @@ const DashRoute = [
         element: <Customer />,
       },
       {
-        path: "profile",
+        path: "adminProfile",
         element: <AdminProfile />,
       },
       {
@@ -80,6 +80,10 @@ const DashRoute = [
           path: 'announcement',
           element: <Announcement/>
       },
+      // {
+      //     path: 'notification',
+      //     element: <Notification/>
+      // },
     ],
   },
 ];

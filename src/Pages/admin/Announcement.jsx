@@ -116,7 +116,7 @@ const Announcement = () => {
 
       <div className="bg-gray-100 rounded-xl shadow-md p-6 border border-gray-100 w-full mb-6">
         <div className="grid md:grid-cols-1 gap-6 mb-6 bg-white p-4 rounded-xl shadow-md border border-gray-200">
-        <div className="max-w-md mb-4">
+        <div className="max-w-md mb-2">
           <Label className="mb-2 block" htmlFor="date">
             Select Announcement Date
           </Label>
@@ -132,7 +132,7 @@ const Announcement = () => {
         </div>
 
 
-        <div className="p-4 max-w-xl mx-auto">
+        <div className="max-w-md mb-2">
           <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
             {editIndex !== null ? 'Edit Announcement' : 'New Announcement'}
           </label>

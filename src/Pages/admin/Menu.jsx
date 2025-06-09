@@ -6,18 +6,20 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import useMenuStore from "../../store/menuStore";
 import { Controller, useForm, useFieldArray } from "react-hook-form";
+import toast from "react-hot-toast";
+import DataTable from "react-data-table-component"; //added for table
 
 const Menu = () => {
   const [menus, setMenus] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [newFoodName, setNewFoodName] = useState("");
+  const [searchText, setSearchText] = useState(""); //Added searchText state
   const queryClient = useQueryClient();
 
   const { menuLists, setMenuLists } = useMenuStore();
 
   const mutation = useApiMutation({
     onSuccess: (data) => {
-      console.log("successful:", data);
       queryClient.invalidateQueries({ queryKey: ["foods"] });
     },
     onError: (error) => {
@@ -45,17 +47,15 @@ const Menu = () => {
     }
   );
 
-  const { register, handleSubmit, control, reset } = useForm(
-    {
-      defaultValues: {
-        menus: [{ food_name: [], created_at: "" }]
-      }
-    }
-  );
+  const { register, handleSubmit, control, reset } = useForm({
+    defaultValues: {
+      menus: [{ food_name: [], created_at: "" }],
+    },
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "menus"
+    name: "menus",
   });
 
   const createMenu = async () => {
@@ -69,7 +69,6 @@ const Menu = () => {
 
   const menuListMutation = useApiMutation({
     onSuccess: (data) => {
-      console.log("successful:", data);
       queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
     },
     onError: (error) => {
@@ -77,15 +76,12 @@ const Menu = () => {
     },
   });
 
-
-
   const onSubmit = (data) => {
     if (!data.price || !data.menus || data.menus.length === 0) {
       alert("Please select at least one menu, price, and date.");
       return;
     }
 
-    // Validate each menu block
     for (const menu of data.menus) {
       if (!menu.food_name || menu.food_name.length === 0 || !menu.created_at) {
         alert("Please select food(s) and date for each menu.");
@@ -93,7 +89,6 @@ const Menu = () => {
       }
     }
 
-    // Transform data for the backend
     const newMenus = data.menus.flatMap((menu) =>
       menu.food_name.map((food) => ({
         food_name: food.name,
@@ -101,8 +96,6 @@ const Menu = () => {
         date: menu.created_at,
       }))
     );
-
-    console.log("Sending menus:", newMenus);
 
     menuListMutation.mutate({
       endpoint: "/foodmonth/create",
@@ -125,7 +118,6 @@ const Menu = () => {
     setMenus(updatedMenus);
     reset();
   };
-
 
   const handleAddFood = () => {
     if (!newFoodName.trim()) {
@@ -159,44 +151,76 @@ const Menu = () => {
     }
   };
 
+  // Filter the data based on searchText
+  const filteredData = (foodMonthCreate || []).filter((item) =>
+    item.food_name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
-  const [showToast, setShowToast] = useState(false);
-  
+  const columns = [
+    {
+      name: "No.",
+      selector: (row, index) => index + 1,
+      width: "70px",
+    },
+    {
+      name: "Menu Name",
+      selector: (row) => row.food_name,
+      sortable: true,
+    },
+    {
+      name: "Price (MMK)",
+      selector: (row) => parseFloat(row.price).toFixed(2),
+      sortable: true,
+      right: true,
+    },
+    {
+      name: "Month",
+      selector: (row) => row.date,
+    },
+    {
+      name: "Actions",
+      cell: (row, index) => (
+        <div className="space-x-2">
+          <button
+            onClick={() => handleEdit(index)}
+            className="text-blue-600 hover:underline"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDelete(index)}
+            className="text-red-600 hover:underline"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <div className="flex justify-end mb-4">
         <Popover
-          aria-labelledby="profile-popover"
           content={
             <div className="w-64 p-3">
-              <div className="mb-2  items-center justify-between">
-                <input
-                  type="text"
-                  placeholder="Enter food name"
-                  className="p-2 border border-gray-300 rounded w-full mb-4"
-                  value={newFoodName}
-                  onChange={(e) => setNewFoodName(e.target.value)}
-                />
-                <button
-                  className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
-                  onClick={() => {
-                    createMenu();
-                    handleAddFood();
-
-                    // Show toast
-                    setShowToast(true);
-
-                    // Hide toast after 3 seconds
-                    setTimeout(() => setShowToast(false), 3000);
-
-
-
-                  }}
-                >
-                  Create
-                </button>
-              </div>
+              <input
+                type="text"
+                placeholder="Enter food name"
+                className="p-2 border border-gray-300 rounded w-full mb-4"
+                value={newFoodName}
+                onChange={(e) => setNewFoodName(e.target.value)}
+              />
+              <button
+                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
+                onClick={() => {
+                  createMenu();
+                  handleAddFood();
+                  toast.success("Food item created successfully!");
+                }}
+              >
+                Create
+              </button>
             </div>
           }
         >
@@ -210,92 +234,87 @@ const Menu = () => {
         Admin Menu Management
       </h2>
 
-      <div className="overflow-x-auto mb-8">
-        <table className="min-w-full text-sm">
-          <thead className="bg-sky-100 text-left">
-            <tr>
-              <th className="px-4 py-2">No.</th>
-              <th className="px-4 py-2">Menu Name</th>
-              <th className="px-4 py-2">Price (MMK)</th>
-              <th className="px-4 py-2">Month</th>
-              <th className="px-4 py-2 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {menus.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="text-center py-4 text-gray-500">
-                  No menus added yet
-                </td>
-              </tr>
-            ) : (
-              foodMonthCreate?.map((menu, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">{menu.food_name}</td>
-                  <td className="px-4 py-2">
-                    {parseFloat(menu.price).toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">{menu.date}</td>
-                  <td className="px-4 py-2 text-center">
-                    <button
-                      onClick={() => handleEdit(index)}
-                      className="text-blue-600 mr-2 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(index)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      {/* Added Search Bar here */}
+      <div className="p-6 bg-white rounded-lg shadow-md mb-6">
+      <div className="mb-4">
+      <div class="flex items-center mb-4">
+        <div class="relative">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+          </div>
+          <input type="search"
+            id="default-search"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            class="block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Search orders..." required />
+        </div>
       </div>
+      
+        <DataTable
+          title="Menu Lists"
+          columns={columns}
+          data={filteredData}
+          pagination
+          highlightOnHover
+          striped
+          responsive
+          noDataComponent="No menu items found"
+          customStyles={{
+          headCells: {
+            style: {
+              fontSize: "15px",
+              fontWeight: "bold",
+              backgroundColor: "#f3f4f6",
+            },
+          },
+          cells: {
+            style: {
+              paddingLeft: "8px",
+              paddingRight: "8px",
+            },
+          },
+        }}
+
+          
+        />
+      </div>
+      </div>
+
 
       <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
         <h3 className="text-lg font-semibold mb-4">
           {editIndex !== null ? "Edit Menu" : "Add New Menu"}
         </h3>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 w-full mb-6">
             <div className="mb-6">
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="price"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Enter Price
               </label>
-              <Controller
-                name="price"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="number"
-                    id="price"
-                    placeholder="Enter price"
-                    className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full"
-                    required
-                    min={0}
-                    step={100}
-                  />
-                )}
+              {/* Changed price input to simple text input using register */}
+              <input
+                {...register("price", { required: "Price is required" })}
+                type="text"
+                id="price"
+                placeholder="Enter price"
+                className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full"
               />
             </div>
-
           </div>
-
 
           <div className="bg-gray-100 rounded-xl shadow-md p-6 border border-gray-100 w-full mb-6">
             {fields.map((item, index) => (
-              <div key={item.id} className="grid md:grid-cols-2 gap-6 mb-6 bg-white p-4 rounded-xl shadow-md border border-gray-200">
-
-                {/* Food Menu */}
+              <div
+                key={item.id}
+                className="grid md:grid-cols-2 gap-6 mb-6 bg-white p-4 rounded-xl shadow-md border border-gray-200"
+              >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Food Menu
@@ -317,7 +336,6 @@ const Menu = () => {
                   />
                 </div>
 
-                {/* Date */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Date
@@ -337,7 +355,6 @@ const Menu = () => {
                   />
                 </div>
 
-                {/* Remove Button */}
                 <div className="col-span-2 text-right">
                   <button
                     type="button"
@@ -359,22 +376,15 @@ const Menu = () => {
             </button>
           </div>
 
-
-
-
-          <div className="md:col-span-3" >
-
-
+          <div>
             <button
               type="submit"
-              className="mt-2 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 "
+              className="mt-2 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
             >
               {editIndex !== null ? "Update Menu" : "Add Menu"}
             </button>
           </div>
         </form>
-
-
       </div>
     </div>
   );

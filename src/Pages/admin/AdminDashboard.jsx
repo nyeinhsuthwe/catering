@@ -1,136 +1,130 @@
-// import React, { useState } from 'react';
-
+import React from 'react';
+import { useApiQuery } from '../../hooks/useQuery'; // your custom hook
+import DataTable from 'react-data-table-component'; // assuming you are using react-data-table-component for the table
 const AdminDashboard = () => {
-  // Sample data for cards
-  const totalData = {
-    reservations: 120,
-    orders: 85,
-    customers: 45,
-  };
 
-  // // Sample data for charts
-  // const [selectedPeriod, setSelectedPeriod] = useState('Month'); // Default period
 
-  // Sample data for order lists
-  const orders = [
+  
+  const { data: announcement } = useApiQuery(
     {
-      no: 1,
-      id: "ORD001",
-      date: "2025-01-05",
-      customer: "John Doe",
-      amount: "$120",
-      status: "Completed",
+      endpoint: "/announcement/list",
+      queryKey: ["announcement"],
     },
     {
-      no: 2,
-      id: "ORD002",
-      date: "2025-01-12",
-      customer: "Jane Smith",
-      amount: "$150",
-      status: "Pending",
+      refetchOnWindowFocus: false,
+    }
+  );
+
+   const { data =[]} = useApiQuery(
+     {
+       endpoint: "/registered-orders/lists",
+       queryKey: ["orders"],
+     },
+     {
+       refetchOnWindowFocus: false,
+     }
+   );
+   console.log("Fetched Data:", data);
+ 
+  const { data: feedbackData } = useApiQuery(
+    {
+      endpoint: "/feedback/list",
+      queryKey: ["feedback"],
     },
     {
-      no: 3,
-      id: "ORD003",
-      date: "2025-02-10",
-      customer: "Alice Johnson",
-      amount: "$200",
-      status: "Completed",
-    },
-  ];
+      refetchOnWindowFocus: false,
+    }
+  );
+
+      const { data: stats = {} } = useApiQuery(
+        {
+          endpoint: "/dashboard/stats",
+          queryKey: ["dashboard-stats"],
+        },
+        {
+          refetchOnWindowFocus: false,
+        }
+      );
+      console.log("Fetched Stats:", stats);
+
 
   return (
-    <div className="p-6 bg-gray-100">
-      {/* Cards Section */}
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div className="p-4 bg-blue-100 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-800">
-            Total Reservations
+            Monthly Reservations
           </h2>
           <p className="text-2xl font-bold text-blue-600 mt-2">
-            {totalData.reservations}
+            {stats.monthly_orders ?? 0}
           </p>
         </div>
         <div className="p-4 bg-green-100 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-800">Total Orders</h2>
           <p className="text-2xl font-bold text-green-600 mt-2">
-            {totalData.orders}
+            {stats.total_orders ?? 0}
           </p>
         </div>
         <div className="p-4 bg-yellow-100 rounded-lg shadow">
           <h2 className="text-lg font-semibold text-gray-800">
-            Total Registration
+            Total Registrations
           </h2>
           <p className="text-2xl font-bold text-yellow-600 mt-2">
-            {totalData.customers}
+            {stats.total_employees ?? 0}
           </p>
         </div>
       </div>
 
-      {/* Order List Section */}
-      <div className="p-4 bg-white rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          Order Lists
-        </h2>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  No.
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Customer Name
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order, index) => (
-                <tr
-                  key={index}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } hover:bg-gray-100`}
-                >
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {order.no}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {order.id}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {order.date}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {order.customer}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {order.amount}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {order.status}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      
+
+      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">Upcoming Events</h2>
+        <ul className="space-y-2 text-sm">
+          {announcement?.map((announcement, idx) => (
+            <li key={idx}>
+              <strong>{announcement.text}</strong> — {announcement.date}
+            </li>
+          ))}
+        </ul>
       </div>
+
+     <div className="p-4 bg-gray-200 rounded-lg shadow mb-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">Recent Orders</h2>
+        <ul className="divide-y divide-gray-200">
+          {data?.slice(0, 5).map((order, idx) => (
+            <li key={idx} className="py-2 flex justify-between text-sm">
+              <span>{order.emp_name}</span>
+              <span>{order.date}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <DataTable
+        title="Employee Feedback"
+        columns={[
+          { name: "ID", selector: (row) => row.emp_id, sortable: true },
+          { name: "Employee Name", selector: (row) => row.emp_name, sortable: true },
+          { name: "Feedback", selector: (row) => row.text },
+          { name: "Rating", selector: (row) => row.rating, sortable: true },
+          { name: "Date", selector: (row) => row.updated_at, sortable: true }
+        ]}
+        data={feedbackData || []}
+        pagination
+        highlightOnHover
+        striped
+        noDataComponent="No feedback available"
+      />
+
+
+
     </div>
   );
 };
 
 export default AdminDashboard;
+
+
