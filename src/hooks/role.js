@@ -1,4 +1,4 @@
 export const role = {
-    employee : "/",
+    employee : "/employee",
     admin : "/admin",
 }

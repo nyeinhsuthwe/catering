@@ -94,18 +94,6 @@ const Login = () => {
               )}
             </Button>
 
-            <div className="flex items-center gap-2">
-              <Label htmlFor="agree" className="flex text-gray-600">
-                If you don't have an account
-                <Link
-                  to="register"
-                  className="text-cyan-600 hover:underline dark:text-cyan-500 ms-1"
-                >
-                  {" "}
-                  Register
-                </Link>
-              </Label>
-            </div>
           </form>
         </div>
       </Card>
