@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast";
 const Record = () => {
   const { user } = userStore();
 
+
   const now = dayjs();
   const [selectedDate, setSelectedDate] = useState({
     year: now.year(),
@@ -40,8 +41,13 @@ const Record = () => {
     params: { year: selectedDate.year, month: selectedDate.month },
     queryKey: ["records", selectedDate.year, selectedDate.month],
   });
-
   console.log(data);
+
+  const { data: checkout } = useApiQuery({
+    endpoint: "/attendance/list",
+    queryKey: ["checkout", user.employeeId],
+  });
+  console.log("checkout", checkout);
 
   const checkoutMutation = useApiMutation({
     onSuccess: () => {
@@ -56,7 +62,7 @@ const Record = () => {
     },
   });
 
-  const handleCheckout = (recordDate) => {
+  const handleCheckout = (recordDate, recordId) => {
     checkoutMutation.mutate({
       endpoint: "/attendance",
       method: "POST",
@@ -64,12 +70,13 @@ const Record = () => {
         emp_id: user.employeeId,
         date: dayjs(recordDate).format("YYYY-MM-DD"),
         status: "present",
-        "check-out": true,
+        check_out: true,
       },
     });
   };
 
   const records = data ?? [];
+  console.log(records);
   const count = 6;
   const paginatedRecord = records.slice(
     (currentPage - 1) * count,
@@ -98,6 +105,17 @@ const Record = () => {
       </div>
     );
   }
+
+  const checkedOutDates = new Set(
+  checkout
+    ?.filter(
+      (item) =>
+        item.emp_id === user.employeeId &&
+        item.check_out === true
+    )
+    .map((item) => dayjs(item.date).format("YYYY-MM-DD"))
+);
+
 
   return (
     <div className="w-full h-[100vh] overflow-y-scroll py-6 pr-11 flex flex-col items-center">
@@ -142,14 +160,13 @@ const Record = () => {
                   <TableCell>
                     {dayjs(record.date).isSame(dayjs(), "day") ? (
                       dayjs().hour() === 11 ? (
-                        <Button
-                          className="w-8 h-8"
-                          onClick={() => handleCheckout(record.date)}
-                          disabled={record.checked_out}
-                          color={record.checked_out ? "success" : "blue"}
+                        <button
+                          className="w-8 h-8 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center bg-blue-600 rounded disabled:bg-gray-600 text-white disabled:text-gray-400 active:scale-0.95 transition-transform duration-200"
+                          onClick={() => handleCheckout(record.date, record.id)}
+                          disabled={checkedOutDates.has(dayjs(record.date).format("YYYY-MM-DD"))}
                         >
                           <i className="fa-solid fa-check text-center flex items-center justify-center"></i>
-                        </Button>
+                        </button>
                       ) : (
                         <span className="text-sm text-gray-500">
                           It is available between 11am–12pm
