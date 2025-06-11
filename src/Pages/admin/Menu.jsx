@@ -67,6 +67,15 @@ const Menu = () => {
     });
   };
 
+  //edit menu price and date
+  const updateMenuMutation = useApiMutation({
+    onSuccess: () => {
+      toast.success("Menu updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
+    },
+  });
+
+
   const menuListMutation = useApiMutation({
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
@@ -76,17 +85,16 @@ const Menu = () => {
     },
   });
 
+
+
+
+
+
+
   const onSubmit = (data) => {
     if (!data.price || !data.menus || data.menus.length === 0) {
-      alert("Please select at least one menu, price, and date.");
+      alert("Please fill all fields.");
       return;
-    }
-
-    for (const menu of data.menus) {
-      if (!menu.food_name || menu.food_name.length === 0 || !menu.created_at) {
-        alert("Please select food(s) and date for each menu.");
-        return;
-      }
     }
 
     const newMenus = data.menus.flatMap((menu) =>
@@ -97,27 +105,33 @@ const Menu = () => {
       }))
     );
 
-    menuListMutation.mutate({
-      endpoint: "/foodmonth/create",
-      method: "POST",
-      body: { items: newMenus, price: data.price },
-    });
-
-    let updatedMenus = [...menus];
     if (editIndex !== null) {
-      updatedMenus[editIndex] = {
-        name: newMenus[0].food_name,
-        price: newMenus[0].price,
-        month: newMenus[0].date,
-      };
-      setEditIndex(null);
-    } else {
-      updatedMenus = [...menus, ...newMenus];
-    }
+      const menuToEdit = foodMonthCreate[editIndex];
 
-    setMenus(updatedMenus);
-    reset();
+      updateMenuMutation.mutate({
+        endpoint: `/foodmonth/update/${menuToEdit.date}`, // Or ID if preferred
+        method: "PUT", // or PATCH
+        body: {
+          items: newMenus,
+          price: data.price,
+        },
+      });
+      console.log("Updating with:", newMenus);
+
+    } else {
+      // If not editing, use your existing create mutation
+      menuListMutation.mutate({
+        endpoint: "/foodmonth/create",
+        method: "POST",
+        body: {
+          items: newMenus,
+          price: data.price,
+        },
+      });
+    }
   };
+
+
 
   const handleAddFood = () => {
     if (!newFoodName.trim()) {
@@ -137,18 +151,40 @@ const Menu = () => {
     const menu = foodMonthCreate[index];
     setEditIndex(index);
     reset({
-      food_name: [{ name: menu.name }],
+      menus: [{
+        food_name: [{ name: menu.food_name }],
+        created_at: menu.date,
+      }],
       price: menu.price,
-      created_at: menu.date,
     });
   };
 
-  const handleDelete = (index) => {
-    if (window.confirm("Are you sure you want to delete this menu?")) {
-      const updatedMenus = [...menus];
-      updatedMenus.splice(index, 1);
-      setMenus(updatedMenus);
-    }
+
+  const deleteMutation = useApiMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['foodmonthprice'] })
+      toast.success("successfully deleted!");
+
+    },
+    onError: (error) => {
+      console.error(
+        "Delete failed:",
+        error?.response?.data?.message || error.message
+      );
+    },
+  });
+
+
+  const handleDelete = (date) => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (!confirmed) return;
+    deleteMutation.mutate({
+      endpoint: `foodmonth/destroy/${date}`,
+      method: "DELETE",
+    });
+
+    console.log(`Deleting MenuList at: foodmonth/destroy/${date}`);
+
   };
 
   // Filter the data based on searchText
@@ -171,7 +207,7 @@ const Menu = () => {
       name: "Price (MMK)",
       selector: (row) => parseFloat(row.price).toFixed(2),
       sortable: true,
-      right: true,
+
     },
     {
       name: "Month",
@@ -188,7 +224,7 @@ const Menu = () => {
             Edit
           </button>
           <button
-            onClick={() => handleDelete(index)}
+            onClick={() => handleDelete(row.date)}
             className="text-red-600 hover:underline"
           >
             Delete
@@ -236,51 +272,51 @@ const Menu = () => {
 
       {/* Added Search Bar here */}
       <div className="p-6 bg-white rounded-lg shadow-md mb-6">
-      <div className="mb-4">
-      <div class="flex items-center mb-4">
-        <div class="relative">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-            </svg>
+        <div className="mb-4">
+          <div class="flex items-center mb-4">
+            <div class="relative">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+              </div>
+              <input type="search"
+                id="default-search"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                class="block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search orders..." required />
+            </div>
           </div>
-          <input type="search"
-            id="default-search"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            class="block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search orders..." required />
-        </div>
-      </div>
-      
-        <DataTable
-          title="Menu Lists"
-          columns={columns}
-          data={filteredData}
-          pagination
-          highlightOnHover
-          striped
-          responsive
-          noDataComponent="No menu items found"
-          customStyles={{
-          headCells: {
-            style: {
-              fontSize: "15px",
-              fontWeight: "bold",
-              backgroundColor: "#f3f4f6",
-            },
-          },
-          cells: {
-            style: {
-              paddingLeft: "8px",
-              paddingRight: "8px",
-            },
-          },
-        }}
 
-          
-        />
-      </div>
+          <DataTable
+            title="Menu Lists"
+            columns={columns}
+            data={filteredData}
+            pagination
+            highlightOnHover
+            striped
+            responsive
+            noDataComponent="No menu items found"
+            customStyles={{
+              headCells: {
+                style: {
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                  backgroundColor: "#f3f4f6",
+                },
+              },
+              cells: {
+                style: {
+                  paddingLeft: "8px",
+                  paddingRight: "8px",
+                },
+              },
+            }}
+
+
+          />
+        </div>
       </div>
 
 
@@ -384,6 +420,22 @@ const Menu = () => {
               {editIndex !== null ? "Update Menu" : "Add Menu"}
             </button>
           </div>
+          <div className="mb-2">
+          {editIndex !== null && (
+            <button
+              type="button"
+              onClick={() => {
+                reset();
+                setEditIndex(null);
+              }}
+              className="mt-2 bg-sky-600 text-white px-3 py-2 rounded hover:bg-sky-700"
+            >
+              Cancel Edit
+            </button>
+            
+          )}
+          </div>
+
         </form>
       </div>
     </div>
