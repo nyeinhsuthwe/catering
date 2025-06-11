@@ -18,6 +18,8 @@ const Menu = () => {
 
   const { menuLists, setMenuLists } = useMenuStore();
 
+  
+  // Create a new food item
   const mutation = useApiMutation({
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["foods"] });
@@ -26,7 +28,16 @@ const Menu = () => {
       console.error("Upload failed:", error);
     },
   });
+  const createMenu = async () => {
+    const food = { name: newFoodName.trim() };
+    mutation.mutate({
+      endpoint: "/food/create",
+      method: "POST",
+      body: food,
+    });
+  };
 
+  // Fetch food lists to show in multiselect
   const { data: foodLists } = useApiQuery(
     {
       endpoint: "/food/list",
@@ -37,6 +48,7 @@ const Menu = () => {
     }
   );
 
+  // Fetch food month data to show in the table
   const { data: foodMonthCreate } = useApiQuery(
     {
       endpoint: "/foodmonth/list",
@@ -58,16 +70,9 @@ const Menu = () => {
     name: "menus",
   });
 
-  const createMenu = async () => {
-    const food = { name: newFoodName.trim() };
-    mutation.mutate({
-      endpoint: "/food/create",
-      method: "POST",
-      body: food,
-    });
-  };
+  
 
-  //edit menu price and date
+  //edit menu price and date to update
   const updateMenuMutation = useApiMutation({
     onSuccess: () => {
       toast.success("Menu updated successfully!");
@@ -75,7 +80,7 @@ const Menu = () => {
     },
   });
 
-
+  // Mutation for creating or updating menu items
   const menuListMutation = useApiMutation({
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
@@ -147,17 +152,51 @@ const Menu = () => {
     setNewFoodName("");
   };
 
-  const handleEdit = (index) => {
-    const menu = foodMonthCreate[index];
-    setEditIndex(index);
+  const updateMutation = useApiMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['foodmonthprice'] })
+      toast.success("successfully updated!");
+      
+
+    },
+    onError: (error) => {
+      console.error(
+        "Update failed:",
+        error?.response?.data?.message || error.message
+      );
+    },
+  });
+  const handleEdit = (date) => {
+  const foundIndex = (foodMonthCreate || []).findIndex((item) => item.date === date);
+  if (foundIndex !== -1) {
+    const selectedMenu = foodMonthCreate[foundIndex];
+
+    // Make sure food_items is always an array of objects
+    const foodArray = Array.isArray(selectedMenu.food_items)
+      ? selectedMenu.food_items
+      : typeof selectedMenu.food_items === "string"
+      ? selectedMenu.food_items.split(",").map((item) => ({ name: item.trim() }))
+      : [];
+
     reset({
-      menus: [{
-        food_name: [{ name: menu.food_name }],
-        created_at: menu.date,
-      }],
-      price: menu.price,
+      price: selectedMenu.price,
+      menus: [
+        {
+          food_name: foodArray,
+          created_at: selectedMenu.date,
+        },
+      ],
     });
-  };
+
+    setEditIndex(foundIndex);
+  }
+};
+
+
+  
+    
+  
+  
 
 
   const deleteMutation = useApiMutation({
@@ -218,7 +257,7 @@ const Menu = () => {
       cell: (row, index) => (
         <div className="space-x-2">
           <button
-            onClick={() => handleEdit(index)}
+            onClick={() => handleEdit(row.date)}
             className="text-blue-600 hover:underline"
           >
             Edit

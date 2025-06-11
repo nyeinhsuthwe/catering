@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApiQuery } from '../../hooks/useQuery'; // your custom hook
 import DataTable from 'react-data-table-component'; // assuming you are using react-data-table-component for the table
+import { DarkThemeToggle } from 'flowbite-react';
 const AdminDashboard = () => {
 
 
@@ -50,6 +51,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
+     
       
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
