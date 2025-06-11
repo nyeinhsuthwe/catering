@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast";
 const Record = () => {
   const { user } = userStore();
 
+
   const now = dayjs();
   const [selectedDate, setSelectedDate] = useState({
     year: now.year(),
@@ -40,11 +41,13 @@ const Record = () => {
     params: { year: selectedDate.year, month: selectedDate.month },
     queryKey: ["records", selectedDate.year, selectedDate.month],
   });
+  console.log(data);
 
   const { data: checkout } = useApiQuery({
     endpoint: "/attendance/list",
     queryKey: ["checkout", user.employeeId],
   });
+  console.log("checkout", checkout);
 
   const checkoutMutation = useApiMutation({
     onSuccess: () => {
@@ -73,13 +76,7 @@ const Record = () => {
   };
 
   const records = data ?? [];
-
-  // FILTER records by selectedDate (year & month)
-  const filteredRecords = records.filter((record) => {
-    const date = dayjs(record.date);
-    return date.year() === selectedDate.year && date.month() + 1 === selectedDate.month;
-  });
-
+  console.log(records);
   const count = 6;
   const paginatedRecord = filteredRecords.slice(
     (currentPage - 1) * count,
@@ -116,12 +113,15 @@ const Record = () => {
   }
 
   const checkedOutDates = new Set(
-    checkout
-      ?.filter(
-        (item) => item.emp_id === user.employeeId && item.check_out === true
-      )
-      .map((item) => dayjs(item.date).format("YYYY-MM-DD"))
-  );
+  checkout
+    ?.filter(
+      (item) =>
+        item.emp_id === user.employeeId &&
+        item.check_out === true
+    )
+    .map((item) => dayjs(item.date).format("YYYY-MM-DD"))
+);
+
 
   return (
     <div className="w-full h-[90dvh] overflow-y-scroll py-6 pr-11 flex flex-col items-center">
@@ -170,9 +170,7 @@ const Record = () => {
                         <button
                           className="w-8 h-8 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center bg-blue-600 rounded disabled:bg-gray-600 text-white disabled:text-gray-400 active:scale-0.95 transition-transform duration-200"
                           onClick={() => handleCheckout(record.date, record.id)}
-                          disabled={checkedOutDates.has(
-                            dayjs(record.date).format("YYYY-MM-DD")
-                          )}
+                          disabled={checkedOutDates.has(dayjs(record.date).format("YYYY-MM-DD"))}
                         >
                           <i className="fa-solid fa-check text-center flex items-center justify-center"></i>
                         </button>
