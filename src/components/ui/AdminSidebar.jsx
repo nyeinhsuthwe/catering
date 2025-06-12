@@ -75,7 +75,7 @@ const AdminSidebar = () => {
           <li>
             
             <Link
-              to="announcement"
+              to="adminAnnouncement"
               className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
             >
               <i className="fa-solid fa-bullhorn text-gray-500"></i>

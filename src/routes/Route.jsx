@@ -16,6 +16,7 @@ import AdminEditProfile from '../Pages/admin/AdminEditProfile'
 import Record from '../Pages/Employee/Record';
 import Announcement from "../Pages/Employee/Announcement";
 import { restrictLoader } from "../hooks/restrictLoader";
+import AdminAnnouncement from "../Pages/admin/AdminAnnouncement";
 
 // import Router from "./Router";
 
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
       //     path: 'addnewfood',
       //     element: <AddNewFood/>
       // },
+      {
+        path: "adminAnnouncement",
+        element: <AdminAnnouncement />,
+      }
     ],
   },
 ]);
