@@ -136,8 +136,9 @@ const Announcement = () => {
   const columns = [
     { name: "ID", selector: row => row.id, sortable: true },
     { name: "Date", selector: row => row.date, sortable: true },
-    { name: "Text", selector: row => row.text, sortable: true },
     { name: "Title", selector: row => row.title, sortable: true },
+    { name: "Text", selector: row => row.text, sortable: true },
+    
 
     {
       name: "Actions",
@@ -173,6 +174,35 @@ const Announcement = () => {
     },
   ]
 
+  //For Updating Announcement
+  const updateMutation = useApiMutation({
+    onSuccess: (data) => {
+      toast.success("Announcement updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["announcements"] });
+      setAnnouncement({ date: "", text: "", title: "" });
+      setEditIndex(null);
+    },
+    onError: (error) => {
+      toast.error("Failed to update announcement.");
+      console.error("Update failed:", error);
+    },
+  });
+
+  const updateAnnouncement = () => {
+    if (editIndex === null) return; // No edit in progress
+
+    updateMutation.mutate({
+      endpoint: `/announcement/update/${announcement.id}`, // Assuming your backend uses this pattern
+      method: "PUT", // or PATCH, depending on your API
+      body: {
+        date: announcement.date,
+        text: announcement.text,
+        title: announcement.title,
+      },
+    });
+  };
+
+
 
 
   return (
@@ -201,7 +231,7 @@ const Announcement = () => {
         </button>
       </div> */}
 
-      
+
 
 
 
@@ -252,13 +282,28 @@ const Announcement = () => {
 
           className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           onClick={() => {
-            createAnnouncement();
+            if (editIndex !== null) {
+              updateAnnouncement();
+            } else {
+              createAnnouncement();
 
+            }
           }
           }
         >
           {editIndex !== null ? 'Update' : 'Add'}
         </button>
+
+        <button
+          className="mt-2 ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={() => {
+            setAnnouncement({ date: "", text: "", title: "" });
+            setEditIndex(null);
+          }}
+        >
+          Cancel
+        </button>
+
 
 
       </div>

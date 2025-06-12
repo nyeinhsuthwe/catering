@@ -18,7 +18,7 @@ const Menu = () => {
 
   const { menuLists, setMenuLists } = useMenuStore();
 
-  
+
   // Create a new food item
   const mutation = useApiMutation({
     onSuccess: (data) => {
@@ -70,7 +70,7 @@ const Menu = () => {
     name: "menus",
   });
 
-  
+
 
   //edit menu price and date to update
   const updateMenuMutation = useApiMutation({
@@ -97,14 +97,16 @@ const Menu = () => {
 
 
   const onSubmit = (data) => {
+    toast.loading("Updating Menu");
     if (!data.price || !data.menus || data.menus.length === 0) {
+      toast.dismiss();
       alert("Please fill all fields.");
       return;
     }
 
     const newMenus = data.menus.flatMap((menu) =>
       menu.food_name.map((food) => ({
-        food_name: food.name,
+        food_name: typeof food === "string" ? food : food.name,
         price: data.price,
         date: menu.created_at,
       }))
@@ -119,8 +121,23 @@ const Menu = () => {
         body: {
           items: newMenus,
           price: data.price,
+
         },
-      });
+      },
+        {
+          onSuccess: () => {
+            toast.dismiss(); // Remove loading toast
+            toast.success("Menu updated successfully!");
+            queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
+          },
+          onError: (error) => {
+            toast.dismiss();
+            toast.error(
+              error?.response?.data?.message || "Update failed. Please try again."
+            );
+          },
+        },
+      );
       console.log("Updating with:", newMenus);
 
     } else {
@@ -132,7 +149,21 @@ const Menu = () => {
           items: newMenus,
           price: data.price,
         },
-      });
+      },
+        {
+          onSuccess: () => {
+            toast.dismiss();
+            toast.success("Menu created successfully!");
+            queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
+          },
+          onError: (error) => {
+            toast.dismiss();
+            toast.error(
+              error?.response?.data?.message || "Creation failed. Please try again."
+            );
+          },
+        },
+      );
     }
   };
 
@@ -156,7 +187,7 @@ const Menu = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['foodmonthprice'] })
       toast.success("successfully updated!");
-      
+
 
     },
     onError: (error) => {
@@ -166,37 +197,33 @@ const Menu = () => {
       );
     },
   });
-  const handleEdit = (date) => {
-  const foundIndex = (foodMonthCreate || []).findIndex((item) => item.date === date);
-  if (foundIndex !== -1) {
-    const selectedMenu = foodMonthCreate[foundIndex];
-
-    // Make sure food_items is always an array of objects
+  const handleEdit = (selectedMenu) => {
     const foodArray = Array.isArray(selectedMenu.food_items)
-      ? selectedMenu.food_items
+      ? selectedMenu.food_items.map((item) =>
+        typeof item === "string" ? { name: item } : item
+      )
       : typeof selectedMenu.food_items === "string"
-      ? selectedMenu.food_items.split(",").map((item) => ({ name: item.trim() }))
-      : [];
+        ? selectedMenu.food_items.split(",").map((item) => ({ name: item.trim() }))
+        : [];
 
     reset({
       price: selectedMenu.price,
       menus: [
         {
-          food_name: foodArray,
+          food_name: foodArray, // <-- this must match what MultiSelect expects
           created_at: selectedMenu.date,
         },
       ],
     });
 
-    setEditIndex(foundIndex);
-  }
-};
+    setEditingId(selectedMenu.id);
+  };
 
 
-  
-    
-  
-  
+
+
+
+
 
 
   const deleteMutation = useApiMutation({
@@ -395,20 +422,22 @@ const Menu = () => {
                     Select Food Menu
                   </label>
                   <Controller
-                    name={`menus.${index}.food_name`}
                     control={control}
-                    rules={{ required: "Please select at least one food item" }}
+                    name={`menus.${index}.food_name`}
                     render={({ field }) => (
                       <MultiSelect
-                        {...field}
-                        value={field.value || []}
+                        value={field.value}
                         options={foodLists}
+                        onChange={(e) => field.onChange(e.value)}
                         optionLabel="name"
-                        placeholder="Select food items"
-                        className="w-full"
+                        placeholder="Select Food"
+                        className="w-full md:w-20rem"
+                        display="chip"
                       />
                     )}
                   />
+
+
                 </div>
 
                 <div>
@@ -459,7 +488,7 @@ const Menu = () => {
               {editIndex !== null ? "Update Menu" : "Add Menu"}
             </button>
           </div>
-          <div className="mb-2">
+
           {editIndex !== null && (
             <button
               type="button"
@@ -467,13 +496,13 @@ const Menu = () => {
                 reset();
                 setEditIndex(null);
               }}
-              className="mt-2 bg-sky-600 text-white px-3 py-2 rounded hover:bg-sky-700"
+              className="mt-2 ml-2 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700"
             >
               Cancel Edit
             </button>
-            
+
           )}
-          </div>
+
 
         </form>
       </div>
