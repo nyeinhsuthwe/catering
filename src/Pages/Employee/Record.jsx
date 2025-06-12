@@ -21,6 +21,7 @@ import { toast } from "react-hot-toast";
 const Record = () => {
   const { user } = userStore();
 
+
   const now = dayjs();
   const [selectedDate, setSelectedDate] = useState({
     year: now.year(),
@@ -40,11 +41,13 @@ const Record = () => {
     params: { year: selectedDate.year, month: selectedDate.month },
     queryKey: ["records", selectedDate.year, selectedDate.month],
   });
+  console.log(data);
 
   const { data: checkout } = useApiQuery({
     endpoint: "/attendance/list",
     queryKey: ["checkout", user.employeeId],
   });
+  console.log("checkout", checkout);
 
   const checkoutMutation = useApiMutation({
     onSuccess: () => {
@@ -73,38 +76,26 @@ const Record = () => {
   };
 
   const records = data ?? [];
-
-  // FILTER records by selectedDate (year & month)
-  const filteredRecords = records.filter((record) => {
-    const date = dayjs(record.date);
-    return date.year() === selectedDate.year && date.month() + 1 === selectedDate.month;
-  });
-
+  console.log(records);
   const count = 6;
-  const paginatedRecord = filteredRecords.slice(
+  const paginatedRecord = records.slice(
     (currentPage - 1) * count,
     currentPage * count
   );
-  const totalPages = Math.ceil(filteredRecords.length / count);
-
-  const totalAmount = filteredRecords.reduce((sum, record) => {
+  const totalPages = Math.ceil(records.length / count);
+  const totalAmount = records.reduce((sum, record) => {
     const price = parseFloat(record.food_month_prices_by_date[0]?.price || 0);
     return sum + price;
   }, 0);
-
   const handlePrevious = () => {
-    const newDate = dayjs(`${selectedDate.year}-${selectedDate.month}-01`).subtract(1, "month");
+    const newDate = dayjs(
+      `${selectedDate.year}-${selectedDate.month}-01`
+    ).subtract(1, "month");
     setSelectedDate({ year: newDate.year(), month: newDate.month() + 1 });
   };
 
   const handleCurrent = () => {
-    const current = dayjs();
-    setSelectedDate({ year: current.year(), month: current.month() + 1 });
-  };
-
-  const handleUpcoming = () => {
-    const next = dayjs().add(1, "month");
-    setSelectedDate({ year: next.year(), month: next.month() + 1 });
+    setSelectedDate({ year: now.year(), month: now.month() + 1 });
   };
 
   if (isLoading) {
@@ -116,25 +107,25 @@ const Record = () => {
   }
 
   const checkedOutDates = new Set(
-    checkout
-      ?.filter(
-        (item) => item.emp_id === user.employeeId && item.check_out === true
-      )
-      .map((item) => dayjs(item.date).format("YYYY-MM-DD"))
-  );
+  checkout
+    ?.filter(
+      (item) =>
+        item.emp_id === user.employeeId &&
+        item.check_out === true
+    )
+    .map((item) => dayjs(item.date).format("YYYY-MM-DD"))
+);
+
 
   return (
-    <div className="w-full h-[90dvh] overflow-y-scroll py-6 pr-11 flex flex-col items-center">
-      <div className="grid gap-4 mx-auto w-full pl-3 h-full">
+    <div className="w-full h-[100vh] overflow-y-scroll py-6 pr-11 flex flex-col items-center">
+      <div className="grid gap-4 mx-auto w-full pl-3">
         <div className="flex gap-4 justify-start items-center mb-4">
           <Button color="gray" onClick={handlePrevious}>
             Previous
           </Button>
           <Button color="gray" onClick={handleCurrent}>
             Current
-          </Button>
-          <Button color="gray" onClick={handleUpcoming}>
-            Upcoming
           </Button>
           <span className="text-sm text-gray-600">
             Showing:{" "}
@@ -154,10 +145,12 @@ const Record = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredRecords.length > 0 ? (
+            {records.length > 0 ? (
               paginatedRecord.map((record) => (
                 <TableRow key={record.id} className="hover:bg-gray-50">
-                  <TableCell>{dayjs(record.date).format("DD/MM/YYYY")}</TableCell>
+                  <TableCell>
+                    {dayjs(record.date).format("DD/MM/YYYY")}
+                  </TableCell>
                   <TableCell>
                     {record.food_month_prices_by_date[0]?.food_name || "NA"}
                   </TableCell>
@@ -170,9 +163,7 @@ const Record = () => {
                         <button
                           className="w-8 h-8 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center bg-blue-600 rounded disabled:bg-gray-600 text-white disabled:text-gray-400 active:scale-0.95 transition-transform duration-200"
                           onClick={() => handleCheckout(record.date, record.id)}
-                          disabled={checkedOutDates.has(
-                            dayjs(record.date).format("YYYY-MM-DD")
-                          )}
+                          disabled={checkedOutDates.has(dayjs(record.date).format("YYYY-MM-DD"))}
                         >
                           <i className="fa-solid fa-check text-center flex items-center justify-center"></i>
                         </button>
@@ -194,11 +185,10 @@ const Record = () => {
             )}
           </TableBody>
         </Table>
-
         <div className="flex justify-center items-center mt-4">
           <Card className="bg-gray-100 text-center max-w-md w-full">
             <p className="font-normal text-gray-700 dark:text-gray-400">
-              Total Days - {filteredRecords.length} Days
+              Total Days - {records.length} Days
             </p>
             <p className="font-normal text-gray-700 dark:text-gray-400">
               Total Amount - {totalAmount.toLocaleString()} ks
