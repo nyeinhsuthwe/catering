@@ -8,7 +8,7 @@ const Profile = () => {
   const [imagePreview, setImagePreview] = useState(
     "https://tse2.mm.bing.net/th?id=OIP.PoS7waY4-VeqgNuBSxVUogAAAA&pid=Api&P=0&h=220"
   );
-console.log("user:",user);
+
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
@@ -57,20 +57,6 @@ console.log("user:",user);
             <Label htmlFor="role">Your Role</Label>
           </div>
           <TextInput id="role" type="text" value={`${user.role}`} disabled />
-        </div>
-
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="name">Your Name</Label>
-          </div>
-          <TextInput id="name" type="text" value={`${user.name}`} disabled />
-        </div>
-
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="email">Your Email</Label>
-          </div>
-          <TextInput id="email" type="text" value={`${user.email}`} disabled />
         </div>
       </form>
     </Card>

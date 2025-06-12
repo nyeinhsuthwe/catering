@@ -8,7 +8,7 @@ const Announcement = () => {
   const onPageChange = (page) => setCurrentPage(page);
 
   const { announcements, setAnnouncements } = announcementStore();
-  console.log("announcements", announcements);
+
   const { data } = useApiQuery({
     endpoint: "/announcement/list",
     queryKey: ["announcements"],
@@ -21,8 +21,7 @@ const Announcement = () => {
   }, [data, setAnnouncements]);
 
   const sortedAnnouncements = [...announcements].sort(
-    (a, b) =>
-      new Date(b.created_at || b.date) - new Date(a.created_at || a.date)
+    (a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date)
   );
 
   const count = 4;
@@ -32,21 +31,6 @@ const Announcement = () => {
     currentPage * count
   );
 
-  const formatDateTime = (datetime) => {
-    const date = new Date(datetime);
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-    return `${formattedDate} at ${formattedTime}`;
-  };
-
   return (
     <div className="h-[90vh] w-full overflow-y-scroll py-6 pr-11 flex flex-col items-center">
       {sortedAnnouncements.length > 0 ? (
@@ -54,9 +38,6 @@ const Announcement = () => {
           <Card key={announcement.id} className="max-w-lg mt-10 w-full">
             <p className="font-normal text-gray-700 dark:text-gray-400">
               {announcement.text}
-            </p>
-            <p className="text-xs text-gray-500 justify-items-end">
-              {formatDateTime(announcement.created_at)}
             </p>
           </Card>
         ))

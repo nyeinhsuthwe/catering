@@ -73,7 +73,7 @@ const History = () => {
   });
 
   return (
-    <div className="h-full">
+    <div className="">
       <div className="h-[90vh] grid gap-4 mx-auto w-full pl-3">
         <Table striped>
           <TableHead className="text-gray-600">
