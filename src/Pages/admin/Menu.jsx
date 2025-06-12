@@ -6,25 +6,38 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import useMenuStore from "../../store/menuStore";
 import { Controller, useForm, useFieldArray } from "react-hook-form";
+import toast from "react-hot-toast";
+import DataTable from "react-data-table-component"; //added for table
 
 const Menu = () => {
   const [menus, setMenus] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [newFoodName, setNewFoodName] = useState("");
+  const [searchText, setSearchText] = useState(""); //Added searchText state
   const queryClient = useQueryClient();
 
   const { menuLists, setMenuLists } = useMenuStore();
 
+
+  // Create a new food item
   const mutation = useApiMutation({
     onSuccess: (data) => {
-      console.log("successful:", data);
       queryClient.invalidateQueries({ queryKey: ["foods"] });
     },
     onError: (error) => {
       console.error("Upload failed:", error);
     },
   });
+  const createMenu = async () => {
+    const food = { name: newFoodName.trim() };
+    mutation.mutate({
+      endpoint: "/food/create",
+      method: "POST",
+      body: food,
+    });
+  };
 
+  // Fetch food lists to show in multiselect
   const { data: foodLists } = useApiQuery(
     {
       endpoint: "/food/list",
@@ -35,6 +48,7 @@ const Menu = () => {
     }
   );
 
+  // Fetch food month data to show in the table
   const { data: foodMonthCreate } = useApiQuery(
     {
       endpoint: "/foodmonth/list",
@@ -45,31 +59,30 @@ const Menu = () => {
     }
   );
 
-  const { register, handleSubmit, control, reset } = useForm(
-    {
-      defaultValues: {
-        menus: [{ food_name: [], created_at: "" }]
-      }
-    }
-  );
+  const { register, handleSubmit, control, reset } = useForm({
+    defaultValues: {
+      menus: [{ food_name: [], created_at: "" }],
+    },
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "menus"
+    name: "menus",
   });
 
-  const createMenu = async () => {
-    const food = { name: newFoodName.trim() };
-    mutation.mutate({
-      endpoint: "/food/create",
-      method: "POST",
-      body: food,
-    });
-  };
 
+
+  //edit menu price and date to update
+  const updateMenuMutation = useApiMutation({
+    onSuccess: () => {
+      toast.success("Menu updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
+    },
+  });
+
+  // Mutation for creating or updating menu items
   const menuListMutation = useApiMutation({
     onSuccess: (data) => {
-      console.log("successful:", data);
       queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
     },
     onError: (error) => {
@@ -79,52 +92,81 @@ const Menu = () => {
 
 
 
+
+
+
+
   const onSubmit = (data) => {
+    toast.loading("Updating Menu");
     if (!data.price || !data.menus || data.menus.length === 0) {
-      alert("Please select at least one menu, price, and date.");
+      toast.dismiss();
+      alert("Please fill all fields.");
       return;
     }
 
-    // Validate each menu block
-    for (const menu of data.menus) {
-      if (!menu.food_name || menu.food_name.length === 0 || !menu.created_at) {
-        alert("Please select food(s) and date for each menu.");
-        return;
-      }
-    }
-
-    // Transform data for the backend
     const newMenus = data.menus.flatMap((menu) =>
       menu.food_name.map((food) => ({
-        food_name: food.name,
+        food_name: typeof food === "string" ? food : food.name,
         price: data.price,
         date: menu.created_at,
       }))
     );
 
-    console.log("Sending menus:", newMenus);
-
-    menuListMutation.mutate({
-      endpoint: "/foodmonth/create",
-      method: "POST",
-      body: { items: newMenus, price: data.price },
-    });
-
-    let updatedMenus = [...menus];
     if (editIndex !== null) {
-      updatedMenus[editIndex] = {
-        name: newMenus[0].food_name,
-        price: newMenus[0].price,
-        month: newMenus[0].date,
-      };
-      setEditIndex(null);
-    } else {
-      updatedMenus = [...menus, ...newMenus];
-    }
+      const menuToEdit = foodMonthCreate[editIndex];
 
-    setMenus(updatedMenus);
-    reset();
+      updateMenuMutation.mutate({
+        endpoint: `/foodmonth/update/${menuToEdit.date}`, // Or ID if preferred
+        method: "PUT", // or PATCH
+        body: {
+          items: newMenus,
+          price: data.price,
+
+        },
+      },
+        {
+          onSuccess: () => {
+            toast.dismiss(); // Remove loading toast
+            toast.success("Menu updated successfully!");
+            queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
+          },
+          onError: (error) => {
+            toast.dismiss();
+            toast.error(
+              error?.response?.data?.message || "Update failed. Please try again."
+            );
+          },
+        },
+      );
+      console.log("Updating with:", newMenus);
+
+    } else {
+      // If not editing, use your existing create mutation
+      menuListMutation.mutate({
+        endpoint: "/foodmonth/create",
+        method: "POST",
+        body: {
+          items: newMenus,
+          price: data.price,
+        },
+      },
+        {
+          onSuccess: () => {
+            toast.dismiss();
+            toast.success("Menu created successfully!");
+            queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
+          },
+          onError: (error) => {
+            toast.dismiss();
+            toast.error(
+              error?.response?.data?.message || "Creation failed. Please try again."
+            );
+          },
+        },
+      );
+    }
   };
+
 
 
   const handleAddFood = () => {
@@ -141,62 +183,146 @@ const Menu = () => {
     setNewFoodName("");
   };
 
-  const handleEdit = (index) => {
-    const menu = foodMonthCreate[index];
-    setEditIndex(index);
+  const updateMutation = useApiMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['foodmonthprice'] })
+      toast.success("successfully updated!");
+
+
+    },
+    onError: (error) => {
+      console.error(
+        "Update failed:",
+        error?.response?.data?.message || error.message
+      );
+    },
+  });
+  const handleEdit = (selectedMenu) => {
+    const foodArray = Array.isArray(selectedMenu.food_items)
+      ? selectedMenu.food_items.map((item) =>
+        typeof item === "string" ? { name: item } : item
+      )
+      : typeof selectedMenu.food_items === "string"
+        ? selectedMenu.food_items.split(",").map((item) => ({ name: item.trim() }))
+        : [];
+
     reset({
-      food_name: [{ name: menu.name }],
-      price: menu.price,
-      created_at: menu.date,
+      price: selectedMenu.price,
+      menus: [
+        {
+          food_name: foodArray, // <-- this must match what MultiSelect expects
+          created_at: selectedMenu.date,
+        },
+      ],
     });
-  };
 
-  const handleDelete = (index) => {
-    if (window.confirm("Are you sure you want to delete this menu?")) {
-      const updatedMenus = [...menus];
-      updatedMenus.splice(index, 1);
-      setMenus(updatedMenus);
-    }
+    setEditingId(selectedMenu.id);
   };
 
 
-  const [showToast, setShowToast] = useState(false);
-  
+
+
+
+
+
+
+  const deleteMutation = useApiMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['foodmonthprice'] })
+      toast.success("successfully deleted!");
+
+    },
+    onError: (error) => {
+      console.error(
+        "Delete failed:",
+        error?.response?.data?.message || error.message
+      );
+    },
+  });
+
+
+  const handleDelete = (date) => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (!confirmed) return;
+    deleteMutation.mutate({
+      endpoint: `foodmonth/destroy/${date}`,
+      method: "DELETE",
+    });
+
+    console.log(`Deleting MenuList at: foodmonth/destroy/${date}`);
+
+  };
+
+  // Filter the data based on searchText
+  const filteredData = (foodMonthCreate || []).filter((item) =>
+    item.food_name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const columns = [
+    {
+      name: "No.",
+      selector: (row, index) => index + 1,
+      width: "70px",
+    },
+    {
+      name: "Menu Name",
+      selector: (row) => row.food_name,
+      sortable: true,
+    },
+    {
+      name: "Price (MMK)",
+      selector: (row) => parseFloat(row.price).toFixed(2),
+      sortable: true,
+
+    },
+    {
+      name: "Month",
+      selector: (row) => row.date,
+    },
+    {
+      name: "Actions",
+      cell: (row, index) => (
+        <div className="space-x-2">
+          <button
+            onClick={() => handleEdit(row.date)}
+            className="text-blue-600 hover:underline"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDelete(row.date)}
+            className="text-red-600 hover:underline"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <div className="flex justify-end mb-4">
         <Popover
-          aria-labelledby="profile-popover"
           content={
             <div className="w-64 p-3">
-              <div className="mb-2  items-center justify-between">
-                <input
-                  type="text"
-                  placeholder="Enter food name"
-                  className="p-2 border border-gray-300 rounded w-full mb-4"
-                  value={newFoodName}
-                  onChange={(e) => setNewFoodName(e.target.value)}
-                />
-                <button
-                  className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
-                  onClick={() => {
-                    createMenu();
-                    handleAddFood();
-
-                    // Show toast
-                    setShowToast(true);
-
-                    // Hide toast after 3 seconds
-                    setTimeout(() => setShowToast(false), 3000);
-
-
-
-                  }}
-                >
-                  Create
-                </button>
-              </div>
+              <input
+                type="text"
+                placeholder="Enter food name"
+                className="p-2 border border-gray-300 rounded w-full mb-4"
+                value={newFoodName}
+                onChange={(e) => setNewFoodName(e.target.value)}
+              />
+              <button
+                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
+                onClick={() => {
+                  createMenu();
+                  handleAddFood();
+                  toast.success("Food item created successfully!");
+                }}
+              >
+                Create
+              </button>
             </div>
           }
         >
@@ -210,114 +336,110 @@ const Menu = () => {
         Admin Menu Management
       </h2>
 
-      <div className="overflow-x-auto mb-8">
-        <table className="min-w-full text-sm">
-          <thead className="bg-sky-100 text-left">
-            <tr>
-              <th className="px-4 py-2">No.</th>
-              <th className="px-4 py-2">Menu Name</th>
-              <th className="px-4 py-2">Price (MMK)</th>
-              <th className="px-4 py-2">Month</th>
-              <th className="px-4 py-2 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {menus.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="text-center py-4 text-gray-500">
-                  No menus added yet
-                </td>
-              </tr>
-            ) : (
-              foodMonthCreate?.map((menu, index) => (
-                <tr key={index} className="hover:bg-gray-50 transition">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">{menu.food_name}</td>
-                  <td className="px-4 py-2">
-                    {parseFloat(menu.price).toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">{menu.date}</td>
-                  <td className="px-4 py-2 text-center">
-                    <button
-                      onClick={() => handleEdit(index)}
-                      className="text-blue-600 mr-2 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(index)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      {/* Added Search Bar here */}
+      <div className="p-6 bg-white rounded-lg shadow-md mb-6">
+        <div className="mb-4">
+          <div class="flex items-center mb-4">
+            <div class="relative">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+              </div>
+              <input type="search"
+                id="default-search"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                class="block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search orders..." required />
+            </div>
+          </div>
+
+          <DataTable
+            title="Menu Lists"
+            columns={columns}
+            data={filteredData}
+            pagination
+            highlightOnHover
+            striped
+            responsive
+            noDataComponent="No menu items found"
+            customStyles={{
+              headCells: {
+                style: {
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                  backgroundColor: "#f3f4f6",
+                },
+              },
+              cells: {
+                style: {
+                  paddingLeft: "8px",
+                  paddingRight: "8px",
+                },
+              },
+            }}
+
+
+          />
+        </div>
       </div>
+
 
       <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
         <h3 className="text-lg font-semibold mb-4">
           {editIndex !== null ? "Edit Menu" : "Add New Menu"}
         </h3>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 w-full mb-6">
             <div className="mb-6">
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="price"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Enter Price
               </label>
-              <Controller
-                name="price"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    type="number"
-                    id="price"
-                    placeholder="Enter price"
-                    className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full"
-                    required
-                    min={0}
-                    step={100}
-                  />
-                )}
+              {/* Changed price input to simple text input using register */}
+              <input
+                {...register("price", { required: "Price is required" })}
+                type="text"
+                id="price"
+                placeholder="Enter price"
+                className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full"
               />
             </div>
-
           </div>
-
 
           <div className="bg-gray-100 rounded-xl shadow-md p-6 border border-gray-100 w-full mb-6">
             {fields.map((item, index) => (
-              <div key={item.id} className="grid md:grid-cols-2 gap-6 mb-6 bg-white p-4 rounded-xl shadow-md border border-gray-200">
-
-                {/* Food Menu */}
+              <div
+                key={item.id}
+                className="grid md:grid-cols-2 gap-6 mb-6 bg-white p-4 rounded-xl shadow-md border border-gray-200"
+              >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Food Menu
                   </label>
                   <Controller
-                    name={`menus.${index}.food_name`}
                     control={control}
-                    rules={{ required: "Please select at least one food item" }}
+                    name={`menus.${index}.food_name`}
                     render={({ field }) => (
                       <MultiSelect
-                        {...field}
-                        value={field.value || []}
+                        value={field.value}
                         options={foodLists}
+                        onChange={(e) => field.onChange(e.value)}
                         optionLabel="name"
-                        placeholder="Select food items"
-                        className="w-full"
+                        placeholder="Select Food"
+                        className="w-full md:w-20rem"
+                        display="chip"
                       />
                     )}
                   />
+
+
                 </div>
 
-                {/* Date */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Select Date
@@ -337,7 +459,6 @@ const Menu = () => {
                   />
                 </div>
 
-                {/* Remove Button */}
                 <div className="col-span-2 text-right">
                   <button
                     type="button"
@@ -359,22 +480,31 @@ const Menu = () => {
             </button>
           </div>
 
-
-
-
-          <div className="md:col-span-3" >
-
-
+          <div>
             <button
               type="submit"
-              className="mt-2 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 "
+              className="mt-2 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
             >
               {editIndex !== null ? "Update Menu" : "Add Menu"}
             </button>
           </div>
+
+          {editIndex !== null && (
+            <button
+              type="button"
+              onClick={() => {
+                reset();
+                setEditIndex(null);
+              }}
+              className="mt-2 ml-2 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700"
+            >
+              Cancel Edit
+            </button>
+
+          )}
+
+
         </form>
-
-
       </div>
     </div>
   );

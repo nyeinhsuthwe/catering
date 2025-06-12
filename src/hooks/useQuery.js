@@ -5,9 +5,13 @@ export const useApiQuery = ({ endpoint, params, queryKey }, options) => {
   return useQuery({
     queryKey: queryKey ?? [endpoint, params],
     queryFn: async () => {
-      const res = await api.get(endpoint, { params });
-      return res.data.data;
-    },
+  const res = await api.get(endpoint, { params });
+  const responseData = res.data;
+
+  // Fallback if res.data.data doesn't exist
+  return responseData?.data ?? responseData;
+},
+
     ...options,
   });
 };

@@ -6,6 +6,7 @@ import { useApiMutation } from "../../hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import Cookies from "js-cookie";
+import Datatable from "react-data-table-component"
 
 const userRole = Cookies.get("role") || "Employee"; // get user role from cookie, default Employee
 const Customer = () => {
@@ -15,6 +16,34 @@ const Customer = () => {
   const [fileBase64, setFileBase64] = useState(null);
 
   const queryClient = useQueryClient();
+
+  const columns = [
+    {
+      name: "No",
+      selector: (row, index) => index + 1,
+      sortable: true,
+    },
+    {
+      name: "ID",
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: "Name",
+      selector: (row) => row.name,
+      sortable: true,
+    },
+    {
+      name: "Email",
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: "Role",
+      selector: (row) => row.role,
+      sortable: true,
+    }
+  ]
 
   const mutation = useApiMutation({
     onSuccess: (data) => {
@@ -199,38 +228,34 @@ const Customer = () => {
       {isLoading && <p className="text-gray-500">Loading employees...</p>}
       {error && <p className="text-red-500">Error loading employees.</p>}
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm">
-          <thead className="bg-sky-100 text-left">
-            <tr>
-              <th className="px-4 py-2">No</th>
-              <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCustomers.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="text-center py-4 text-gray-500">
-                  No employees found
-                </td>
-              </tr>
-            ) : (
-              filteredCustomers.map((customer, index) => (
-                <tr key={customer.id} className="hover:bg-gray-50 transition">
-                  <td className="px-4 py-2">{index + 1}</td>
-                  <td className="px-4 py-2">{customer.id}</td>
-                  <td className="px-4 py-2">{customer.name}</td>
-                  <td className="px-4 py-2">{customer.email}</td>
-                  <td className="px-4 py-2">{customer.role}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      <Datatable
+        title="Registered Employees"
+        columns={columns}
+        data={filteredCustomers}
+        pagination
+        paginationPerPage={10}
+        highlightOnHover
+        striped
+        noDataComponent="No employees found"
+        progressPending={isLoading}
+        progressComponent={<div className="text-center">Loading...</div>}
+        noHeader
+        customStyles={{
+          headCells: {
+            style: {
+              fontSize: "16px",
+              fontWeight: "bold",
+              backgroundColor: "#f3f4f6",
+            },
+          },
+          cells: {
+            style: {
+              paddingLeft: "8px",
+              paddingRight: "8px",
+            },
+          },
+        }}
+      />
     </div>
   );
 };
