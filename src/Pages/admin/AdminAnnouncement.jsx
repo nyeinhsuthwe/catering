@@ -137,8 +137,8 @@ const AdminAnnouncement = () => {
     { name: "ID", selector: row => row.id, sortable: true },
     { name: "Date", selector: row => row.date, sortable: true },
     { name: "Title", selector: row => row.title, sortable: true },
-    { name: "Text", selector: row => row.text, sortable: true },
-    
+    { name: "Description", selector: row => row.text, sortable: true },
+
 
     {
       name: "Actions",
@@ -156,7 +156,8 @@ const AdminAnnouncement = () => {
               setEditIndex(index);
             }}
           >
-            Edit
+            <i class="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
+
           </button>
           <button
             className="text-red-600 hover:text-red-800"
@@ -167,7 +168,8 @@ const AdminAnnouncement = () => {
               console.log("Delete announcement:", row.id);
             }}
           >
-            Delete
+            <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-2"></i>
+
           </button>
         </div>
       ),

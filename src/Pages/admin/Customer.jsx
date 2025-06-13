@@ -8,7 +8,7 @@ import { useApiQuery } from "../../hooks/useQuery";
 import Cookies from "js-cookie";
 import Datatable from "react-data-table-component"
 
-const userRole = Cookies.get("role") || "Employee"; // get user role from cookie, default Employee
+//const userRole = Cookies.get("role") || "Employee"; // get user role from cookie, default Employee
 const Customer = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -24,8 +24,8 @@ const Customer = () => {
       sortable: true,
     },
     {
-      name: "ID",
-      selector: (row) => row.id,
+      name: "Emp ID",
+      selector: (row) => row.emp_id,
       sortable: true,
     },
     {
@@ -42,8 +42,50 @@ const Customer = () => {
       name: "Role",
       selector: (row) => row.role,
       sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <div className="flex gap-2">
+          <button
+            className="text-red-600 hover:text-red-800"
+            onClick={() => {
+              handleDelete(row.emp_id);
+
+
+              console.log("Delete employee:", row.id);
+            }}
+          ><i className="fa-solid fa-trash text-red-500 cursor-pointer ml-3"></i> </button>
+        </div>
+      ),
     }
   ]
+
+  const deleteMutation = useApiMutation({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['employees'] })
+        toast.success("successfully deleted!");
+  
+      },
+      onError: (error) => {
+        console.error(
+          "Delete failed:",
+          error?.response?.data?.message || error.message
+        );
+      },
+    });
+    //Delete employee record
+    const handleDelete = (emp_id) => {
+      const confirmed = window.confirm("Are you sure you want to delete?");
+      if (!confirmed) return;
+      deleteMutation.mutate({
+        endpoint: `employees/destroy/${emp_id}`,
+        method: "DELETE",
+      });
+  
+      console.log(`Deleting Employee Data at: employees/destroy/${emp_id}`);
+  
+    };
 
   const mutation = useApiMutation({
     onSuccess: (data) => {
@@ -54,6 +96,18 @@ const Customer = () => {
       console.error("Upload failed:", error);
     },
   });
+
+  const onSubmit = (data) => {
+    mutation.mutate({
+      endpoint: "/employees/import",
+      method: "POST",
+      body: {
+        filename: "employee file",
+        file_base64: fileBase64,
+      },
+    });
+  };
+
 
   const {
     data: employeeData,
@@ -68,51 +122,53 @@ const Customer = () => {
       refetchOnWindowFocus: false,
     }
   );
+  console.log("Employee data:", employeeData);
 
-  const availableRoles = [userRole];
-  const allMonths = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
-  // Calculate available months based on userRole and employeeData
-  const availableMonths = React.useMemo(() => {
-    if (userRole === "admin") {
-      return allMonths;
-    }
-    if (employeeData && Array.isArray(employeeData)) {
-      const monthsSet = new Set(
-        employeeData
-          .filter((emp) => emp.role === userRole)
-          .map((emp) => emp.month)
-          .filter(Boolean)
-      );
-      return Array.from(monthsSet);
-    }
-    return [];
-  }, [userRole, employeeData]);
-  //
-  const filteredCustomers = Array.isArray(employeeData)
-    ? employeeData.filter((customer) => {
-        // restrict to current user's role only
-        if (customer.role !== userRole) return false;
+  // const availableRoles = [userRole];
+  // const allMonths = [
+  //   "January",
+  //   "February",
+  //   "March",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  //   "August",
+  //   "September",
+  //   "October",
+  //   "November",
+  //   "December",
+  // ];
 
-        if (selectedMonth && customer.month !== selectedMonth) return false;
-        if (selectedRole && customer.role !== selectedRole) return false;
+  // // Calculate available months based on userRole and employeeData
+  // const availableMonths = React.useMemo(() => {
+  //   if (userRole === "admin") {
+  //     return allMonths;
+  //   }
+  //   if (employeeData && Array.isArray(employeeData)) {
+  //     const monthsSet = new Set(
+  //       employeeData
+  //         .filter((emp) => emp.role === userRole)
+  //         .map((emp) => emp.month)
+  //         .filter(Boolean)
+  //     );
+  //     return Array.from(monthsSet);
+  //   }
+  //   return [];
+  // }, [userRole, employeeData]);
+  // //
+  // const filteredCustomers = Array.isArray(employeeData)
+  //   ? employeeData.filter((customer) => {
+  //       // restrict to current user's role only
+  //       if (customer.role !== userRole) return false;
 
-        return true;
-      })
-    : [];
+  //       if (selectedMonth && customer.month !== selectedMonth) return false;
+  //       if (selectedRole && customer.role !== selectedRole) return false;
+
+  //       return true;
+  //     })
+  //   : [];
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -127,17 +183,7 @@ const Customer = () => {
     reader.readAsDataURL(file);
   };
 
-  const onSubmit = (data) => {
-    mutation.mutate({
-      endpoint: "/employees/import",
-      method: "POST",
-      body: {
-        filename: "employee file",
-        file_base64: fileBase64,
-      },
-    });
-  };
-
+  
   const handleExportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredCustomers);
     const workbook = XLSX.utils.book_new();
@@ -184,7 +230,7 @@ const Customer = () => {
       </h2>
 
       <div className="flex gap-4 flex-wrap">
-        <div className="mb-4 w-full md:w-1/3">
+        {/* <div className="mb-4 w-full md:w-1/3">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Filter by Month
           </label>
@@ -205,9 +251,9 @@ const Customer = () => {
               <option disabled>No months available</option>
             )}
           </select>
-        </div>
+        </div> */}
 
-        <div className="mb-4 w-full md:w-1/3">
+        {/* <div className="mb-4 w-full md:w-1/3">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Filter by Role
           </label>
@@ -222,7 +268,7 @@ const Customer = () => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
       </div>
 
       {isLoading && <p className="text-gray-500">Loading employees...</p>}
@@ -231,30 +277,13 @@ const Customer = () => {
       <Datatable
         title="Registered Employees"
         columns={columns}
-        data={filteredCustomers}
+        data={employeeData || []}
         pagination
         paginationPerPage={10}
         highlightOnHover
-        striped
-        noDataComponent="No employees found"
-        progressPending={isLoading}
-        progressComponent={<div className="text-center">Loading...</div>}
-        noHeader
-        customStyles={{
-          headCells: {
-            style: {
-              fontSize: "16px",
-              fontWeight: "bold",
-              backgroundColor: "#f3f4f6",
-            },
-          },
-          cells: {
-            style: {
-              paddingLeft: "8px",
-              paddingRight: "8px",
-            },
-          },
-        }}
+        paginationRowsPerPageOptions={[10, 15, 20, 25]}
+        
+        
       />
     </div>
   );

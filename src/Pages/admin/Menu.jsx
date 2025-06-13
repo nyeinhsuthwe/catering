@@ -285,15 +285,18 @@ const Menu = () => {
         <div className="space-x-2">
           <button
             onClick={() => handleEdit(row.date)}
-            className="text-blue-600 hover:underline"
+            className=" hover:text-blue-800"
           >
-            Edit
+
+
+
+            <i class="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
           </button>
           <button
             onClick={() => handleDelete(row.date)}
-            className="text-red-600 hover:underline"
+            className=""
           >
-            Delete
+            <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-2"></i>
           </button>
         </div>
       ),
@@ -487,9 +490,9 @@ const Menu = () => {
             >
               {editIndex !== null ? "Update Menu" : "Add Menu"}
             </button>
-          </div>
 
-          {editIndex !== null && (
+
+
             <button
               type="button"
               onClick={() => {
@@ -501,8 +504,8 @@ const Menu = () => {
               Cancel Edit
             </button>
 
-          )}
 
+          </div>
 
         </form>
       </div>

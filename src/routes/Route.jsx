@@ -17,6 +17,7 @@ import Record from '../Pages/Employee/Record';
 import Announcement from "../Pages/Employee/Announcement";
 import { restrictLoader } from "../hooks/restrictLoader";
 import AdminAnnouncement from "../Pages/admin/AdminAnnouncement";
+import Report from "../Pages/admin/Report";
 
 // import Router from "./Router";
 
@@ -95,7 +96,7 @@ const router = createBrowserRouter([
         element: <Customer />,
       },
       {
-        path: "profile",
+        path: "adminProfile",
         element: <AdminProfile />,
       },
       {
@@ -113,7 +114,11 @@ const router = createBrowserRouter([
       {
         path: "adminAnnouncement",
         element: <AdminAnnouncement />,
-      }
+      },
+      {
+        path: "report",
+        element: <Report/>,
+      },
     ],
   },
 ]);

@@ -2,6 +2,9 @@ import React from 'react';
 import { useApiQuery } from '../../hooks/useQuery'; // your custom hook
 import DataTable from 'react-data-table-component'; // assuming you are using react-data-table-component for the table
 import { DarkThemeToggle } from 'flowbite-react';
+import MonthlyEmpOrderChart from './MonthlyEmpOrderChart'; // your chart component
+import MenuOrderPie from './MenuOrderPie';
+import FeedbackRecord from './FeedbackRecord';
 const AdminDashboard = () => {
 
 
@@ -27,15 +30,7 @@ const AdminDashboard = () => {
    );
    console.log("Fetched Data:", data);
  
-  const { data: feedbackData } = useApiQuery(
-    {
-      endpoint: "/feedback/list",
-      queryKey: ["feedback"],
-    },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  
 
       const { data: stats = {} } = useApiQuery(
         {
@@ -79,7 +74,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-
+   
       
 
       <div className="p-4 bg-gray-200 rounded-lg shadow mb-6">
@@ -104,22 +99,11 @@ const AdminDashboard = () => {
           ))}
         </ul>
       </div>
+      
+       <MonthlyEmpOrderChart data={data} />
+    {/* <MenuOrderPie data={data}/> */}
 
-      <DataTable
-        title="Employee Feedback"
-        columns={[
-          { name: "ID", selector: (row) => row.emp_id, sortable: true },
-          { name: "Employee Name", selector: (row) => row.emp_name, sortable: true },
-          { name: "Feedback", selector: (row) => row.text },
-          { name: "Rating", selector: (row) => row.rating, sortable: true },
-          { name: "Date", selector: (row) => row.updated_at, sortable: true }
-        ]}
-        data={feedbackData || []}
-        pagination
-        highlightOnHover
-        striped
-        noDataComponent="No feedback available"
-      />
+      <FeedbackRecord data="feedbackData"/>
 
 
 

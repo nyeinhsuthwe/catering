@@ -23,7 +23,7 @@ const AdminTopbar = () => {
                 
                 
                 <Dropdown label="Admin" inline>
-                    <Link to="/profile">
+                    <Link to="adminProfile">
                         <DropdownItem>View Profile</DropdownItem>
                     </Link>
 

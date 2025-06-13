@@ -42,7 +42,7 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
         
             
                 <div className="mt-6">
-                    <h2 className="text-xl font-semibold mb-4">Details for Employee ID: {empId}</h2>
+                    <h2 className="text-xl font-semibold mb-4">Details for Employee Name: {empId}</h2>
                     <button onClick={onBack} className="mb-4 text-red-500 hover:underline">
                         ← Back to List 
                     </button>          

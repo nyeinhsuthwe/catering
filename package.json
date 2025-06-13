@@ -33,6 +33,7 @@
     "react-rating": "^2.0.5",
     "react-router-dom": "^7.6.0",
     "react-transition-group": "^4.4.5",
+    "recharts": "^2.15.3",
     "tailwind-variants": "^1.0.0",
     "xlsx": "^0.18.5",
     "zustand": "^5.0.4"

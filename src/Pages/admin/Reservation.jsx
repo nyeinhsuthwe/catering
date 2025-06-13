@@ -5,6 +5,8 @@ import EmployeeMealAttendance from './EmployeeMealAttendance';
 import ViewEmpOrderDetail from './ViewEmpOrderDetail';
 import { useState } from 'react';
 
+
+
 const Reservation = () => {
   const { data =[]} = useApiQuery(
     {
@@ -15,7 +17,7 @@ const Reservation = () => {
       refetchOnWindowFocus: false,
     }
   );
-  console.log("Fetched Data:", data);
+  console.log("Employee Order Data:", data);
 
   // Get unique employees (one row per emp_id)
   const groupData = Array.from(
@@ -55,7 +57,7 @@ const Reservation = () => {
   ];
 
 
-
+    
 
 
 
@@ -77,6 +79,10 @@ const Reservation = () => {
           </div>
         </div>
       </div> */}
+
+      
+
+
       {!showDetails ? (
       <Datatable
         title="Employee Reservations"
