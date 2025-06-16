@@ -56,7 +56,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
   }
   return (
     <div className="p-4 bg-white rounded shadow ">
-      <h2 className="text-xl font-semibold mb-4">Employee Reports</h2>
+      
 
       <div className="flex flex-wrap gap-4 mb-6">
 
@@ -78,8 +78,8 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
           className="border px-3 py-2 rounded ml-2"
         />
       </div>
-      <div className='flex flex-wrap gap-4'>
-        <div className="w-full md:w-1/2">
+      
+        <div className="w-full md:w-1/2 ">
           <h2 className="text-lg font-semibold mb-2">Monthly Employee Order Chart</h2>
 
           {chartData.length > 0 ? (
@@ -97,39 +97,8 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
             <p className="text-gray-500 text-center">No data to display for selected filters.</p>
           )}
         </div>
-        <div className="w-full md:w-1/2">
-          {employeeMenuOrders?.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-4">Employee Menu Orders (Pie Chart)</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={employeeMenuOrders}
-                    dataKey="count"
-                    nameKey="food_name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    label={({ name, percent }) =>
-                      `${name} (${(percent * 100).toFixed(0)}%)`
-                    }
-                  >
-                    {employeeMenuOrders.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#00c49f"][index % 5]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-
-        </div>
-      </div>
+        
+      
 
     </div>
   );

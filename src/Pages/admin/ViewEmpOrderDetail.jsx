@@ -36,27 +36,36 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
             sortable: true,
         }
     ];
-    
+
+
+
+    // Calculate Total Amount
+    const totalAmount = detailData.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
 
     return (
-        
-            
-                <div className="mt-6">
-                    <h2 className="text-xl font-semibold mb-4">Details for Employee Name: {empId}</h2>
-                    <button onClick={onBack} className="mb-4 text-red-500 hover:underline">
-                        ← Back to List 
-                    </button>          
-                    <Datatable
-                        columns={detailColumns}
-                        data={detailData} // <-- this line is crucial
-                        pagination
-                        paginationPerPage={10}
-                        paginationRowsPerPageOptions={[10, 15, 20, 25]}
-                    />
 
-                </div>
-            
-        
+
+        <div className="mt-6">
+            <h2 className="text-xl font-semibold mb-4">Details for Employee Name: {empId}</h2>
+            <button onClick={onBack} className="mb-4 text-red-500 hover:underline">
+                ← Back to List
+            </button>
+            <Datatable
+                columns={detailColumns}
+                data={detailData} // <-- this line is crucial
+                pagination
+                paginationPerPage={10}
+                paginationRowsPerPageOptions={[10, 15, 20, 25]}
+            />
+
+            <div className="mt-4 text-right font-semibold text-lg">
+                Total Amount: <span className="text-green-600">${totalAmount.toFixed(2)}</span>
+            </div>
+
+
+        </div>
+
+
     )
 }
 

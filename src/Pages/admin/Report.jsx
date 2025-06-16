@@ -2,7 +2,7 @@
 import React from 'react';
 import { useApiQuery } from '../../hooks/useQuery';
 import MonthlyEmpOrderChart from './MonthlyEmpOrderChart';
-import MenuOrderPie from './MenuOrderPie';
+import FeedbackRecord from './FeedbackRecord';
 
 const Report = () => {
   const { data = [] } = useApiQuery({
@@ -21,11 +21,21 @@ const Report = () => {
       );
       console.log("Employee Menu Orders Data:", employeeMenuOrders);
 
+      
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
+    
+      <>
+      <h2 className="text-xl font-semibold mb-4">Employee Reports</h2>
+      
+    <div className='flex flex-wrap gap-4'>
+      <div className="flex flex-wrap gap-4">
       <MonthlyEmpOrderChart data={data} />
+      
       {/* <MenuOrderPie data={data}/> */}
+       </div>
     </div>
+    <FeedbackRecord  />
+    </>
   );
 };
 

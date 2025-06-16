@@ -18,6 +18,9 @@ import Announcement from "../Pages/Employee/Announcement";
 import { restrictLoader } from "../hooks/restrictLoader";
 import AdminAnnouncement from "../Pages/admin/AdminAnnouncement";
 import Report from "../Pages/admin/Report";
+import FeedbackRecord from "../Pages/admin/FeedbackRecord";
+import FeedbackTable from "../Pages/admin/FeedbackTable";
+import MealCheckoutDetails from "../Pages/admin/MealCheckoutDetails";
 
 // import Router from "./Router";
 
@@ -119,6 +122,18 @@ const router = createBrowserRouter([
         path: "report",
         element: <Report/>,
       },
+      {
+        path: "feedback",
+        element: <FeedbackRecord />,
+      },
+      {
+        path: "/admin/report/feedbackTable",
+        element: <FeedbackTable />,
+      },
+      {
+        path: "mealCheckoutDetails",
+        element: <MealCheckoutDetails />,
+      }
     ],
   },
 ]);

@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as XLSX from "xlsx";
 import DataTable from 'react-data-table-component';
 import { toast } from "react-hot-toast";
+import Holiday from './Holiday';
 
 
 
@@ -17,7 +18,8 @@ const AdminAnnouncement = () => {
   const queryClient = useQueryClient();
 
 
-  const [fileBase64, setFileBase64] = useState(null);
+ 
+  
 
   // const fileInputRef = useRef(null);
 
@@ -40,26 +42,9 @@ const AdminAnnouncement = () => {
   // };
 
 
-  // const mutation = useApiMutation({
-  //     onSuccess: (data) => {
-  //       console.log("Upload successful:", data);
-  //       queryClient.invalidateQueries({ queryKey: ["holiday"] });
-  //     },
-  //     onError: (error) => {
-  //       console.error("Upload failed:", error);
-  //     },
-  //   });
-  //   const onSubmit = (data) => {
-  //   mutation.mutate({
-  //     endpoint: "/holiday/create",
-  //     method: "POST",
-  //     body: {
-  //       filename: "holiday file",
-  //       file_base64: fileBase64,
-  //     },
-  //   });
-  // };
 
+
+  
   const [announcement, setAnnouncement] = useState({
     date: "",
     text: ""
@@ -210,6 +195,7 @@ const AdminAnnouncement = () => {
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
 
+
       {/* <div id="fileUpload" className="max-w-md mb-4">
         <Label className="mb-2 block" htmlFor="file">
           Upload Holiday Announcement File
@@ -337,6 +323,8 @@ const AdminAnnouncement = () => {
           },
         }}
       />
+      <Holiday />
+      
 
     </div>
   );

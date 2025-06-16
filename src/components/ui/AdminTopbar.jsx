@@ -28,7 +28,7 @@ const AdminTopbar = () => {
                     </Link>
 
                     <button onClick={handleSignOut}>
-                        <DropdownItem>Sign out</DropdownItem>
+                        <DropdownItem>Logout</DropdownItem>
                     </button>
                 </Dropdown>
                 

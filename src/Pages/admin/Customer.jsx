@@ -6,12 +6,14 @@ import { useApiMutation } from "../../hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import Cookies from "js-cookie";
-import Datatable from "react-data-table-component"
+import Datatable from "react-data-table-component";
 
-//const userRole = Cookies.get("role") || "Employee"; // get user role from cookie, default Employee
+// const userRole = Cookies.get("role") || "Employee";
+
 const Customer = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
+  const [filterName, setFilterName] = useState(""); // 👈 NEW
   const { handleSubmit, setValue } = useForm();
   const [fileBase64, setFileBase64] = useState(null);
 
@@ -49,43 +51,34 @@ const Customer = () => {
         <div className="flex gap-2">
           <button
             className="text-red-600 hover:text-red-800"
-            onClick={() => {
-              handleDelete(row.emp_id);
-
-
-              console.log("Delete employee:", row.id);
-            }}
-          ><i className="fa-solid fa-trash text-red-500 cursor-pointer ml-3"></i> </button>
+            onClick={() => handleDelete(row.emp_id)}
+          >
+            <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-3"></i>
+          </button>
         </div>
       ),
     }
-  ]
+  ];
 
   const deleteMutation = useApiMutation({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['employees'] })
-        toast.success("successfully deleted!");
-  
-      },
-      onError: (error) => {
-        console.error(
-          "Delete failed:",
-          error?.response?.data?.message || error.message
-        );
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      toast.success("Successfully deleted!");
+    },
+    onError: (error) => {
+      console.error("Delete failed:", error?.response?.data?.message || error.message);
+    },
+  });
+
+  const handleDelete = (emp_id) => {
+    const confirmed = window.confirm("Are you sure you want to delete?");
+    if (!confirmed) return;
+    deleteMutation.mutate({
+      endpoint: `employees/destroy/${emp_id}`,
+      method: "DELETE",
     });
-    //Delete employee record
-    const handleDelete = (emp_id) => {
-      const confirmed = window.confirm("Are you sure you want to delete?");
-      if (!confirmed) return;
-      deleteMutation.mutate({
-        endpoint: `employees/destroy/${emp_id}`,
-        method: "DELETE",
-      });
-  
-      console.log(`Deleting Employee Data at: employees/destroy/${emp_id}`);
-  
-    };
+    console.log(`Deleting Employee Data at: employees/destroy/${emp_id}`);
+  };
 
   const mutation = useApiMutation({
     onSuccess: (data) => {
@@ -108,7 +101,6 @@ const Customer = () => {
     });
   };
 
-
   const {
     data: employeeData,
     isLoading,
@@ -122,53 +114,25 @@ const Customer = () => {
       refetchOnWindowFocus: false,
     }
   );
-  console.log("Employee data:", employeeData);
 
+  const availableRoles = React.useMemo(() => {
+    if (!employeeData) return [];
+    const rolesSet = new Set(employeeData.map(emp => emp.role));
+    return Array.from(rolesSet);
+  }, [employeeData]);
 
-  // const availableRoles = [userRole];
-  // const allMonths = [
-  //   "January",
-  //   "February",
-  //   "March",
-  //   "April",
-  //   "May",
-  //   "June",
-  //   "July",
-  //   "August",
-  //   "September",
-  //   "October",
-  //   "November",
-  //   "December",
-  // ];
+  const filteredCustomers = React.useMemo(() => {
+    if (!Array.isArray(employeeData)) return [];
 
-  // // Calculate available months based on userRole and employeeData
-  // const availableMonths = React.useMemo(() => {
-  //   if (userRole === "admin") {
-  //     return allMonths;
-  //   }
-  //   if (employeeData && Array.isArray(employeeData)) {
-  //     const monthsSet = new Set(
-  //       employeeData
-  //         .filter((emp) => emp.role === userRole)
-  //         .map((emp) => emp.month)
-  //         .filter(Boolean)
-  //     );
-  //     return Array.from(monthsSet);
-  //   }
-  //   return [];
-  // }, [userRole, employeeData]);
-  // //
-  // const filteredCustomers = Array.isArray(employeeData)
-  //   ? employeeData.filter((customer) => {
-  //       // restrict to current user's role only
-  //       if (customer.role !== userRole) return false;
+    return employeeData.filter((employee) => {
+      const matchesRole = selectedRole ? employee.role === selectedRole : true;
+      const matchesName = filterName
+        ? employee.name.toLowerCase().includes(filterName.toLowerCase())
+        : true;
 
-  //       if (selectedMonth && customer.month !== selectedMonth) return false;
-  //       if (selectedRole && customer.role !== selectedRole) return false;
-
-  //       return true;
-  //     })
-  //   : [];
+      return matchesRole && matchesName;
+    });
+  }, [employeeData, selectedRole, filterName]);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -183,7 +147,6 @@ const Customer = () => {
     reader.readAsDataURL(file);
   };
 
-  
   const handleExportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredCustomers);
     const workbook = XLSX.utils.book_new();
@@ -229,31 +192,10 @@ const Customer = () => {
         Registered Employees
       </h2>
 
-      <div className="flex gap-4 flex-wrap">
-        {/* <div className="mb-4 w-full md:w-1/3">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter by Month
-          </label>
-
-          <select
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className="p-2 border border-gray-300 rounded w-full"
-          >
-            <option value="">All Months</option>
-            {availableMonths.length > 0 ? (
-              availableMonths.map((month) => (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              ))
-            ) : (
-              <option disabled>No months available</option>
-            )}
-          </select>
-        </div> */}
-
-        {/* <div className="mb-4 w-full md:w-1/3">
+      {/* 🔍 Filters Section */}
+      <div className="flex gap-4 flex-wrap mb-4">
+        {/* Filter by Role */}
+        <div className="w-full md:w-1/3">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Filter by Role
           </label>
@@ -262,28 +204,46 @@ const Customer = () => {
             onChange={(e) => setSelectedRole(e.target.value)}
             className="p-2 border border-gray-300 rounded w-full"
           >
+            <option value="">All Roles</option>
             {availableRoles.map((role) => (
               <option key={role} value={role}>
                 {role}
               </option>
             ))}
           </select>
-        </div> */}
+        </div>
+
+        {/* Filter by Name */}
+        <div className="w-full md:w-1/3">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Filter by Name
+          </label>
+          <input
+            type="text"
+            value={filterName}
+            onChange={(e) => setFilterName(e.target.value)}
+            placeholder="Enter name..."
+            className="p-2 border border-gray-300 rounded w-full"
+          />
+        </div>
       </div>
 
       {isLoading && <p className="text-gray-500">Loading employees...</p>}
       {error && <p className="text-red-500">Error loading employees.</p>}
+      
+      {/* Total Count Display */}
+      <div className="mb-4 text-gray-700 font-semibold">
+        Total Registered Employees: {filteredCustomers.length}
+      </div>
 
       <Datatable
         title="Registered Employees"
         columns={columns}
-        data={employeeData || []}
+        data={filteredCustomers}
         pagination
         paginationPerPage={10}
         highlightOnHover
         paginationRowsPerPageOptions={[10, 15, 20, 25]}
-        
-        
       />
     </div>
   );

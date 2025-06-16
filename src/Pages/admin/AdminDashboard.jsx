@@ -4,7 +4,6 @@ import DataTable from 'react-data-table-component'; // assuming you are using re
 import { DarkThemeToggle } from 'flowbite-react';
 import MonthlyEmpOrderChart from './MonthlyEmpOrderChart'; // your chart component
 import MenuOrderPie from './MenuOrderPie';
-import FeedbackRecord from './FeedbackRecord';
 const AdminDashboard = () => {
 
 
@@ -82,7 +81,7 @@ const AdminDashboard = () => {
         <ul className="space-y-2 text-sm">
           {announcement?.map((announcement, idx) => (
             <li key={idx}>
-              <strong>{announcement.text}</strong> — {announcement.date}
+              <strong>{announcement.date}</strong> — {announcement.text}
             </li>
           ))}
         </ul>
@@ -103,7 +102,7 @@ const AdminDashboard = () => {
        <MonthlyEmpOrderChart data={data} />
     {/* <MenuOrderPie data={data}/> */}
 
-      <FeedbackRecord data="feedbackData"/>
+    
 
 
 
