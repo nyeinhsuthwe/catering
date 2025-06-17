@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import Cookies from "js-cookie";
 import Datatable from "react-data-table-component";
+import { toast } from "react-hot-toast";
 
 // const userRole = Cookies.get("role") || "Employee";
 
@@ -82,12 +83,17 @@ const Customer = () => {
 
   const mutation = useApiMutation({
     onSuccess: (data) => {
+      toast.success("File uploaded successfully!");
       console.log("Upload successful:", data);
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
     onError: (error) => {
       console.error("Upload failed:", error);
-    },
+                toast.dismiss();
+                toast.error(
+                  error?.response?.data?.message || "Update failed. Please try again."
+                );
+              },
   });
 
   const onSubmit = (data) => {
@@ -188,6 +194,7 @@ const Customer = () => {
         </div>
       </form>
 
+      <div className="p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         Registered Employees
       </h2>
@@ -245,6 +252,7 @@ const Customer = () => {
         highlightOnHover
         paginationRowsPerPageOptions={[10, 15, 20, 25]}
       />
+    </div>
     </div>
   );
 };

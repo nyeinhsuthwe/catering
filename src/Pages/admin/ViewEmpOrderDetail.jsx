@@ -59,7 +59,8 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
             />
 
             <div className="mt-4 text-right font-semibold text-lg">
-                Total Amount: <span className="text-green-600">${totalAmount.toFixed(2)}</span>
+                Total Amount: <span className="text-green-600">{totalAmount}MMK</span>
+                
             </div>
 
 

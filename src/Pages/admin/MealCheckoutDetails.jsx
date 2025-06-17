@@ -1,23 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import { useApiQuery } from '../../hooks/useQuery'; // Adjust if needed
 import Datatable from 'react-data-table-component';
 
-const MealCheckoutDetails = ({ empId, onBack }) => {
-  const { data, isLoading, error } = useApiQuery(
-    {
-      endpoint: "/attendance/list-admin",
-      queryKey: ["attendance"],
-    },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-
+const MealCheckoutDetails = ({ empId, onBack, data }) => {
   const [filters, setFilters] = useState({
     status: '',
     date: '',
     checkOut: ''
   });
+
+  if (!data) return <p>Loading...</p>;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,9 +16,7 @@ const MealCheckoutDetails = ({ empId, onBack }) => {
   };
 
   const filteredData = useMemo(() => {
-    if (!data?.data) return [];
-
-    const selectedEmployee = data.data.find(emp => emp.emp_id === empId);
+    const selectedEmployee = data.find(emp => emp.emp_id === empId);
     if (!selectedEmployee) return [];
 
     return selectedEmployee.attendances
@@ -36,7 +25,7 @@ const MealCheckoutDetails = ({ empId, onBack }) => {
         const matchDate = filters.date ? att.date === filters.date : true;
         const matchCheckOut =
           filters.checkOut !== ''
-            ? String(att.check_out) === filters.checkOut
+            ? att.check_out === (filters.checkOut === 'true')
             : true;
         return matchStatus && matchDate && matchCheckOut;
       })
@@ -59,11 +48,7 @@ const MealCheckoutDetails = ({ empId, onBack }) => {
     { name: 'Price', selector: row => row.price },
     { name: 'Status', selector: row => row.status, sortable: true },
     { name: 'Check Out', selector: row => String(row.check_out) },
-    { name: 'Total Amount', selector: row => row.total_amount },
   ];
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading attendance data.</p>;
 
   return (
     <div className="p-4">
@@ -115,6 +100,12 @@ const MealCheckoutDetails = ({ empId, onBack }) => {
         responsive
         striped
       />
+      {filteredData.length > 0 && (
+        <div className="mt-4 text-right font-semibold text-lg">
+          Total Amount: {filteredData[0].total_amount} MMK
+        </div>
+      )}
+
     </div>
   );
 };

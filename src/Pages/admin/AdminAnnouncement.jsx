@@ -17,40 +17,15 @@ const AdminAnnouncement = () => {
   const [editIndex, setEditIndex] = useState(null);
   const queryClient = useQueryClient();
 
-
- 
-  
-
-  // const fileInputRef = useRef(null);
-
-  // const handleClick = () => {
-  //   fileInputRef.current.click();
-  // };
-
-
-  // const handleHolidayFileUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => {
-  //     const base64 = reader.result.split(",")[1];
-  //     setFileBase64(base64);
-  //     setValue("Holidayfile", base64);
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
-
-
-
-
   
   const [announcement, setAnnouncement] = useState({
     date: "",
     text: ""
   });
   const mutation = useApiMutation({
+  
     onSuccess: (data) => {
+      toast.success("Announcement created successfully!");
       console.log("successful:", data);
       queryClient.invalidateQueries({ queryKey: ["announcements"] });
       // Reset form
@@ -58,8 +33,11 @@ const AdminAnnouncement = () => {
       setInput('');
     },
     onError: (error) => {
-      console.error("Upload failed:", error);
-    },
+                toast.dismiss();
+                toast.error(
+                  error?.response?.data?.message || "Update failed. Please try again."
+                );
+              },
   });
 
   const createAnnouncement = async () => {

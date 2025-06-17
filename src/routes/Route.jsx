@@ -21,6 +21,7 @@ import Report from "../Pages/admin/Report";
 import FeedbackRecord from "../Pages/admin/FeedbackRecord";
 import FeedbackTable from "../Pages/admin/FeedbackTable";
 import MealCheckoutDetails from "../Pages/admin/MealCheckoutDetails";
+import MenuUpdate from "../Pages/admin/MenuUpdate";
 
 // import Router from "./Router";
 
@@ -133,7 +134,15 @@ const router = createBrowserRouter([
       {
         path: "mealCheckoutDetails",
         element: <MealCheckoutDetails />,
+      },
+      {
+        path: "menu/edit-menu",
+        element: <MenuUpdate />,
       }
+      // {
+      //   path: "createNewMenu",
+      //   element: <CreateNewMenu />,
+      // }
     ],
   },
 ]);
