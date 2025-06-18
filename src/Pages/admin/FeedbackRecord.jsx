@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useApiQuery } from '../../hooks/useQuery';
-import { Card, Button } from 'flowbite-react';
-import { useNavigate } from 'react-router-dom';
+import {  Card, Button } from 'flowbite-react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+
 
 import {
   LineChart,
@@ -36,11 +37,11 @@ const FeedbackRecord = () => {
 
   return (
     <Card>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mt-2">
         <h2 className="text-xl font-semibold">Employee Satisfaction Over Time</h2>
-        <Button size="sm" onClick={() => navigate('../report/feedbackTable')}>
-         Details
-        </Button>
+        <Link to="feedbackTable">
+        <Button>Details</Button>
+        </Link>
       </div>
 
       <div style={{ width: '100%', height: 300 }}>
@@ -56,7 +57,7 @@ const FeedbackRecord = () => {
       </div>
 
       {showDetails && (
-        <div className="mt-6">
+        <div className="mt-6 mb-4">
           <FeedbackTable feedbackData={feedbackData} />
         </div>
       )}

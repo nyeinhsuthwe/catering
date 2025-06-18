@@ -1,66 +1,58 @@
-import React from 'react'
-import { useApiQuery } from "../../hooks/useQuery";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'flowbite-react';
 import {
-    PieChart,
-    Pie,
-    Cell,
-    Tooltip,
-    Legend,
-    ResponsiveContainer,
-} from "recharts";
+    PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
 
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28EF7', '#F67280'];
 
-const MenuOrderPie = () => {
-    const { data: employeeMenuOrders } = useApiQuery(
-        {
-            endpoint: "/dashboard/MonthlyOrderCounts", //count of menu orders by employee
-            queryKey: ["employeeMenuPie"],
-        },
-        {
-            refetchOnWindowFocus: false,
-        }
-    );
-    console.log("Employee Menu Orders Data:", employeeMenuOrders);
-    // if (!employeeMenuOrders || employeeMenuOrders.length === 0) {
-    //     return <div className="p-6 bg-white rounded-lg shadow-md">No data available</div>;
-    // }
+const MenuOrderPie = ({ detailData }) => {
+    // Group food items and count frequency
+    const foodCountMap = detailData.reduce((acc, curr) => {
+        acc[curr.food_name] = (acc[curr.food_name] || 0) + 1;
+        return acc;
+    }, {});
 
+    const chartData = Object.entries(foodCountMap).map(([name, value]) => ({
+        name,
+        value
+    }));
 
+    if (chartData.length === 0) {
+        return <p className="text-gray-500 mt-4">No orders available to generate chart.</p>;
+    }
 
     return (
-        <div className="w-full md:w-1/2">
-          {employeeMenuOrders?.length > 0 && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <h3 className="text-lg font-semibold mb-4">Employee Menu Orders (Pie Chart)</h3>
-              <ResponsiveContainer width="100%" height={300}>
+          <>
+            <h3 className="text-lg font-semibold mb-2">Top Ordered Dishes by Employee</h3>
+            {/* <Button size="sm" onClick={() => navigate('menuListTable')} >
+                               Details
+                              </Button> */}
+            <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie
-                    data={employeeMenuOrders}
-                    dataKey="count"
-                    nameKey="food_name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    label={({ name, percent }) =>
-                      `${name} (${(percent * 100).toFixed(0)}%)`
-                    }
-                  >
-                    {employeeMenuOrders.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#00c49f"][index % 5]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
+                    <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={100}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={({ name, percent }) =>
+                            `${name} (${(percent * 100).toFixed(0)}%)`
+                        }
+                    >
+                        {chartData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
                 </PieChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+            </ResponsiveContainer>
+        </>
+    );
+};
 
-        </div>
-    )
-}
-
-export default MenuOrderPie
+export default MenuOrderPie;

@@ -1,69 +1,70 @@
-// MonthlyEmpOrderChart.jsx
 import React, { useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { format, parseISO } from 'date-fns';
-import { Menu } from 'lucide-react';
 import MenuOrderPie from './MenuOrderPie';
 import { useApiQuery } from '../../hooks/useQuery';
-import { Cell, Pie, PieChart, Legend } from 'recharts';
+import FeedbackRecord from './FeedbackRecord'; 
+import { Button } from 'flowbite-react';
+
 
 
 const MonthlyEmpOrderChart = ({ data = [] }) => {
   const [selectedEmp, setSelectedEmp] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
 
+  // Filter by employee and date
   const filteredData = data.filter(order => {
     const matchesName = selectedEmp ? order.emp_name === selectedEmp : true;
     const matchesDate = selectedDate ? order.date?.startsWith(selectedDate) : true;
     return matchesName && matchesDate;
   });
 
+  // Group by month and count unique employee orders
   const monthlyOrderCount = filteredData.reduce((acc, order) => {
     try {
       const rawDate = order.date;
       const parsedDate = parseISO(rawDate);
-      const month = format(parsedDate, 'yyyy-MM');
-      if (!acc[month]) acc[month] = new Set();
-      acc[month].add(order.emp_id);
+      const key = format(parsedDate, 'yyyy-MM'); // for sorting
+      if (!acc[key]) acc[key] = new Set();
+      acc[key].add(order.emp_id);
     } catch (err) {
       console.warn("Invalid date in order:", order);
     }
     return acc;
   }, {});
 
-  const chartData = Object.entries(monthlyOrderCount).map(([month, empSet]) => ({
-    month,
-    employeeCount: empSet.size,
-  }));
+  const chartData = Object.entries(monthlyOrderCount)
+    .sort(([a], [b]) => new Date(a) - new Date(b)) // sort by real date
+    .map(([monthKey, empSet]) => ({
+      month: format(parseISO(`${monthKey}-01`), 'MMM'), // convert to Jan, Feb
+      employeeCount: empSet.size,
+    }));
 
   const uniqueNames = [...new Set(data.map(d => d.emp_name))];
 
-
   const { data: employeeMenuOrders } = useApiQuery(
     {
-      endpoint: "/dashboard/MonthlyOrderCounts", //count of menu orders by employee
+      endpoint: "/dashboard/MonthlyOrderCounts",
       queryKey: ["employeeMenuPie"],
     },
     {
       refetchOnWindowFocus: false,
     }
   );
-  console.log("Employee Menu Orders Data:", employeeMenuOrders);
+
   if (!employeeMenuOrders || employeeMenuOrders.length === 0) {
     return <div className="p-6 bg-white rounded-lg shadow-md">No data available</div>;
   }
+
   return (
-    <div className="p-4 bg-white rounded shadow ">
-      
-
-      <div className="flex flex-wrap gap-4 mb-6">
-
+    <>
+      <div className="mb-6 flex flex-wrap items-center gap-4  ">
         <select
           value={selectedEmp}
           onChange={(e) => setSelectedEmp(e.target.value)}
-          className="border px-3 py-2 rounded ml-2 "
+          className="p-2 border border-gray-300 rounded w-50"
         >
           <option value="">All Employees</option>
           {uniqueNames.map(name => (
@@ -78,17 +79,20 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
           className="border px-3 py-2 rounded ml-2"
         />
       </div>
-      
-        <div className="w-full md:w-1/2 ">
-          <h2 className="text-lg font-semibold mb-2">Monthly Employee Order Chart</h2>
 
+      <div className="flex  flex-wrap gap-4 w-full mb-4">
+        {/* Bar Chart */}
+        <div className=" w-[400px] bg-white rounded shadow p-4 ">
+          <h2 className="text-lg font-semibold mb-2">Monthly Employee Order Chart</h2>
+          {/* <Button size="sm" onClick={() => navigate('../report/ViewEmpOrderDetail')} >
+                   Details
+                  </Button> */}
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={400}>
-              {/* //100% for full widht */}
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis label={{ value: 'Employees Ordered', angle: -90, position: 'center' }} />
+                <YAxis label={{ value: 'Employees Ordered', angle: -90, position: 'insideLeft' }} />
                 <Tooltip />
                 <Bar dataKey="employeeCount" fill="#3B82F6" />
               </BarChart>
@@ -97,10 +101,14 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
             <p className="text-gray-500 text-center">No data to display for selected filters.</p>
           )}
         </div>
-        
-      
 
-    </div>
+        {/* Pie Chart */}
+        <div className="w-[550px] bg-white rounded shadow p-4">
+          <MenuOrderPie detailData={filteredData} />
+          
+        </div>
+      </div>
+    </>
   );
 };
 

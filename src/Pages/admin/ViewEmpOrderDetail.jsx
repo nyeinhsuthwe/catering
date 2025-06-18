@@ -1,5 +1,6 @@
 import React from 'react'
 import Datatable from 'react-data-table-component'
+import MenuOrderPie from './MenuOrderPie'; // Assuming this is the correct path to your Pie chart component
 
 const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
 
@@ -63,7 +64,8 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
                 
             </div>
 
-
+         {/* Pie Chart Component */}
+            <MenuOrderPie detailData={detailData} />
         </div>
 
 

@@ -25,8 +25,7 @@ const Menu = () => {
         <MenuListTable />
         <AddNewMenu />
       </div>
-      <MenuUpdate />
-
+      
     </div>
   );
 };

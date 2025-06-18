@@ -45,8 +45,7 @@ const MenuUpdate = () => {
   const updateMenuMutation = useApiMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
-      toast.success("Menu updated successfully!");
-      navigate("/admin/menu");
+            navigate("/admin/menu");
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Update failed.");
@@ -75,13 +74,10 @@ const MenuUpdate = () => {
   }, [selectedMenu, foodLists, setValue, reset]);
 
   const onSubmit = (data) => {
- 
-
   if (!data.price || !data.menus.length) {
     toast.error("Please fill all required fields");
     return;
   }
-    
 
   const updatedMenus = data.menus.flatMap((menu) =>
     menu.food_name.map((food) => ({
@@ -90,33 +86,41 @@ const MenuUpdate = () => {
       date: menu.created_at,
     }))
   );
- console.log("Food list from API:", foodLists);
-console.log("Data to send:", updatedMenus);
-  console.log("Sending update body:", updatedMenus); // Debug line
 
-  updateMenuMutation.mutate(
-    {
-      endpoint: "/foodmonth/update/${date}",
-      method: "PUT",
-      body: updatedMenus,
-    },
-    {
-      onSuccess: () => {
-        toast.success("Menu updated successfully!");
-        navigate("/admin/menu");
+  let successCount = 0;
+  let failCount = 0;
+
+  updatedMenus.forEach((menu) => {
+    updateMenuMutation.mutate(
+      {
+        endpoint: `/foodmonth/update/${menu.date}`,
+        method: "PUT",
+        body: {
+          food_name: menu.food_name,
+          price: menu.price,
+          date: menu.date,
+        },
       },
-      onError: (error) => {
-        console.error(error);
-        toast.error(
-          error?.response?.data?.message || "Update failed. Try again."
-        );
-      },
-    }
-  );
+      {
+        onSuccess: () => {
+          successCount++;
+          if (successCount + failCount === updatedMenus.length) {
+            toast.success("All menus updated successfully!");
+            navigate("/admin/menu");
+          }
+        },
+        onError: (error) => {
+          failCount++;
+          console.error("Update failed:", error);
+          toast.error(
+            error?.response?.data?.message || `Failed to update menu for ${menu.date}`
+          );
+        },
+      }
+    );
+  });
 };
 
- 
-  
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">

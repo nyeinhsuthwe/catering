@@ -4,10 +4,11 @@ import DataTable from 'react-data-table-component'; // assuming you are using re
 import { DarkThemeToggle } from 'flowbite-react';
 import MonthlyEmpOrderChart from './MonthlyEmpOrderChart'; // your chart component
 import MenuOrderPie from './MenuOrderPie';
+import Report from './Report';
 const AdminDashboard = () => {
 
 
-  
+
   const { data: announcement } = useApiQuery(
     {
       endpoint: "/announcement/list",
@@ -18,64 +19,81 @@ const AdminDashboard = () => {
     }
   );
 
-   const { data =[]} = useApiQuery(
-     {
-       endpoint: "/registered-orders/lists",
-       queryKey: ["orders"],
-     },
-     {
-       refetchOnWindowFocus: false,
-     }
-   );
-   console.log("Fetched Data:", data);
- 
-  
+  const { data = [] } = useApiQuery(
+    {
+      endpoint: "/registered-orders/lists",
+      queryKey: ["orders"],
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+  console.log("Fetched Data:", data);
 
-      const { data: stats = {} } = useApiQuery(
-        {
-          endpoint: "/dashboard/stats",
-          queryKey: ["dashboard-stats"],
-        },
-        {
-          refetchOnWindowFocus: false,
-        }
-      );
-      console.log("Fetched Stats:", stats);
+
+
+  const { data: stats = {} } = useApiQuery(
+    {
+      endpoint: "/dashboard/stats",
+      queryKey: ["dashboard-stats"],
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+  console.log("Fetched Stats:", stats);
 
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-     
-      
+    <div className="">
+
+
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+
         <div className="p-4 bg-blue-100 rounded-lg shadow">
-          <h2 className="text-lg font-semibold text-gray-800">
-            Monthly Reservations
-          </h2>
+          <div className="flex items-center mb-1">
+            <i className="fas fa-calendar-alt text-blue-600 mr-2"></i>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Monthly Reservations
+            </h2>
+          </div>
           <p className="text-2xl font-bold text-blue-600 mt-2">
             {stats.monthly_orders ?? 0}
           </p>
         </div>
+
         <div className="p-4 bg-green-100 rounded-lg shadow">
-          <h2 className="text-lg font-semibold text-gray-800">Total Orders</h2>
+          <div className="flex items-center mb-1">
+            <i className="fas fa-shopping-cart text-green-600 mr-2"></i>
+            <h2 className="text-lg font-semibold text-gray-800">Total Orders</h2>
+          </div>
           <p className="text-2xl font-bold text-green-600 mt-2">
             {stats.total_orders ?? 0}
           </p>
         </div>
         <div className="p-4 bg-yellow-100 rounded-lg shadow">
-          <h2 className="text-lg font-semibold text-gray-800">
-            Total Registrations
-          </h2>
+
+          <div className="flex items-center mb-1">
+            <i class="fa-regular fa-user text-yellow-600 mr-2"></i>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Total Registrations
+            </h2>
+          </div>
+
           <p className="text-2xl font-bold text-yellow-600 mt-2">
             {stats.total_employees ?? 0}
           </p>
         </div>
       </div>
 
-   
-      
 
+      <div className='w-full mb-4'>
+        <Report/>
+      </div>
+      <div className="flex gap-2 flex-wrap mb-4">
+        <div className="w-full md:w-1/2">
       <div className="p-4 bg-gray-200 rounded-lg shadow mb-6">
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Upcoming Events</h2>
         <ul className="space-y-2 text-sm">
@@ -87,22 +105,30 @@ const AdminDashboard = () => {
         </ul>
       </div>
 
-     <div className="p-4 bg-gray-200 rounded-lg shadow mb-6">
+      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6 ">
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Recent Orders</h2>
         <ul className="divide-y divide-gray-200">
           {data?.slice(0, 5).map((order, idx) => (
             <li key={idx} className="py-2 flex justify-between text-sm">
-              <span>{order.emp_name}</span>
-              <span>{order.date}</span>
+              <div className="flex flex-col">
+                <span className="font-medium text-gray-800">{order.emp_name}</span>
+                <span className="text-gray-600">{order.food_name}</span>
+              </div>
+              <div className="flex flex-col">
+              <span className="font-medium text-gray-800">{order.date}</span>
+              <span className='text-gray-600'>{order.price}</span>
+              </div>
             </li>
           ))}
         </ul>
       </div>
-      
-       <MonthlyEmpOrderChart data={data} />
-    {/* <MenuOrderPie data={data}/> */}
+          </div>
+      </div>
 
-    
+      {/* <MenuOrderPie data={data}/> */}
+
+
+
 
 
 

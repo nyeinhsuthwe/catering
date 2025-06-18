@@ -128,7 +128,7 @@ const router = createBrowserRouter([
         element: <FeedbackRecord />,
       },
       {
-        path: "/admin/report/feedbackTable",
+        path: "feedbackTable",
         element: <FeedbackTable />,
       },
       {
@@ -138,11 +138,9 @@ const router = createBrowserRouter([
       {
         path: "menu/edit-menu",
         element: <MenuUpdate />,
-      }
-      // {
-      //   path: "createNewMenu",
-      //   element: <CreateNewMenu />,
-      // }
+      },
+     
+  
     ],
   },
 ]);

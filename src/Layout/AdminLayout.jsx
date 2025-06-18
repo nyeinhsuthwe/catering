@@ -13,14 +13,15 @@ const AdminLayout = () => {
 
       <AdminTopbar />
       
-      <div className="flex flex-1 ">
+      <div className="flex min-h-screen"> 
         <AdminSidebar />
-
-        <div className="flex-1 p-6 bg-gray-100">
+        <div className="flex-1 p-6 bg-gray-100 h-screen overflow-y-auto ">
           
-          
+      
           <Outlet />
         </div>
+
+        
       </div>
     </div>
   )
