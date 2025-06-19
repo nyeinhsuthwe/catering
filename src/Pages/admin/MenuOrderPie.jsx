@@ -20,12 +20,12 @@ const MenuOrderPie = ({ detailData }) => {
     }));
 
     if (chartData.length === 0) {
-        return <p className="text-gray-500 mt-4">No orders available to generate chart.</p>;
+        return <p className="text-gray-500 mt-4">No orders available </p>;
     }
 
     return (
           <>
-            <h3 className="text-lg font-semibold mb-2">Top Ordered Dishes by Employee</h3>
+            
             {/* <Button size="sm" onClick={() => navigate('menuListTable')} >
                                Details
                               </Button> */}

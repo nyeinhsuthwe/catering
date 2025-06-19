@@ -10,9 +10,7 @@ import Menu from '../Pages/admin/Menu'
 import AdminDashboard from '../Pages/admin/AdminDashboard'
 import Reservation from '../Pages/admin/Reservation'
 import Customer from '../Pages/admin/Customer'
-import AdminProfile from '../Pages/admin/AdminProfile'
 import Login from '../Pages/Login'
-import AdminEditProfile from '../Pages/admin/AdminEditProfile'
 import Record from '../Pages/Employee/Record';
 import Announcement from "../Pages/Employee/Announcement";
 import { restrictLoader } from "../hooks/restrictLoader";
@@ -22,6 +20,11 @@ import FeedbackRecord from "../Pages/admin/FeedbackRecord";
 import FeedbackTable from "../Pages/admin/FeedbackTable";
 import MealCheckoutDetails from "../Pages/admin/MealCheckoutDetails";
 import MenuUpdate from "../Pages/admin/MenuUpdate";
+import AdminProfile from "../Pages/admin/AdminProfile";
+import AdminEditProfile from "../Pages/admin/AdminEditProfile";
+import AdminResetPassword from "../Pages/admin/AdminResetPassword"
+
+
 
 // import Router from "./Router";
 
@@ -100,21 +103,10 @@ const router = createBrowserRouter([
         element: <Customer />,
       },
       {
-        path: "adminProfile",
-        element: <AdminProfile />,
-      },
-      {
         path: "login",
         element: <Login />,
       },
-      {
-        path: "edit",
-        element: <AdminEditProfile />,
-      },
-      // {
-      //     path: 'addnewfood',
-      //     element: <AddNewFood/>
-      // },
+           
       {
         path: "adminAnnouncement",
         element: <AdminAnnouncement />,
@@ -139,6 +131,22 @@ const router = createBrowserRouter([
         path: "menu/edit-menu",
         element: <MenuUpdate />,
       },
+      {
+        path: "adminProfile",
+        element: <AdminProfile/>
+
+      },
+      {
+        path: "/admin/adminProfile/adminEditProfile",
+        element: <AdminEditProfile/>
+      },
+      {
+        path: "/admin/adminProfile/adminResetPassword",
+        element: <AdminResetPassword/>
+      }
+
+
+     
      
   
     ],

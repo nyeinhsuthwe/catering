@@ -49,14 +49,24 @@ const AdminDashboard = () => {
 
 
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
 
         <div className="p-4 bg-blue-100 rounded-lg shadow">
           <div className="flex items-center mb-1">
             <i className="fas fa-calendar-alt text-blue-600 mr-2"></i>
             <h2 className="text-lg font-semibold text-gray-800">
-              Monthly Reservations
+               Menu
+            </h2>
+          </div>
+          <p className="text-2xl font-bold text-blue-600 mt-2">
+            {stats.menus_count ?? 0}
+          </p>
+        </div>
+        <div className="p-4 bg-blue-100 rounded-lg shadow">
+          <div className="flex items-center mb-1">
+            <i className="fas fa-calendar-alt text-blue-600 mr-2"></i>
+            <h2 className="text-lg font-semibold text-gray-800">
+              Monthly Orders
             </h2>
           </div>
           <p className="text-2xl font-bold text-blue-600 mt-2">
@@ -92,9 +102,9 @@ const AdminDashboard = () => {
       <div className='w-full mb-4'>
         <Report/>
       </div>
-      <div className="flex gap-2 flex-wrap mb-4">
-        <div className="w-full md:w-1/2">
-      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6">
+      <div className="flex  flex-wrap gap-4 w-full mb-4">
+
+      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6 w-[550px]">
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Upcoming Events</h2>
         <ul className="space-y-2 text-sm">
           {announcement?.map((announcement, idx) => (
@@ -105,7 +115,7 @@ const AdminDashboard = () => {
         </ul>
       </div>
 
-      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6 ">
+      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6 w-[400px] ">
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Recent Orders</h2>
         <ul className="divide-y divide-gray-200">
           {data?.slice(0, 5).map((order, idx) => (
@@ -122,7 +132,7 @@ const AdminDashboard = () => {
           ))}
         </ul>
       </div>
-          </div>
+          
       </div>
 
       {/* <MenuOrderPie data={data}/> */}

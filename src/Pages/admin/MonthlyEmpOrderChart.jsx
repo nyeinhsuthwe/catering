@@ -98,12 +98,13 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-gray-500 text-center">No data to display for selected filters.</p>
+            <p className="text-gray-500 text-center">No data to display for this Month</p>
           )}
         </div>
 
         {/* Pie Chart */}
         <div className="w-[550px] bg-white rounded shadow p-4">
+          <h3 className="text-lg font-semibold mb-2">Top Ordered Dishes by Employee</h3>
           <MenuOrderPie detailData={filteredData} />
           
         </div>
