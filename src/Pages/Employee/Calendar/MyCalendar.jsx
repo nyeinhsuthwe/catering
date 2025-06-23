@@ -135,7 +135,7 @@ const MyCalendar = () => {
   console.log(selectedEvents);
 
   return (
-    <div className="flex  dark:bg-black">
+    <div className="flex mt-[50px] dark:bg-black">
       <div className="w-2/3 p-5 bg-gray-100 h-full ">
         <Calendar
           localizer={localizer}

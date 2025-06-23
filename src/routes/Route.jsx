@@ -14,8 +14,12 @@ import AdminProfile from '../Pages/admin/AdminProfile'
 import Login from '../Pages/Login'
 import AdminEditProfile from '../Pages/admin/AdminEditProfile'
 import Record from '../Pages/Employee/Record';
-import Announcement from "../Pages/Employee/Announcement";
+import Announce from "../Pages/Employee/Announce";
 import { restrictLoader } from "../hooks/restrictLoader";
+import { Voucher } from "../Pages/Employee/Voucher";
+import { TermsConditions } from "../Pages/Employee/TermsConditions";
+import Password from "../Pages/Employee/Password";
+import MailTesting from "../Pages/Employee/MailTesting";
 
 // import Router from "./Router";
 
@@ -61,7 +65,23 @@ const router = createBrowserRouter([
       },
       {
         path: "announcement",
-        element: <Announcement/>
+        element: <Announce/>
+      },
+      {
+        path: "voucher",
+        element: <Voucher/>
+      },
+      {
+        path: "terms-conditions",
+        element: <TermsConditions/>
+      },
+      {
+        path: "password",
+        element: <Password/>
+      },
+      {
+        path: "mail-testing",
+        element: <MailTesting/>
       }
     ],
   },

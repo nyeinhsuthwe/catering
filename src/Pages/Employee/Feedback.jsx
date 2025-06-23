@@ -56,12 +56,21 @@ const Feedback = () => {
 
   console.log(feedbackList);
 
+  
+
+ const sortedFeedback = [...(feedbackList || [])].sort(function (a, b) {
+  return new Date(b.updated_at) - new Date(a.updated_at);
+});
+
+
+
+  console.log(sortedFeedback);
   const count = 4;
-  const paginatedFeedback = feedbackList?.slice(
+  const paginatedFeedback = sortedFeedback?.slice(
     (currentPage - 1) * count,
     currentPage * count
   );
-  const totalPages = Math.ceil((feedbackList?.length || 0) / count);
+  const totalPages = Math.ceil(sortedFeedback.length / count);
 
   // feedback delete mutation
   const deleteMutation = useApiMutation({
@@ -90,6 +99,20 @@ const Feedback = () => {
     return "Loading";
   }
 
+  const formatDateTime = (utcDatetime) => {
+    const utcDate = new Date(utcDatetime);
+    const myanmarTime = new Date(utcDate.getTime() + 390 * 60 * 1000);
+
+    return myanmarTime.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   return (
     <div className="h-[90vh] w-full overflow-y-scroll py-6 pr-11 flex flex-col items-center ">
       <div className="w-full flex gap-[100px]">
@@ -103,7 +126,7 @@ const Feedback = () => {
             {...register("text")}
           />
 
-          <div className="mt-3">
+          <div className="mt-3 ml-2">
             <label className="block text-sm font-medium mb-1">
               Your Rating:
             </label>
@@ -131,19 +154,24 @@ const Feedback = () => {
 
           <Button
             type="submit"
-            className="bg-gray-500 hover:bg-gray-600 mt-4 justify-end"
+            className="bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400  mt-4 ml-2 justify-end"
           >
             Submit
           </Button>
         </form>
 
         <div className="w-2/3 mt-6 flex flex-col gap-4">
-          {feedbackList?.length > 0 ? (
+          {sortedFeedback?.length > 0 ? (
             paginatedFeedback?.map((item, index) => (
               <Card key={index} className="w-[500px]">
-                <p className="font-normal text-gray-700 dark:text-gray-400">
-                  {item?.text}
-                </p>
+                <div className="flex space-x-4 items-center justify-between">
+                  <p className="font-normal text-gray-700 dark:text-gray-400">
+                    {item?.text}
+                  </p>
+                  <button onClick={() => handleDelete(item.fb_id)}>
+                    <i className="fa-solid fa-trash text-red-500 cursor-pointer"></i>
+                  </button>
+                </div>
 
                 <Rating
                   initialRating={parseFloat(item?.rating)}
@@ -152,16 +180,16 @@ const Feedback = () => {
                   emptySymbol={
                     <FaRegStar className="text-yellow-400 text-md" />
                   }
-                  fullSymbol={<FaStar className="text-yellow-400 text-md" />}
+                  fullSymbol={<FaStar className="text-yellow-400 text-sm" />}
                 />
 
                 <div className="flex space-x-4 items-center justify-between">
                   <p className="text-sm text-yellow-500">
                     Rating: {parseFloat(item?.rating)} / 5
                   </p>
-                  <button onClick={() => handleDelete(item.fb_id)}>
-                    <i className="fa-solid fa-trash text-red-500 cursor-pointer"></i>
-                  </button>
+                  <p className="text-xs text-gray-500">
+                    {formatDateTime(item?.updated_at)}
+                  </p>
                 </div>
               </Card>
             ))

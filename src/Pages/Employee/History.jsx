@@ -121,11 +121,11 @@ const History = () => {
           </p>
         </Card>
         <div className="flex gap-2 justify-center items-center">
-          <Button color="yellow" onClick={unselectEvents}>
+          <Button className="bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400 " onClick={unselectEvents}>
             Unselect All
           </Button>
           <Button
-            className="bg-gray-400 hover:bg-gray-500"
+            className="bg-gray-500 hover:bg-gray-600 dark:bg-gray-500 dark:hover:bg-gray-600"
             onClick={handleCheckout}
           >
             Register

@@ -17,10 +17,12 @@ import { userStore } from "../../store/userStore";
 import { useApiMutation } from "../../hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import { totalAmountStore } from "../../store/totalAmount";
+import { CookingPot } from "lucide-react";
 
 const Record = () => {
   const { user } = userStore();
-
+  const { setTotalAmount, setTotalOrders } = totalAmountStore();
   const now = dayjs();
   const [selectedDate, setSelectedDate] = useState({
     year: now.year(),
@@ -40,7 +42,7 @@ const Record = () => {
     params: { year: selectedDate.year, month: selectedDate.month },
     queryKey: ["records", selectedDate.year, selectedDate.month],
   });
-
+console.log("data", data);
   const { data: checkout } = useApiQuery({
     endpoint: "/attendance/list",
     queryKey: ["checkout", user.employeeId],
@@ -74,11 +76,15 @@ const Record = () => {
 
   const records = data ?? [];
 
-  // FILTER records by selectedDate (year & month)
-  const filteredRecords = records.filter((record) => {
-    const date = dayjs(record.date);
-    return date.year() === selectedDate.year && date.month() + 1 === selectedDate.month;
-  });
+  const filteredRecords = records
+    .filter((record) => {
+      const date = dayjs(record.date);
+      return (
+        date.year() === selectedDate.year &&
+        date.month() + 1 === selectedDate.month
+      );
+    })
+    .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
 
   const count = 6;
   const paginatedRecord = filteredRecords.slice(
@@ -92,8 +98,15 @@ const Record = () => {
     return sum + price;
   }, 0);
 
+  useEffect(() => {
+    setTotalAmount(totalAmount);
+    setTotalOrders(filteredRecords.length);
+  }, [totalAmount, filteredRecords.length, setTotalAmount, setTotalOrders]);
+
   const handlePrevious = () => {
-    const newDate = dayjs(`${selectedDate.year}-${selectedDate.month}-01`).subtract(1, "month");
+    const newDate = dayjs(
+      `${selectedDate.year}-${selectedDate.month}-01`
+    ).subtract(1, "month");
     setSelectedDate({ year: newDate.year(), month: newDate.month() + 1 });
   };
 
@@ -116,17 +129,17 @@ const Record = () => {
   }
 
   const checkedOutDates = new Set(
-    checkout
-      ?.filter(
-        (item) => item.emp_id === user.employeeId && item.check_out === true
-      )
-      .map((item) => dayjs(item.date).format("YYYY-MM-DD"))
+    Array.isArray(checkout?.attendances)
+      ? checkout.attendances
+          .filter((item) => item.check_out === true)
+          .map((item) => dayjs(item.date).format("YYYY-MM-DD"))
+      : []
   );
 
   return (
     <div className="w-full h-[90dvh] overflow-y-scroll py-6 pr-11 flex flex-col items-center">
       <div className="grid gap-4 mx-auto w-full pl-3 h-full">
-        <div className="flex gap-4 justify-start items-center mb-4">
+        <div className="flex gap-4 justify-start items-center ">
           <Button color="gray" onClick={handlePrevious}>
             Previous
           </Button>
@@ -136,8 +149,7 @@ const Record = () => {
           <Button color="gray" onClick={handleUpcoming}>
             Upcoming
           </Button>
-          <span className="text-sm text-gray-600">
-            Showing:{" "}
+          <span className="text-sm dark:text-yellow-500 text-yellow-400 font-bold">
             {dayjs(`${selectedDate.year}-${selectedDate.month}-01`).format(
               "MMMM YYYY"
             )}
@@ -145,7 +157,7 @@ const Record = () => {
         </div>
 
         <Table striped>
-          <TableHead className="text-gray-600">
+          <TableHead className=" text-gray-600">
             <TableRow>
               <TableHeadCell>Date</TableHeadCell>
               <TableHeadCell>Menu</TableHeadCell>
@@ -157,7 +169,9 @@ const Record = () => {
             {filteredRecords.length > 0 ? (
               paginatedRecord.map((record) => (
                 <TableRow key={record.id} className="hover:bg-gray-50">
-                  <TableCell>{dayjs(record.date).format("DD/MM/YYYY")}</TableCell>
+                  <TableCell>
+                    {dayjs(record.date).format("DD/MM/YYYY")}
+                  </TableCell>
                   <TableCell>
                     {record.food_month_prices_by_date[0]?.food_name || "NA"}
                   </TableCell>
@@ -166,9 +180,9 @@ const Record = () => {
                   </TableCell>
                   <TableCell>
                     {dayjs(record.date).isSame(dayjs(), "day") ? (
-                      dayjs().hour() === 11 ? (
+                      dayjs().hour() === 17 ? (
                         <button
-                          className="w-8 h-8 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center bg-blue-600 rounded disabled:bg-gray-600 text-white disabled:text-gray-400 active:scale-0.95 transition-transform duration-200"
+                          className="w-8 h-8 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center bg-yellow-500 rounded disabled:bg-gray-600 text-white disabled:text-gray-400 active:scale-0.95 transition-transform duration-200"
                           onClick={() => handleCheckout(record.date, record.id)}
                           disabled={checkedOutDates.has(
                             dayjs(record.date).format("YYYY-MM-DD")
@@ -177,7 +191,7 @@ const Record = () => {
                           <i className="fa-solid fa-check text-center flex items-center justify-center"></i>
                         </button>
                       ) : (
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-yellow-400 dark:text-yellow-500 font-bold">
                           It is available between 11am–12pm
                         </span>
                       )

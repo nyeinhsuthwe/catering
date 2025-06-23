@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Card, Pagination } from "flowbite-react";
-import { useApiQuery } from "../../hooks/useQuery";
 import { announcementStore } from "../../store/announcement";
 
-const Announcement = () => {
+const Announce = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const onPageChange = (page) => setCurrentPage(page);
-
-  const { announcements, setAnnouncements } = announcementStore();
-  console.log("announcements", announcements);
-  const { data } = useApiQuery({
-    endpoint: "/announcement/list",
-    queryKey: ["announcements"],
-  });
-
-  useEffect(() => {
-    if (data) {
-      setAnnouncements(data);
-    }
-  }, [data, setAnnouncements]);
+  const { announcements } = announcementStore();  
 
   const sortedAnnouncements = [...announcements].sort(
     (a, b) =>
@@ -55,7 +42,7 @@ const Announcement = () => {
             <p className="font-normal text-gray-700 dark:text-gray-400">
               {announcement.text}
             </p>
-            <p className="text-xs text-gray-500 justify-items-end">
+            <p className="text-xs dark:text-yellow-500 text-yellow-400 font-bold justify-items-end">
               {formatDateTime(announcement.created_at)}
             </p>
           </Card>
@@ -78,4 +65,4 @@ const Announcement = () => {
   );
 };
 
-export default Announcement;
+export default Announce;
