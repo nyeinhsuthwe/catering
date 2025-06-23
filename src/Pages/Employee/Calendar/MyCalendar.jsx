@@ -7,6 +7,9 @@ import { useSelectedDatesStore } from "../../../store/dateStore";
 import History from "../History";
 import { useApiQuery } from "../../../hooks/useQuery";
 import { foodStore } from "../../../store/foodStore";
+import dayjs from "dayjs";
+import { userStore } from "../../../store/userStore";
+import { toast } from "react-hot-toast";
 
 const locales = {
   "en-US": enUS,
@@ -25,8 +28,33 @@ const MyCalendar = () => {
   const [currentView, setCurrentView] = useState(Views.MONTH);
   const { selectedEvents, toggleEvent } = useSelectedDatesStore();
   const { setFoodList, foodList } = foodStore();
+  const { user } = userStore();
+  const [isBlocked, setIsBlocked] = useState(false);
 
-  // API
+  // Attendance check for missed checkouts
+  const { data: checkout } = useApiQuery({
+    endpoint: "/attendance/list",
+    queryKey: ["checkout", user.employeeId],
+  });
+
+  useEffect(() => {
+    if (checkout?.attendances && Array.isArray(checkout.attendances)) {
+      const now = new Date();
+      const missed = checkout.attendances.filter((att) => {
+        const date = new Date(att.date);
+        const isCurrentMonth =
+          date.getMonth() === now.getMonth() &&
+          date.getFullYear() === now.getFullYear();
+        return isCurrentMonth && att.check_out === false;
+      });
+
+      if (missed.length >= 5) {
+        setIsBlocked(true);
+      }
+    }
+  }, [checkout]);
+
+  // API for food
   const { data: Foods } = useApiQuery(
     {
       endpoint: "foodmonth/list",
@@ -45,8 +73,6 @@ const MyCalendar = () => {
     }
   }, [Foods, setFoodList]);
 
-  console.log(foodList);
-
   const events = (foodList || []).map((item) => ({
     id: item.id,
     title: `${item.food_name}`,
@@ -55,22 +81,20 @@ const MyCalendar = () => {
     price: item.price,
   }));
 
-  const today = new Date();
-  const nextMonth = today.getMonth() + 1;
-  const currentYear = today.getFullYear();
-
   const isDateSelected = (date) =>
     selectedEvents.some(
       (e) => new Date(e.start).toDateString() === date.toDateString()
     );
 
   const dayPropGetter = (date) => {
-    const currentMonth = date.getMonth();
-    const isCloseMonth = currentMonth === nextMonth;
-    const isCurrentYear = date.getFullYear() === currentYear;
+    const today = new Date();
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const isSameMonth =
+      date.getMonth() === nextMonthDate.getMonth() &&
+      date.getFullYear() === nextMonthDate.getFullYear();
     const isWeekend = [0, 6].includes(date.getDay());
 
-    if (!(isCloseMonth && isCurrentYear) || isWeekend) {
+    if (!isSameMonth || isWeekend) {
       return {
         style: {
           backgroundColor: "#eee",
@@ -116,27 +140,51 @@ const MyCalendar = () => {
   };
 
   const handleSelectSlot = (slotInfo) => {
+    if (isBlocked) {
+      toast.error("You missed 5 checkouts. You cannot order for next month.");
+      return;
+    }
+
     const clickedDate = slotInfo.start;
+    const today = new Date();
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const isSameMonth =
+      clickedDate.getMonth() === nextMonthDate.getMonth() &&
+      clickedDate.getFullYear() === nextMonthDate.getFullYear();
+    const isWeekend = [0, 6].includes(clickedDate.getDay());
+
+    if (!isSameMonth || isWeekend) return;
+
     const foundEvent = events.find(
       (e) => new Date(e.start).toDateString() === clickedDate.toDateString()
     );
-
     if (foundEvent) {
       toggleEvent(foundEvent);
-    } else {
-      return
     }
   };
 
   const handleSelectEvent = (event) => {
+    if (isBlocked) {
+      toast.error("You missed 5 checkouts. You cannot order for next month.");
+      return;
+    }
+
+    const eventDate = new Date(event.start);
+    const today = new Date();
+    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const isSameMonth =
+      eventDate.getMonth() === nextMonthDate.getMonth() &&
+      eventDate.getFullYear() === nextMonthDate.getFullYear();
+    const isWeekend = [0, 6].includes(eventDate.getDay());
+
+    if (!isSameMonth || isWeekend) return;
+
     toggleEvent(event);
   };
 
-  console.log(selectedEvents);
-
   return (
     <div className="flex mt-[50px] dark:bg-black">
-      <div className="w-2/3 p-5 bg-gray-100 h-full ">
+      <div className="w-2/3 p-5 bg-gray-100 h-full">
         <Calendar
           localizer={localizer}
           startAccessor="start"

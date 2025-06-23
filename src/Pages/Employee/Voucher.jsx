@@ -36,16 +36,16 @@ export const Voucher = () => {
   const totalDays = attendances.length;
   const totalPresent = attendances.filter((a) => a.check_out).length;
   const totalAbsent = attendances.filter((a) => !a.check_out).length;
-  // const today = dayjs();
-  // const isLastDayOfMonth = today.date() === today.endOf("month").date();
+  const today = dayjs();
 
+  // const isLastDayOfMonth = today.date() === today.endOf("month").date();
   // if(!isLastDayOfMonth){
   //   return (
   //     <div className="max-w-5xl mx-auto mt-[80px] mb-10 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg items-center justify-center flex flex-col">
   //       <h1 className="text-2xl font-semibold text-gray-700 dark:text-white">
   //         Voucher is available only on the end of the month.
   //       </h1>
-  //       <p className="text-gray-600 dark:text-gray-300 mt-4">
+  //       <p className="text-yellow-400 font-bold dark:text-yellow-500 mt-4">
   //         Please check back later.
   //       </p>
   //     </div>

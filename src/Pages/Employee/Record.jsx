@@ -18,7 +18,6 @@ import { useApiMutation } from "../../hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { totalAmountStore } from "../../store/totalAmount";
-import { CookingPot } from "lucide-react";
 
 const Record = () => {
   const { user } = userStore();
