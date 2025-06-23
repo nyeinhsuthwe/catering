@@ -45,7 +45,9 @@ const MyCalendar = () => {
         const isCurrentMonth =
           date.getMonth() === now.getMonth() &&
           date.getFullYear() === now.getFullYear();
-        return isCurrentMonth && att.check_out === false;
+        const isPastDay = date < new Date().setHours(0, 0, 0, 0);
+
+        return isCurrentMonth && isPastDay && att.check_out === false;
       });
 
       if (missed.length >= 5) {
@@ -88,7 +90,11 @@ const MyCalendar = () => {
 
   const dayPropGetter = (date) => {
     const today = new Date();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const nextMonthDate = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1
+    );
     const isSameMonth =
       date.getMonth() === nextMonthDate.getMonth() &&
       date.getFullYear() === nextMonthDate.getFullYear();
@@ -147,7 +153,11 @@ const MyCalendar = () => {
 
     const clickedDate = slotInfo.start;
     const today = new Date();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const nextMonthDate = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1
+    );
     const isSameMonth =
       clickedDate.getMonth() === nextMonthDate.getMonth() &&
       clickedDate.getFullYear() === nextMonthDate.getFullYear();
@@ -171,7 +181,11 @@ const MyCalendar = () => {
 
     const eventDate = new Date(event.start);
     const today = new Date();
-    const nextMonthDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    const nextMonthDate = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      1
+    );
     const isSameMonth =
       eventDate.getMonth() === nextMonthDate.getMonth() &&
       eventDate.getFullYear() === nextMonthDate.getFullYear();

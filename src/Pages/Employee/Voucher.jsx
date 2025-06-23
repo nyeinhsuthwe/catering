@@ -35,7 +35,9 @@ export const Voucher = () => {
   const totalAmount = data?.total_amount ?? 0;
   const totalDays = attendances.length;
   const totalPresent = attendances.filter((a) => a.check_out).length;
-  const totalAbsent = attendances.filter((a) => !a.check_out).length;
+  const totalAbsent = attendances.filter(
+    (a) => !a.check_out && dayjs(a.date).isBefore(dayjs(), "day") // only count past days
+  ).length;
   const today = dayjs();
 
   // const isLastDayOfMonth = today.date() === today.endOf("month").date();
@@ -133,11 +135,13 @@ export const Voucher = () => {
                         present
                         <FaCheckCircle className="text-green-500" />
                       </>
-                    ) : (
+                    ) : dayjs(item.date).isBefore(dayjs(), "day") ? (
                       <>
                         absent
                         <FaTimesCircle className="text-red-500" />
                       </>
+                    ) : (
+                      "—"
                     )}
                   </TableCell>
                 </TableRow>

@@ -128,7 +128,7 @@ const History = () => {
             className="bg-gray-500 hover:bg-gray-600 dark:bg-gray-500 dark:hover:bg-gray-600"
             onClick={handleCheckout}
           >
-            Register
+            Order
           </Button>
         </div>
       </div>
