@@ -5,8 +5,9 @@ import {
 import { format, parseISO } from 'date-fns';
 import MenuOrderPie from './MenuOrderPie';
 import { useApiQuery } from '../../hooks/useQuery';
-import FeedbackRecord from './FeedbackRecord'; 
+import FeedbackRecord from './FeedbackRecord';
 import { Button } from 'flowbite-react';
+import { Link } from 'react-router-dom';
 
 
 
@@ -21,25 +22,25 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
     return matchesName && matchesDate;
   });
 
-  // Group by month and count unique employee orders
-  const monthlyOrderCount = filteredData.reduce((acc, order) => {
+  // Group by month and count menu orders
+  const monthlyMenuCount = filteredData.reduce((acc, order) => {
     try {
       const rawDate = order.date;
       const parsedDate = parseISO(rawDate);
       const key = format(parsedDate, 'yyyy-MM'); // for sorting
-      if (!acc[key]) acc[key] = new Set();
-      acc[key].add(order.emp_id);
+      if (!acc[key]) acc[key] = 0;
+      acc[key] += 1; // count every menu order
     } catch (err) {
       console.warn("Invalid date in order:", order);
     }
     return acc;
   }, {});
 
-  const chartData = Object.entries(monthlyOrderCount)
-    .sort(([a], [b]) => new Date(a) - new Date(b)) // sort by real date
-    .map(([monthKey, empSet]) => ({
-      month: format(parseISO(`${monthKey}-01`), 'MMM'), // convert to Jan, Feb
-      employeeCount: empSet.size,
+  const chartData = Object.entries(monthlyMenuCount)
+    .sort(([a], [b]) => new Date(a) - new Date(b))
+    .map(([monthKey, count]) => ({
+      month: format(parseISO(`${monthKey}-01`), 'MMM'),
+      menuCount: count,
     }));
 
   const uniqueNames = [...new Set(data.map(d => d.emp_name))];
@@ -83,19 +84,17 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
       <div className="flex  flex-wrap gap-4 w-full mb-4">
         {/* Bar Chart */}
         <div className=" w-[400px] bg-white rounded shadow p-4 ">
-          <h2 className="text-lg font-semibold mb-2">Monthly Employee Order Chart</h2>
-          {/* <Button size="sm" onClick={() => navigate('../report/ViewEmpOrderDetail')} >
-                   Details
-                  </Button> */}
+          <h2 className="text-xl font-semibold">Monthly Employee Order Chart</h2>
+          {/* <Link to="viewEmpOrderDetail">
+            <Button>Details</Button>
+          </Link> */}
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis label={{ value: 'Employees Ordered', angle: -90, position: 'insideLeft' }} />
-                <Tooltip />
-                <Bar dataKey="employeeCount" fill="#3B82F6" />
-              </BarChart>
+                <YAxis label={{ value: 'Menu Orders', angle: -90, position: 'insideLeft' }} />                <Tooltip />
+                <Bar dataKey="menuCount" fill="#3B82F6" />              </BarChart>
             </ResponsiveContainer>
           ) : (
             <p className="text-gray-500 text-center">No data to display for this Month</p>
@@ -106,7 +105,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
         <div className="w-[550px] bg-white rounded shadow p-4">
           <h3 className="text-lg font-semibold mb-2">Top Ordered Dishes by Employee</h3>
           <MenuOrderPie detailData={filteredData} />
-          
+
         </div>
       </div>
     </>

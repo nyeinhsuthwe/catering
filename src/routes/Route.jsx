@@ -23,6 +23,9 @@ import MenuUpdate from "../Pages/admin/MenuUpdate";
 import AdminProfile from "../Pages/admin/AdminProfile";
 import AdminEditProfile from "../Pages/admin/AdminEditProfile";
 import AdminResetPassword from "../Pages/admin/AdminResetPassword"
+import Order from "../Pages/admin/Order"
+import InvoiceInfo from "../Pages/admin/InvoiceInfo"
+import ViewEmpOrderDetail from "../Pages/admin/ViewEmpOrderDetail";
 
 
 
@@ -143,6 +146,18 @@ const router = createBrowserRouter([
       {
         path: "/admin/adminProfile/adminResetPassword",
         element: <AdminResetPassword/>
+      },
+      // {
+      //   path: "/admin/adminProfile/order",
+      //   element: <Order/>
+      // }
+      {
+        path: "invoiceInfo",
+        element: <InvoiceInfo/>
+      },
+      {
+        path: "viewEmpOrderDetail",
+        element: <ViewEmpOrderDetail/>
       }
 
 

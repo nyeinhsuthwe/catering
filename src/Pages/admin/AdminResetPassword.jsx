@@ -1,100 +1,140 @@
-import React, { useState } from "react";
-import { useApiMutation } from "../../hooks/useMutation";
+
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Card,
+  Label,
+  TextInput,
+  Modal,
+  ModalBody,
+  ModalHeader,
+} from "flowbite-react";
+import { userStore } from "../../store/userStore";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useLocation } from "react-router-dom";
-export default function AdminResetPassword() {
-  const { state } = useLocation();
-  const profile = state?.profile;
+import { useApiMutation } from "../../hooks/useMutation";
+import Cookie from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
+const AdminResetPassword = () => {
+  const { handleSubmit, register, reset } = useForm();
+  const { user, logout } = userStore();
+  const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-
-  const mutation = useApiMutation({
-    method: "PUT",
+  const changePasswordMutation = useApiMutation({
     onSuccess: () => {
-      toast.success("Password changed successfully!");
-      setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      setOpenModal(true);
+      toast.success("Password updated successfully!");
+      reset();
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to change password.");
+      toast.error(error?.response?.data?.message || "Something went wrong");
     },
   });
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (formData.newPassword !== formData.confirmPassword) {
-      toast.error("New password and confirm password do not match.");
+  const onSubmit = (data) => {
+    if (data.new_password !== data.confirm_password) {
+      toast.error("New password and confirmation do not match.");
       return;
     }
-
-    mutation.mutate({
-      endpoint: "/employeesPsw/${formData.emp_id}", // Change to your API endpoint
+    changePasswordMutation.mutate({
+      endpoint: `/employeesPsw/${user.employeeId}`,
       method: "PUT",
       body: {
-        current_password: formData.currentPassword,
-        new_password: formData.newPassword,
-      },
+      old_password: data.oldPassword,
+      new_password: data.newPassword,
+      confirm_password: data.confirmPassword,
+    },
     });
-  };
-  console.log("Changing password for employee id:", formData.emp_id);
+};
 
+const handleStay = () => setOpenModal(false);
+const handleLogout = () => {
+  setOpenModal(false);
+  Cookie.remove("token");
+  logout();
+  navigate("/login");
+};
 
-  return (
-    <div className="max-w-md mx-auto p-6 bg-gray-50 rounded shadow">
-      <h2 className="text-xl font-bold mb-4 text-sky-700">Change Password</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+return (
+  <div className="">
+    <Modal show={openModal} size="md" onClose={handleStay} popup>
+      <ModalHeader />
+      <ModalBody>
+        <div className="text-center">
+          <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+            Your password has been changed. Do you want to stay logged in or
+            log out?
+          </h3>
+          <div className="flex justify-center gap-4">
+            <Button color="red" onClick={handleLogout}>
+              Log Out
+            </Button>
+            <Button color="alternative" onClick={handleStay}>
+              Stay Logged In
+            </Button>
+          </div>
+        </div>
+      </ModalBody>
+    </Modal>
+
+    <p className="mx-auto dark:text-blue-500 text-blue-400 max-w-lg  text-2xl mb-4 font-bold  mt-[80px]">
+      Change Your Password
+    </p>
+
+    <Card className="max-w-lg mx-auto">
+      <form
+        className="flex mx-auto flex-col gap-4 w-100 mt-4 mb-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div>
-          <label className="block mb-1 text-gray-600">Current Password</label>
-          <input
+          <div className="mb-2 block">
+            <Label htmlFor="password">Old Password</Label>
+          </div>
+          <TextInput
+            placeholder="enter your current password ..."
+            id="oldPassword"
             type="password"
-            name="currentPassword"
-            value={formData.currentPassword}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded"
+            {...register("oldPassword")}
           />
         </div>
+
         <div>
-          <label className="block mb-1 text-gray-600">New Password</label>
-          <input
+          <div className="mb-2 block">
+            <Label htmlFor="password">New Password</Label>
+          </div>
+          <TextInput
+            placeholder="enter your new password ..."
+            id="newPassword"
             type="password"
-            name="newPassword"
-            value={formData.newPassword}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded"
+            {...register("newPassword")}
           />
         </div>
+
         <div>
-          <label className="block mb-1 text-gray-600">Confirm New Password</label>
-          <input
+          <div className="mb-2 block">
+            <Label htmlFor="password">Confirm Password</Label>
+          </div>
+          <TextInput
+            placeholder="confirm your password ..."
+            id="confirmPassword"
             type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded"
+            {...register("confirmPassword")}
           />
         </div>
-        <button
+        <Button
+          className="mt-3 w-[200px] bg-blue-400 dark:bg-blue-500 hover:bg-blue-500 dark:hover:bg-blue-400"
           type="submit"
-          className="bg-sky-600 text-white px-6 py-2 rounded hover:bg-sky-700"
         >
-          Change Password
-        </button>
+          <i className="fa-solid fa-check me-2"></i> Submit
+        </Button>
       </form>
-    </div>
-  );
-}
+    </Card>
+  </div>
+);
+};
+
+export default AdminResetPassword;

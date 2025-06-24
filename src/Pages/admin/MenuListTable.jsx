@@ -143,13 +143,7 @@ const MenuListTable = () => {
                     <button onClick={() => handleEdit(row)}>
                         <i className="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
                     </button>
-                    {/* <button
-                        type="button"
-                        onClick={() => navigate("menu/edit-menu")}
-                        
-                    >
-                        <i className="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
-                    </button> */}
+
                     <button onClick={() => handleDelete(row.date)}>
                         <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-2"></i>
                     </button>
@@ -175,12 +169,12 @@ const MenuListTable = () => {
             <DataTable
                 title="Menu Lists"
                 columns={columns}
-                data={filteredData}
+                data={filteredData || []}
                 pagination
                 highlightOnHover
                 striped
                 responsive
-                noDataComponent="No menu items found"
+                noDataComponent={<div className="py-6 text-gray-500">No menu items found</div>}
                 customStyles={{
                     headCells: {
                         style: {
@@ -191,12 +185,13 @@ const MenuListTable = () => {
                     },
                     cells: {
                         style: {
-                            paddingLeft: "8px",
+                            paddingLeft: "13px",
                             paddingRight: "8px",
                         },
                     },
                 }}
             />
+
         </div>
     );
 };

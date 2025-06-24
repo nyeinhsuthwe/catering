@@ -21,6 +21,7 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
             selector: row => row.emp_name,
             sortable: true,
         },
+        
         {
             name: 'Food Name',
             selector: row => row.food_name,
@@ -60,12 +61,12 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
             />
 
             <div className="mt-4 text-right font-semibold text-lg">
-                Total Amount: <span className="text-green-600">{totalAmount}MMK</span>
+                Total Amount: <span className="text-green-600">{totalAmount}</span>
                 
             </div>
 
          {/* Pie Chart Component */}
-            <MenuOrderPie detailData={detailData} />
+            {/* <MenuOrderPie detailData={detailData} /> */}
         </div>
 
 

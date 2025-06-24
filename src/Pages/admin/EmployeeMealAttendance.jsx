@@ -58,7 +58,19 @@ const EmployeeMealAttendance = () => {
           pagination
           paginationPerPage={10}
           paginationRowsPerPageOptions={[10, 15, 20, 25]}
+          noDataComponent={<div className="py-4 text-gray-500">No attendance records found</div>}
+          customStyles={{
+            headCells: {
+              style: {
+                backgroundColor: '#e2e8f0',
+                fontWeight: 'bold',
+                fontSize: '15px',
+              },
+            },
+          }}
+
         />
+
       ) : (
         <MealCheckoutDetails
           empId={selectedEmpId}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { FileInput, Label } from "flowbite-react";
+import { FileInput, Label, Modal, Button } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useApiMutation } from "../../hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -9,14 +9,18 @@ import Cookies from "js-cookie";
 import Datatable from "react-data-table-component";
 import { toast } from "react-hot-toast";
 
-// const userRole = Cookies.get("role") || "Employee";
+
 
 const Customer = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
-  const [filterName, setFilterName] = useState(""); // 👈 NEW
+  const [filterName, setFilterName] = useState("");
   const { handleSubmit, setValue } = useForm();
   const [fileBase64, setFileBase64] = useState(null);
+
+  const [editEmployee, setEditEmployee] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
 
   const queryClient = useQueryClient();
 
@@ -49,7 +53,17 @@ const Customer = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <div className="flex gap-2">
+        <div className="space-x-2 flex items-center">
+          <button
+            className="text-blue-600 hover:text-blue-800"
+            onClick={() => {
+              setEditEmployee(row); // carry all data
+              setIsEditModalOpen(true);
+            }}
+          >
+            <i className="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
+          </button>
+
           <button
             className="text-red-600 hover:text-red-800"
             onClick={() => handleDelete(row.emp_id)}
@@ -59,6 +73,8 @@ const Customer = () => {
         </div>
       ),
     }
+
+
   ];
 
   const deleteMutation = useApiMutation({
@@ -70,6 +86,8 @@ const Customer = () => {
       console.error("Delete failed:", error?.response?.data?.message || error.message);
     },
   });
+
+
 
   const handleDelete = (emp_id) => {
     const confirmed = window.confirm("Are you sure you want to delete?");
@@ -89,11 +107,11 @@ const Customer = () => {
     },
     onError: (error) => {
       console.error("Upload failed:", error);
-                toast.dismiss();
-                toast.error(
-                  error?.response?.data?.message || "Update failed. Please try again."
-                );
-              },
+      toast.dismiss();
+      toast.error(
+        error?.response?.data?.message || "Update failed. Please try again."
+      );
+    },
   });
 
   const onSubmit = (data) => {
@@ -160,6 +178,35 @@ const Customer = () => {
     XLSX.writeFile(workbook, "Registered_Employees.xlsx");
   };
 
+
+  const handleChangeRole = (emp_id, newRole) => {
+    const confirm = window.confirm(`Change role to ${newRole}?`);
+    if (!confirm) return;
+    roleUpdateMutation.mutate({
+      endpoint: `/admins/${emp_id}`,
+      method: "PUT",
+      body: {
+        name: editEmployee.name,
+        email: editEmployee.email,
+        role: newRole,
+      },
+    });
+  };
+
+  const roleUpdateMutation = useApiMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employee"] });
+      toast.success("Role updated successfully!");
+    },
+    onError: (error) => {
+      console.error("Update failed:", error);
+      toast.error("Failed to update role");
+    },
+  });
+
+
+
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex justify-end mb-4">
@@ -195,64 +242,120 @@ const Customer = () => {
       </form>
 
       <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        Registered Employees
-      </h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          Registered Employees
+        </h2>
 
-      {/* 🔍 Filters Section */}
-      <div className="flex gap-4 flex-wrap mb-4">
-        {/* Filter by Role */}
-        <div className="w-full md:w-1/3">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter by Role
-          </label>
-          <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="p-2 border border-gray-300 rounded w-full"
-          >
-            <option value="">All Roles</option>
-            {availableRoles.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
-          </select>
+        {/* 🔍 Filters Section */}
+        <div className="flex gap-4 flex-wrap mb-4">
+          {/* Filter by Role */}
+          <div className="w-full md:w-1/3">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter by Role
+            </label>
+            <select
+              id="role"
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="w-full border border-gray-300 rounded p-2"
+            >
+              <option value="">Select Role</option>
+              {availableRoles.map((role) => (
+                <option key={role} value={role}>
+                  {role}
+                </option>
+              ))}
+            </select>
+
+
+          </div>
+
+          {/* Filter by Name */}
+          <div className="w-full md:w-1/3">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter by Name
+            </label>
+            <input
+              type="text"
+              value={filterName}
+              onChange={(e) => setFilterName(e.target.value)}
+              placeholder="Enter name..."
+              className="p-2 border border-gray-300 rounded w-full"
+            />
+          </div>
         </div>
 
-        {/* Filter by Name */}
-        <div className="w-full md:w-1/3">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter by Name
-          </label>
-          <input
-            type="text"
-            value={filterName}
-            onChange={(e) => setFilterName(e.target.value)}
-            placeholder="Enter name..."
-            className="p-2 border border-gray-300 rounded w-full"
-          />
+        {isLoading && <p className="text-gray-500">Loading employees...</p>}
+        {error && <p className="text-red-500">Error loading employees.</p>}
+
+        {/* Total Count Display */}
+        <div className="mb-4 text-gray-700 font-semibold">
+          Total Registered Employees: {filteredCustomers.length}
         </div>
-      </div>
 
-      {isLoading && <p className="text-gray-500">Loading employees...</p>}
-      {error && <p className="text-red-500">Error loading employees.</p>}
-      
-      {/* Total Count Display */}
-      <div className="mb-4 text-gray-700 font-semibold">
-        Total Registered Employees: {filteredCustomers.length}
-      </div>
+        <Datatable
+          title="Registered Employees"
+          columns={columns}
+          data={filteredCustomers}
+          pagination
+          paginationPerPage={10}
+          highlightOnHover
+          paginationRowsPerPageOptions={[10, 15, 20, 25]}
+        />
 
-      <Datatable
-        title="Registered Employees"
-        columns={columns}
-        data={filteredCustomers}
-        pagination
-        paginationPerPage={10}
-        highlightOnHover
-        paginationRowsPerPageOptions={[10, 15, 20, 25]}
-      />
-    </div>
+        <Modal
+          show={isEditModalOpen}
+          size="md"
+          popup
+          onClose={() => setIsEditModalOpen(false)}
+        >
+          <div className="p-6 bg-white">
+            <h3 className="text-xl font-medium text-gray-900 mb-4">Edit Role</h3>
+
+            {editEmployee && (
+              <div className="space-y-4">
+                <p><strong>ID:</strong> {editEmployee.emp_id}</p>
+                <p><strong>Name:</strong> {editEmployee.name}</p>
+                <p><strong>Email:</strong> {editEmployee.email}</p>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Role
+                  </label>
+                  <select
+                    value={editEmployee.role}
+                    onChange={(e) =>
+                      setEditEmployee({ ...editEmployee, role: e.target.value })
+                    }
+                    className="w-full border border-gray-300 rounded p-2"
+                  >
+                    <option value="employee">employee</option>
+                    <option value="admin">admin</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6 flex justify-end gap-2">
+              <Button
+                onClick={() => {
+                  handleChangeRole(editEmployee.emp_id, editEmployee.role);
+                  setIsEditModalOpen(false);
+                }}
+              >
+                Save
+              </Button>
+              <Button color="gray" onClick={() => setIsEditModalOpen(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal>
+
+
+
+
+      </div>
     </div>
   );
 };

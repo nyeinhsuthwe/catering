@@ -53,7 +53,7 @@ const AdminDashboard = () => {
 
         <div className="p-4 bg-blue-100 rounded-lg shadow">
           <div className="flex items-center mb-1">
-            <i className="fas fa-calendar-alt text-blue-600 mr-2"></i>
+            <i class="fa-solid fa-utensils  text-blue-600 mr-2"></i>
             <h2 className="text-lg font-semibold text-gray-800">
                Menu
             </h2>
@@ -62,14 +62,14 @@ const AdminDashboard = () => {
             {stats.menus_count ?? 0}
           </p>
         </div>
-        <div className="p-4 bg-blue-100 rounded-lg shadow">
+        <div className="p-4 bg-cyan-100 rounded-lg shadow">
           <div className="flex items-center mb-1">
-            <i className="fas fa-calendar-alt text-blue-600 mr-2"></i>
+            <i className="fas fa-calendar-alt text-cyan-600 mr-2"></i>
             <h2 className="text-lg font-semibold text-gray-800">
               Monthly Orders
             </h2>
           </div>
-          <p className="text-2xl font-bold text-blue-600 mt-2">
+          <p className="text-2xl font-bold text-cyan-600 mt-2">
             {stats.monthly_orders ?? 0}
           </p>
         </div>

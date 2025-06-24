@@ -2,29 +2,26 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useApiMutation } from "../../hooks/useMutation";
 import toast from "react-hot-toast";
+import { userStore } from "../../store/userStore";
 
 
 const AdminEditProfile = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const profile = state?.profile;
-
-  if (!profile) {
-    return <div className="p-6 text-red-500">No profile data received.</div>;
-  }
-
+  const { user } = userStore();
+  const empId = user.employeeId;
+ 
   const [formData, setFormData] = useState({
-    name: profile.name || "",
-    email: profile.email || "",
-    emp_id: profile.emp_id || "",
-    role: profile.role || "",
+    name: user.name || "",
+    email: user.email || "",
+    emp_id: user.employeeId || "",
+    role: user.role || "",
   });
 
   const updateMutation = useApiMutation({
     method: "PUT",
     onSuccess: () => {
       toast.success("Profile updated successfully!");
-      navigate("/admin/adminProfile");
+      navigate("/admin/adminProfile", { state: { updated: true } });
     },
     onError: (error) => {
       const errData = error?.response?.data;
@@ -44,20 +41,20 @@ const AdminEditProfile = () => {
     e.preventDefault();
 
     updateMutation.mutate({
-      endpoint: `/employees/${formData.emp_id}`,
+      endpoint: `/employees/${empId}`,
       method: "PUT",
       body: {
         name: formData.name,
         email: formData.email,
         role: formData.role,
-        emp_id: formData.emp_id,
+        emp_id: formData.employeeId,
       },
     });
   };
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h2 className="text-xl font-bold mb-6 text-sky-700">Edit Admin Profile</h2>
+      <h2 className="text-xl font-bold mb-6 text-sky-700">Edit Your Profile</h2>
       <form onSubmit={handleSubmit} className="space-y-4 bg-gray-50 p-6 rounded shadow">
         <div>
           <label className="block text-sm text-gray-600">Name</label>
