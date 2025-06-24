@@ -21,6 +21,7 @@ const EmployeeMealAttendance = () => {
     {
       name: 'No.',
       selector: (row, index) => index + 1,
+      
     },
     {
       name: 'Employee ID',
@@ -47,6 +48,17 @@ const EmployeeMealAttendance = () => {
       ),
     }
   ];
+  const hasData = Array.isArray(data) && data.length > 0;
+
+  const displayData = hasData
+    ? data
+    : [
+      {
+        emp_id: '',
+        emp_name: '',
+      },
+    ];
+
 
   return (
     <div className="p-4">
@@ -54,22 +66,33 @@ const EmployeeMealAttendance = () => {
         <Datatable
           title="Employee Attendance"
           columns={columns}
-          data={data || []}
+          data={displayData}
           pagination
           paginationPerPage={10}
           paginationRowsPerPageOptions={[10, 15, 20, 25]}
-          noDataComponent={<div className="py-4 text-gray-500">No attendance records found</div>}
-          customStyles={{
-            headCells: {
+          noDataComponent={
+            hasData ? null : <div className="py-4 text-gray-500">No attendance records found</div>
+          }
+          conditionalRowStyles={[
+            {
+              when: row => !row.emp_id && !row.emp_name,
               style: {
-                backgroundColor: '#e2e8f0',
-                fontWeight: 'bold',
-                fontSize: '15px',
+                display: 'none', 
               },
             },
+          ]}
+          customStyles={{
+            headCells: {
+                        style: {
+                            fontSize: "15px",
+                            fontWeight: "bold",
+                            backgroundColor: "#f3f4f6",
+                        },
+                        
+                    },
           }}
-
         />
+
 
       ) : (
         <MealCheckoutDetails

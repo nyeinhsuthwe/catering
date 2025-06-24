@@ -125,12 +125,21 @@ return (
             {...register("confirmPassword")}
           />
         </div>
+        <div className="flex items-center gap-4">
         <Button
-          className="mt-3 w-[200px] bg-blue-400 dark:bg-blue-500 hover:bg-blue-500 dark:hover:bg-blue-400"
+          className="mt-3 w-[200px] bg-sky-600 hover:bg-sky-700"
           type="submit"
         >
           <i className="fa-solid fa-check me-2"></i> Submit
         </Button>
+        <button
+          type="button"
+          onClick={() => navigate("/admin/adminProfile")}
+          className="mt-3 bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded"
+        >
+          Cancel 
+        </button>
+        </div>
       </form>
     </Card>
   </div>

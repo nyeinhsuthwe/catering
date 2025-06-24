@@ -9,7 +9,7 @@ const AdminEditProfile = () => {
   const navigate = useNavigate();
   const { user } = userStore();
   const empId = user.employeeId;
- 
+
   const [formData, setFormData] = useState({
     name: user.name || "",
     email: user.email || "",
@@ -106,6 +106,7 @@ const AdminEditProfile = () => {
           </select>
         </div>
 
+        <div className="flex items-center gap-4">
         <button
           type="submit"
           className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded"
@@ -113,6 +114,14 @@ const AdminEditProfile = () => {
         >
           {updateMutation.isLoading ? "Saving..." : "Save Changes"}
         </button>
+        <button
+          type="button"
+          onClick={() => navigate("/admin/adminProfile")}
+          className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded"
+        >
+          Cancel 
+        </button>
+        </div>
       </form>
     </div>
   );

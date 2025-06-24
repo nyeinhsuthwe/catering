@@ -8,6 +8,7 @@ import { useApiQuery } from "../../hooks/useQuery";
 import Cookies from "js-cookie";
 import Datatable from "react-data-table-component";
 import { toast } from "react-hot-toast";
+import { AlignLeft } from "lucide-react";
 
 
 
@@ -29,11 +30,14 @@ const Customer = () => {
       name: "No",
       selector: (row, index) => index + 1,
       sortable: true,
+      width: "75px",
     },
     {
       name: "Emp ID",
       selector: (row) => row.emp_id,
       sortable: true,
+      
+      
     },
     {
       name: "Name",
@@ -171,13 +175,7 @@ const Customer = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleExportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredCustomers);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Employees");
-    XLSX.writeFile(workbook, "Registered_Employees.xlsx");
-  };
-
+  
 
   const handleChangeRole = (emp_id, newRole) => {
     const confirm = window.confirm(`Change role to ${newRole}?`);
@@ -209,14 +207,7 @@ const Customer = () => {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex justify-end mb-4">
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          onClick={handleExportToExcel}
-        >
-          Export
-        </button>
-      </div>
+      
 
       <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
         <div id="fileUpload" className="max-w-md mb-4">
@@ -301,6 +292,17 @@ const Customer = () => {
           paginationPerPage={10}
           highlightOnHover
           paginationRowsPerPageOptions={[10, 15, 20, 25]}
+
+          customStyles={{
+            headCells: {
+              style: {
+                fontSize: "15px",
+                fontWeight: "bold",
+                backgroundColor: "#f3f4f6",
+              },
+
+            },
+          }}
         />
 
         <Modal

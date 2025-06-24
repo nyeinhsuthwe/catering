@@ -166,8 +166,7 @@ const AdminSidebar = () => {
       {/* Sidebar Content */}
       <div className="p-6">
         {/* Navigation Link */}
-        
-        <ul className="space-y-4">
+         <ul className="space-y-4">
           <li>
             <Link
               to="/admin"
@@ -204,7 +203,7 @@ const AdminSidebar = () => {
               {!isCollapsed && <span className="ml-3">Employee Lists</span>}
             </Link>
           </li>
-          
+
           <li>
             <Link
               to="report"
@@ -215,7 +214,7 @@ const AdminSidebar = () => {
             </Link>
           </li>
           <li>
-            
+
             <Link
               to="adminAnnouncement"
               className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
@@ -224,7 +223,18 @@ const AdminSidebar = () => {
               {!isCollapsed && <span className="ml-3">Announcement</span>}
             </Link>
           </li>
+          <li>
+
+            <Link
+              to="invoiceInfo"
+              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
+            >
+              <i className="fa-solid fa-bullhorn text-gray-500"></i>
+              {!isCollapsed && <span className="ml-3">Invoice</span>}
+            </Link>
+          </li>
         </ul>
+        
       </div>
     </div>
   );

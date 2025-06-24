@@ -17,13 +17,13 @@ const AdminAnnouncement = () => {
   const [editIndex, setEditIndex] = useState(null);
   const queryClient = useQueryClient();
 
-  
+
   const [announcement, setAnnouncement] = useState({
     date: "",
     text: ""
   });
   const mutation = useApiMutation({
-  
+
     onSuccess: (data) => {
       toast.success("Announcement created successfully!");
       console.log("successful:", data);
@@ -33,11 +33,11 @@ const AdminAnnouncement = () => {
       setInput('');
     },
     onError: (error) => {
-                toast.dismiss();
-                toast.error(
-                  error?.response?.data?.message || "Update failed. Please try again."
-                );
-              },
+      toast.dismiss();
+      toast.error(
+        error?.response?.data?.message || "Update failed. Please try again."
+      );
+    },
   });
 
   const createAnnouncement = async () => {
@@ -157,8 +157,8 @@ const AdminAnnouncement = () => {
     if (editIndex === null) return; // No edit in progress
 
     updateMutation.mutate({
-      endpoint: `/announcement/update/${announcement.id}`, // Assuming your backend uses this pattern
-      method: "PUT", // or PATCH, depending on your API
+      endpoint: `/announcement/update/${announcement.id}`, 
+      method: "PUT", 
       body: {
         date: announcement.date,
         text: announcement.text,
@@ -172,33 +172,6 @@ const AdminAnnouncement = () => {
 
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-
-
-      {/* <div id="fileUpload" className="max-w-md mb-4">
-        <Label className="mb-2 block" htmlFor="file">
-          Upload Holiday Announcement File
-        </Label>
-        <FileInput
-          id="file"
-          type="file"
-
-          // onChange={handleHolidayFileUpload}
-          accept=".xls,.xlsx"
-        />
-      </div> */}
-
-      {/* <div className="justify-end mb-4">
-        {/* <button
-          type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          disabled={mutation.isLoading}
-        >
-          {mutation.isLoading ? "Uploading..." : "Upload"}
-        </button>
-      </div> */}
-
-
-
 
 
       <div className="max-w-md mb-2">
@@ -246,7 +219,7 @@ const AdminAnnouncement = () => {
         ></textarea>
         <button
 
-          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="mt-2 px-4 py-2  text-white rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
           onClick={() => {
             if (editIndex !== null) {
               updateAnnouncement();
@@ -261,7 +234,7 @@ const AdminAnnouncement = () => {
         </button>
 
         <button
-          className="mt-2 ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="mt-2 ml-2 px-4 py-2 text-white rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
           onClick={() => {
             setAnnouncement({ date: "", text: "", title: "" });
             setEditIndex(null);
@@ -282,27 +255,18 @@ const AdminAnnouncement = () => {
         highlightOnHover
         pointerOnHover
         customStyles={{
-          rows: {
-            style: {
-              minHeight: '72px', // override the row height
-            },
-          },
           headCells: {
             style: {
-              paddingLeft: '8px', // override the cell padding for head cells
-              paddingRight: '8px',
+              fontSize: "15px",
+              fontWeight: "bold",
+              backgroundColor: "#f3f4f6",
             },
-          },
-          cells: {
-            style: {
-              paddingLeft: '8px', // override the cell padding for data cells
-              paddingRight: '8px',
-            },
+
           },
         }}
       />
       <Holiday />
-      
+
 
     </div>
   );

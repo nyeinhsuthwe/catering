@@ -159,7 +159,7 @@ const AddNewMenu = () => {
           <button
             type="button"
             onClick={() => append({ food_name: [], created_at: "" })}
-            className="mb-4 mr-3 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700 mb-2"
+            className="mb-4 mr-3  text-white px-4 py-2 rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
           >
             Add
           </button>
@@ -168,7 +168,7 @@ const AddNewMenu = () => {
         <div>
           <button
             type="submit"
-            className="mt-2 bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
+            className="mt-2 text-white px-4 py-2 rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
           >
             Add Menu
           </button>
@@ -176,7 +176,7 @@ const AddNewMenu = () => {
           <button
             type="button"
             onClick={() => reset()}
-            className="mt-2 ml-2 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700"
+            className="mt-2 ml-2 text-white px-3 py-2 rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
           >
             Clear
           </button>

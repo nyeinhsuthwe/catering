@@ -25,7 +25,7 @@ const InvoiceInfo = () => {
 
     const mutation = useApiMutation({
         onSuccess: () => {
-            
+
             queryClient.invalidateQueries({ queryKey: ["invoice"] });
         },
         onError: (error) => {
@@ -103,20 +103,20 @@ const InvoiceInfo = () => {
         <div className="p-6 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold mb-4">Employee Invoices</h2>
 
-             {/* Filter by Name */}
-          <div className="w-full md:w-1/3 mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Filter by Name
-            </label>
-            <input
-              type="text"
-              value={filterName}
-              onChange={(e) => setFilterName(e.target.value)}
-              placeholder="Enter name..."
-              className="p-2 border border-gray-300 rounded w-full"
-            />
-          </div>
-           
+            {/* Filter by Name */}
+            <div className="w-full md:w-1/3 mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Filter by Name
+                </label>
+                <input
+                    type="text"
+                    value={filterName}
+                    onChange={(e) => setFilterName(e.target.value)}
+                    placeholder="Enter name..."
+                    className="p-2 border border-gray-300 rounded w-full"
+                />
+            </div>
+
 
             <DataTable
                 columns={columns}
@@ -125,6 +125,17 @@ const InvoiceInfo = () => {
                 pagination
                 highlightOnHover
                 defaultSortFieldId={1}
+
+                customStyles={{
+                    headCells: {
+                        style: {
+                            fontSize: "15px",
+                            fontWeight: "bold",
+                            backgroundColor: "#f3f4f6",
+                        },
+
+                    },
+                }}
             />
         </div>
     );

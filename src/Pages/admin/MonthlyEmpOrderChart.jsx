@@ -65,11 +65,11 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
         <select
           value={selectedEmp}
           onChange={(e) => setSelectedEmp(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-50"
+          className="p-2 border border-gray-300 rounded w-50 text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
         >
-          <option value="">All Employees</option>
+          <option value="" className='text-gray-800 dark:text-white  '>All Employees</option>
           {uniqueNames.map(name => (
-            <option key={name} value={name}>{name}</option>
+            <option key={name} className='text-gray-800 dark:text-white' value={name}>{name}</option>
           ))}
         </select>
 
@@ -77,7 +77,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
           type="month"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
-          className="border px-3 py-2 rounded ml-2"
+          className="border px-3 py-2 rounded ml-2 text-gray-800 dark:text-white dark:bg-gray-800 bg-white"
         />
       </div>
 

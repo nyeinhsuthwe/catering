@@ -4,6 +4,7 @@ import { useApiQuery } from "../../hooks/useQuery";
 import toast from "react-hot-toast";
 import { userStore } from "../../store/userStore"; // adjust path as needed
 import Cookies from "js-cookie"
+import DarkModeToggle from './DarkModeToggle';
 
 export default function AdminTopbar() {
     const navigate = useNavigate();
@@ -43,10 +44,10 @@ export default function AdminTopbar() {
     );
 
     return (
-        <div className="sticky top-0 z-50 h-16 bg-white shadow-md px-6 flex items-center justify-between">
+        <div className="sticky top-0 z-50 h-16 bg-white dark:bg-gray-800 dark:text-white text-gray-800 shadow-md px-6 flex items-center justify-between">
             <h1 className="text-2xl font-light">Catering Management System</h1>
-
             <div className="flex justify-end mb-4">
+                <DarkModeToggle/>
                 <Link to="adminProfile">
                     <Avatar rounded />
                 </Link>

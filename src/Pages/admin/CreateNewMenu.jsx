@@ -54,7 +54,7 @@ const CreateNewMenu = () => {
               onChange={(e) => setNewFoodName(e.target.value)}
             />
             <button
-              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
+              className=" text-white px-4 py-2 rounded  w-full bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
               onClick={async () => {
                 if (!newFoodName.trim()) {
                   toast.error("Please enter a valid food name.");
@@ -74,7 +74,7 @@ const CreateNewMenu = () => {
           </div>
         }
       >
-        <button className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700">
+        <button className= "text-white px-4 py-2 rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400">
           Create New Menu
         </button>
       </Popover>

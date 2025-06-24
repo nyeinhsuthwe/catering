@@ -62,7 +62,7 @@ const AdminProfile = () => {
                 <div className="flex items-center justify-between mb-6">
                     <h1>Personal Information</h1>
                     <Link
-                        to="/admin/adminProfile/adminEditProfile"
+                        to="/admin/adminProfile/adminEditPro</div>file"
                         state={{ profile }}
                     >
                         <button className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded shadow-sm">

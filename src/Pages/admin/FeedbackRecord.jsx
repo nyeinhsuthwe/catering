@@ -38,9 +38,9 @@ const FeedbackRecord = () => {
   return (
     <Card>
       <div className="flex justify-between items-center mt-2">
-        <h2 className="text-xl font-semibold">Employee Satisfaction Over Time</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Employee Satisfaction Over Time</h2>
         <Link to="feedbackTable">
-        <Button>Details</Button>
+        <Button className='bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400'>Details</Button>
         </Link>
       </div>
 

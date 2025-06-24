@@ -94,6 +94,16 @@ const Reservation = () => {
         pagination
         paginationPerPage={10}
         paginationRowsPerPageOptions={[10, 15, 20, 25]}
+        customStyles={{
+                    headCells: {
+                        style: {
+                            fontSize: "15px",
+                            fontWeight: "bold",
+                            backgroundColor: "#f3f4f6",
+                        },
+
+                    },
+                }}
       />
       ): (
         <ViewEmpOrderDetail

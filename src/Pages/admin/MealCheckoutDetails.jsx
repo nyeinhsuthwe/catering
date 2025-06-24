@@ -99,6 +99,17 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
         pointerOnHover
         responsive
         striped
+
+        customStyles={{
+            headCells: {
+              style: {
+                fontSize: "15px",
+                fontWeight: "bold",
+                backgroundColor: "#f3f4f6",
+              },
+
+            },
+          }}
       />
       {filteredData.length > 0 && (
         <div className="mt-4 text-right font-semibold text-lg">
