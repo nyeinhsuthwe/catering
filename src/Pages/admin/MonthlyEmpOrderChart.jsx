@@ -8,6 +8,7 @@ import { useApiQuery } from '../../hooks/useQuery';
 import FeedbackRecord from './FeedbackRecord';
 import { Button } from 'flowbite-react';
 import { Link } from 'react-router-dom';
+import MenuOrderBar from './MenuOrderBar';
 
 
 
@@ -103,8 +104,9 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
 
         {/* Pie Chart */}
         <div className="w-[550px] bg-white rounded shadow p-4">
-          <h3 className="text-lg font-semibold mb-2">Top Ordered Dishes by Employee</h3>
-          <MenuOrderPie detailData={filteredData} />
+          <h3 className="text-lg font-semibold mb-2">Menu Ordered Dishes by Employee</h3>
+          {/* <MenuOrderPie detailData={filteredData} /> */}
+          <MenuOrderBar detailData={filteredData} />
 
         </div>
       </div>

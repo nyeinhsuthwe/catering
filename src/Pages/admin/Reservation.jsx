@@ -50,7 +50,7 @@ const Reservation = () => {
             setSelectedEmpId(row.emp_id);
             setShowDetails(true);
           }}
-          className="text-blue-600 hover:underline"
+          className="text-yellow-400 hover:underline"
         >
           View Details
         </button>
@@ -65,7 +65,7 @@ const Reservation = () => {
 
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
+    <div className="p-6 bg-white rounded-lg shadow-md ">
       {/* <div className="mb-4">
         <div className="flex items-center mb-4">
           <div className="relative">

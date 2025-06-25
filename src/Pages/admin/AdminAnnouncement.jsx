@@ -7,6 +7,7 @@ import * as XLSX from "xlsx";
 import DataTable from 'react-data-table-component';
 import { toast } from "react-hot-toast";
 import Holiday from './Holiday';
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 
 
 
@@ -157,8 +158,8 @@ const AdminAnnouncement = () => {
     if (editIndex === null) return; // No edit in progress
 
     updateMutation.mutate({
-      endpoint: `/announcement/update/${announcement.id}`, 
-      method: "PUT", 
+      endpoint: `/announcement/update/${announcement.id}`,
+      method: "PUT",
       body: {
         date: announcement.date,
         text: announcement.text,
@@ -168,20 +169,18 @@ const AdminAnnouncement = () => {
   };
 
 
-
-
   return (
-    <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+    <div className="p-6 rounded-lg shadow-sm text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
 
 
-      <div className="max-w-md mb-2">
+      <div className="max-w-md mb-2 ">
         <Label className="mb-2 block" htmlFor="date">
           Select Announcement Date
         </Label>
         <input
           id="date"
           type="date"
-          className="p-2 border rounded w-full"
+          className="p-2 border rounded w-full text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
           value={announcement.date}
           onChange={(e) =>
             setAnnouncement({ ...announcement, date: e.target.value })
@@ -189,7 +188,7 @@ const AdminAnnouncement = () => {
         />
         <input
           type="text"
-          className="p-2 border rounded w-full mt-2"
+          className="p-2 border rounded w-full mt-2 text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
           placeholder="Enter announcement title"
           value={announcement.title}
           onChange={(e) =>
@@ -208,7 +207,7 @@ const AdminAnnouncement = () => {
           id="message"
           rows="4"
           className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300
-                    focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600
+                    focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600
                     dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Write your announcement here..."
 
@@ -246,25 +245,59 @@ const AdminAnnouncement = () => {
 
 
       </div>
+        <div className="overflow-x-auto bg-white text-gray-700 dark:bg-gray-800 dark:text-white p-4 rounded">
+          <Table striped>
+            <TableHead>
+              <TableHeadCell>ID</TableHeadCell>
+              <TableHeadCell>Date</TableHeadCell>
+              <TableHeadCell>Title</TableHeadCell>
+              <TableHeadCell>Description</TableHeadCell>
+              <TableHeadCell>Actions</TableHeadCell>
+             
+            </TableHead>
+            <TableBody className="divide-y">
+              {(announce || []).map((row, index) => (
+                <TableRow
+                  key={row.id}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800 border-0"
+                >
+                  <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {row.id}
+                  </TableCell>
+                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{row.title}</TableCell>
+                  <TableCell>{row.text}</TableCell>
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <button
+                        className="text-blue-600 hover:text-blue-800"
+                        onClick={() => {
+                          setAnnouncement({
+                            id: row.id,
+                            date: row.date,
+                            text: row.text,
+                            title: row.title,
+                          });
+                          setEditIndex(index);
+                        }}
+                      >
+                        <i className="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => handleDelete(row.id)}
+                      >
+                        <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-2"></i>
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
-      <DataTable
-        title="Announcements"
-        columns={columns}
-        data={announce || []}
-        pagination
-        highlightOnHover
-        pointerOnHover
-        customStyles={{
-          headCells: {
-            style: {
-              fontSize: "15px",
-              fontWeight: "bold",
-              backgroundColor: "#f3f4f6",
-            },
-
-          },
-        }}
-      />
+     
       <Holiday />
 
 

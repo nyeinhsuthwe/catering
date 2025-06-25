@@ -5,6 +5,7 @@ import MonthlyEmpOrderChart from './MonthlyEmpOrderChart';
 import FeedbackRecord from './FeedbackRecord';
 import MenuOrderPie from './MenuOrderPie';
 import { useState } from 'react';
+import MealAttendanceDonut from './MealAttendanceDonut';
 
 const Report = () => {
 
@@ -37,7 +38,7 @@ const Report = () => {
         <MonthlyEmpOrderChart data={data} />
 
        
-      
+      <MealAttendanceDonut/>
       
       <FeedbackRecord />
     </>

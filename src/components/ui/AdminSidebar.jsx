@@ -36,7 +36,7 @@ const AdminSidebar = () => {
               />
               <hr className="text-gray-300" />
               <NavLink
-                className={"flex w-auto"}
+                
                 to="reservation"
                 end
                 children={({ isActive }) => (

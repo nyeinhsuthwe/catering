@@ -26,6 +26,9 @@ import AdminResetPassword from "../Pages/admin/AdminResetPassword"
 import Order from "../Pages/admin/Order"
 import InvoiceInfo from "../Pages/admin/InvoiceInfo"
 import ViewEmpOrderDetail from "../Pages/admin/ViewEmpOrderDetail";
+import SendInvoice from "../Pages/admin/SendInvoice"
+import MenuOrderBar from "../Pages/admin/MenuOrderBar";
+import MealAttendanceDonut from "../Pages/admin/MealAttendanceDonut";
 
 
 
@@ -158,6 +161,18 @@ const router = createBrowserRouter([
       {
         path: "viewEmpOrderDetail",
         element: <ViewEmpOrderDetail/>
+      },
+      {
+        path: "/admin/invoiceInfo/sendInvoice",
+        element: <SendInvoice/>
+      },
+      {
+        path: "menuOrderBar",
+        element: <MenuOrderBar/>
+      },
+      {
+        path: "mealAttendanceDonut",
+        element: <MealAttendanceDonut/>
       }
 
 

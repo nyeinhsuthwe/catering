@@ -53,46 +53,46 @@ const AdminEditProfile = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h2 className="text-xl font-bold mb-6 text-sky-700">Edit Your Profile</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 bg-gray-50 p-6 rounded shadow">
+    <div className="p-6 max-w-3xl mx-auto ">
+      <h2 className="text-xl font-bold mb-6 text-gray-700  dark:text-white">Edit Your Profile</h2>
+      <form onSubmit={handleSubmit} className="space-y-4 p-6 rounded shadow text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
         <div>
-          <label className="block text-sm text-gray-600">Name</label>
+          <label className="block text-sm text-gray-700 dark:text-white">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-gray-700 dark:bg-gray-700 bg-white dark:text-white"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm text-gray-600">Email</label>
+          <label className="block text-sm text-gray-700 dark:text-white">Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-gray-700 dark:bg-gray-700 bg-white dark:text-white"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm text-gray-600">Employee ID</label>
+          <label className="block text-sm text-gray-700 dark:text-white">Employee ID</label>
           <input
             type="text"
             name="emp_id"
             value={formData.emp_id}
-            className="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-gray-700 dark:bg-gray-700 bg-white dark:text-white"
             disabled
           />
         </div>
 
         <div>
-          <label className="block text-sm text-gray-600">Role</label>
+          <label className="block text-sm text-gray-700 dark:text-white">Role</label>
           <select
             name="role"
             value={formData.role}
@@ -100,8 +100,8 @@ const AdminEditProfile = () => {
             className="w-full border border-gray-300 rounded px-3 py-2"
             required
           >
-            <option value="">Select Role</option>
-            <option value="admin">Admin</option>
+            <option value="" >Select Role</option>
+            <option value="admin" >Admin</option>
             <option value="employee">Employee</option>
           </select>
         </div>
@@ -109,7 +109,7 @@ const AdminEditProfile = () => {
         <div className="flex items-center gap-4">
         <button
           type="submit"
-          className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded"
+          className="  text-white px-6 py-2 rounded bg-yellow-400  dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
           disabled={updateMutation.isLoading}
         >
           {updateMutation.isLoading ? "Saving..." : "Save Changes"}
@@ -117,7 +117,7 @@ const AdminEditProfile = () => {
         <button
           type="button"
           onClick={() => navigate("/admin/adminProfile")}
-          className="bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded"
+          className=" text-white px-6 py-2 rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
         >
           Cancel 
         </button>

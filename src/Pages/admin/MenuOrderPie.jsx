@@ -14,10 +14,10 @@ const MenuOrderPie = ({ detailData }) => {
         return acc;
     }, {});
 
-    const chartData = Object.entries(foodCountMap).map(([name, value]) => ({
-        name,
-        value
-    }));
+     const chartData = Object.entries(foodCountMap)
+        .map(([name, value]) => ({ name, value }))
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 5); // only top 5
 
     if (chartData.length === 0) {
         return <p className="text-gray-500 mt-4">No orders available </p>;

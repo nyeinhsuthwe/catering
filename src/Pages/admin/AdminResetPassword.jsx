@@ -81,7 +81,7 @@ return (
       </ModalBody>
     </Modal>
 
-    <p className="mx-auto dark:text-blue-500 text-blue-400 max-w-lg  text-2xl mb-4 font-bold  mt-[80px]">
+    <p className="mx-auto dark:text-white text-gray-700 max-w-lg  text-2xl mb-4 font-bold  mt-[80px]">
       Change Your Password
     </p>
 
@@ -127,7 +127,7 @@ return (
         </div>
         <div className="flex items-center gap-4">
         <Button
-          className="mt-3 w-[200px] bg-sky-600 hover:bg-sky-700"
+          className="mt-3 w-[200px] bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500"
           type="submit"
         >
           <i className="fa-solid fa-check me-2"></i> Submit
@@ -135,7 +135,7 @@ return (
         <button
           type="button"
           onClick={() => navigate("/admin/adminProfile")}
-          className="mt-3 bg-sky-600 hover:bg-sky-700 text-white px-6 py-2 rounded"
+          className="mt-3 bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-2 rounded"
         >
           Cancel 
         </button>

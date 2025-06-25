@@ -60,11 +60,11 @@ const Holiday = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Upload Holiday File</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-700 dark:bg-gray-700 bg-white dark:text-white">Upload Holiday File</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
         <div id="fileUpload" className="max-w-md mb-4">
-          <Label className="mb-2 block" htmlFor="file">
+          <Label className="mb-2 block " htmlFor="file">
             Upload Holiday File (.xls, .xlsx)
           </Label>
           <FileInput
@@ -78,7 +78,7 @@ const Holiday = () => {
         <div className="justify-end mb-4">
           <button
             type="submit"
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="  px-4 py-2 rounded text-white  bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400" 
             disabled={mutation.isLoading}
           >
             {mutation.isLoading ? "Uploading..." : "Upload"}

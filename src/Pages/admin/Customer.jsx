@@ -211,10 +211,11 @@ const Customer = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
         <div id="fileUpload" className="max-w-md mb-4">
-          <Label className="mb-2 block" htmlFor="file">
+          <Label className="mb-2 block " htmlFor="file">
             Upload file
           </Label>
           <FileInput
+          className="bg-white  text-gray-800 dark:bg-gray-800 dark:text-white "
             id="file"
             type="file"
             onChange={handleFileUpload}
@@ -224,7 +225,7 @@ const Customer = () => {
         <div className="justify-end mb-4">
           <button
             type="submit"
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className=" px-4 py-2 rounded text-white bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
             disabled={mutation.isLoading}
           >
             {mutation.isLoading ? "Uploading..." : "Upload"}
@@ -232,23 +233,23 @@ const Customer = () => {
         </div>
       </form>
 
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+      <div className="p-6  rounded-lg shadow-md text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 dark:text-white">
           Registered Employees
         </h2>
 
         {/* 🔍 Filters Section */}
         <div className="flex gap-4 flex-wrap mb-4">
           {/* Filter by Role */}
-          <div className="w-full md:w-1/3">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="w-full md:w-1/3 ">
+            <label className="block text-sm font-medium text-gray-700 mb-2 ">
               Filter by Role
             </label>
             <select
               id="role"
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="w-full border border-gray-300 rounded p-2"
+              className="w-full border border-gray-300 rounded p-2 text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
             >
               <option value="">Select Role</option>
               {availableRoles.map((role) => (
@@ -263,7 +264,7 @@ const Customer = () => {
 
           {/* Filter by Name */}
           <div className="w-full md:w-1/3">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium  mb-2 ">
               Filter by Name
             </label>
             <input
@@ -271,7 +272,7 @@ const Customer = () => {
               value={filterName}
               onChange={(e) => setFilterName(e.target.value)}
               placeholder="Enter name..."
-              className="p-2 border border-gray-300 rounded w-full"
+              className="p-2 border border-gray-300 rounded w-full text-gray-800 dark:bg-gray-800 bg-white dark:text-white "
             />
           </div>
         </div>
