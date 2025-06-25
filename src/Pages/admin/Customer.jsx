@@ -9,6 +9,14 @@ import Cookies from "js-cookie";
 import Datatable from "react-data-table-component";
 import { toast } from "react-hot-toast";
 import { AlignLeft } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
 
 
 
@@ -36,8 +44,8 @@ const Customer = () => {
       name: "Emp ID",
       selector: (row) => row.emp_id,
       sortable: true,
-      
-      
+
+
     },
     {
       name: "Name",
@@ -175,7 +183,7 @@ const Customer = () => {
     reader.readAsDataURL(file);
   };
 
-  
+
 
   const handleChangeRole = (emp_id, newRole) => {
     const confirm = window.confirm(`Change role to ${newRole}?`);
@@ -207,7 +215,7 @@ const Customer = () => {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      
+
 
       <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
         <div id="fileUpload" className="max-w-md mb-4">
@@ -215,7 +223,7 @@ const Customer = () => {
             Upload file
           </Label>
           <FileInput
-          className="bg-white  text-gray-800 dark:bg-gray-800 dark:text-white "
+            className="bg-white  text-gray-800 dark:bg-gray-800 dark:text-white "
             id="file"
             type="file"
             onChange={handleFileUpload}
@@ -242,7 +250,7 @@ const Customer = () => {
         <div className="flex gap-4 flex-wrap mb-4">
           {/* Filter by Role */}
           <div className="w-full md:w-1/3 ">
-            <label className="block text-sm font-medium text-gray-700 mb-2 ">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2 ">
               Filter by Role
             </label>
             <select
@@ -281,30 +289,56 @@ const Customer = () => {
         {error && <p className="text-red-500">Error loading employees.</p>}
 
         {/* Total Count Display */}
-        <div className="mb-4 text-gray-700 font-semibold">
+        <div className="mb-4 text-gray-700 dark:text-white font-semibold">
           Total Registered Employees: {filteredCustomers.length}
         </div>
+        <div className="overflow-x-auto bg-white text-gray-700 dark:bg-gray-800 dark:text-white p-4 rounded">
 
-        <Datatable
-          title="Registered Employees"
-          columns={columns}
-          data={filteredCustomers}
-          pagination
-          paginationPerPage={10}
-          highlightOnHover
-          paginationRowsPerPageOptions={[10, 15, 20, 25]}
+        <Table striped>
+          <TableHead>
+            <TableHeadCell>No</TableHeadCell>
+            <TableHeadCell>Emp ID</TableHeadCell>
+            <TableHeadCell>Name</TableHeadCell>
+            <TableHeadCell>Email</TableHeadCell>
+            <TableHeadCell>Role</TableHeadCell>
+            <TableHeadCell>
+              <span className="sr-only">Actions</span>
+            </TableHeadCell>
+          </TableHead>
+          <TableBody className="divide-y">
+            {filteredCustomers.map((row, index) => (
+              <TableRow key={row.emp_id} className="bg-white dark:border-gray-700 dark:bg-gray-800 border-0">
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{row.emp_id}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.role}</TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <button
+                      className="text-blue-600 hover:text-blue-800"
+                      onClick={() => {
+                        setEditEmployee(row);
+                        setIsEditModalOpen(true);
+                      }}
+                    >
+                      <i className="fas fa-edit text-blue-600 cursor-pointer"></i>
+                    </button>
+                    <button
+                      className="text-red-600 hover:text-red-800"
+                      onClick={() => handleDelete(row.emp_id)}
+                    >
+                      <i className="fa-solid fa-trash text-red-500 cursor-pointer"></i>
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        </div>
 
-          customStyles={{
-            headCells: {
-              style: {
-                fontSize: "15px",
-                fontWeight: "bold",
-                backgroundColor: "#f3f4f6",
-              },
 
-            },
-          }}
-        />
 
         <Modal
           show={isEditModalOpen}
@@ -312,8 +346,8 @@ const Customer = () => {
           popup
           onClose={() => setIsEditModalOpen(false)}
         >
-          <div className="p-6 bg-white">
-            <h3 className="text-xl font-medium text-gray-900 mb-4">Edit Role</h3>
+          <div className="p-6 text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
+            <h3 className="text-xl font-medium text-gray-700 dark:text-white mb-4">Edit Role</h3>
 
             {editEmployee && (
               <div className="space-y-4">
@@ -330,7 +364,7 @@ const Customer = () => {
                     onChange={(e) =>
                       setEditEmployee({ ...editEmployee, role: e.target.value })
                     }
-                    className="w-full border border-gray-300 rounded p-2"
+                    className="w-full border border-gray-300 rounded p-2 text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
                   >
                     <option value="employee">employee</option>
                     <option value="admin">admin</option>
@@ -341,6 +375,7 @@ const Customer = () => {
 
             <div className="mt-6 flex justify-end gap-2">
               <Button
+                className="text-white rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400"
                 onClick={() => {
                   handleChangeRole(editEmployee.emp_id, editEmployee.role);
                   setIsEditModalOpen(false);
@@ -348,7 +383,7 @@ const Customer = () => {
               >
                 Save
               </Button>
-              <Button color="gray" onClick={() => setIsEditModalOpen(false)}>
+              <Button className="text-white rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400" onClick={() => setIsEditModalOpen(false)}>
                 Cancel
               </Button>
             </div>

@@ -76,15 +76,15 @@ const AddNewMenu = () => {
   };
 
   return (
-    <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Add New Menu</h3>
+    <div className=" p-6 rounded-lg shadow-sm text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
+      <h3 className="text-lg font-semibold mb-4 text-gray-700 dark:text-white">Add New Menu</h3>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200 w-full mb-6">
+        <div className=" rounded-xl shadow-md p-6 border border-gray-200 w-full mb-6 text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
           <div className="mb-6">
             <label
               htmlFor="price"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium  mb-2 ext-gray-700  dark:text-white"
             >
               Enter Price
             </label>
@@ -93,19 +93,19 @@ const AddNewMenu = () => {
               type="text"
               id="price"
               placeholder="Enter price"
-              className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full"
+              className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
             />
           </div>
         </div>
 
-        <div className="bg-gray-100 rounded-xl shadow-md p-6 border border-gray-100 w-full mb-6">
+        <div className="">
           {fields.map((item, index) => (
             <div
               key={item.id}
-              className="grid md:grid-cols-2 gap-6 mb-6 bg-white p-4 rounded-xl shadow-md border border-gray-200"
+              className="grid md:grid-cols-2 gap-6 mb-6 p-4 rounded-xl shadow-md border border-gray-200 text-gray-700 dark:bg-gray-700 bg-white dark:text-white"
             >
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                   Select Food Menu
                 </label>
                 <Controller
@@ -118,7 +118,7 @@ const AddNewMenu = () => {
                       onChange={(e) => field.onChange(e.value)}
                       optionLabel="name"
                       placeholder="Select Food"
-                      className="w-full md:w-20rem"
+                      className="w-full md:w-20rem text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
                       display="chip"
                     />
                   )}
@@ -126,7 +126,7 @@ const AddNewMenu = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                   Select Date
                 </label>
                 <Controller
@@ -136,7 +136,7 @@ const AddNewMenu = () => {
                   render={({ field }) => (
                     <input
                       type="date"
-                      className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full"
+                      className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
                       value={field.value || ""}
                       onChange={(e) => field.onChange(e.target.value)}
                     />

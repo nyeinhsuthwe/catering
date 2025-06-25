@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { useApiQuery } from "../../hooks/useQuery";
-import Datatable from 'react-data-table-component';
-import MealCheckoutDetails from './MealCheckoutDetails'; // Adjust path if needed
 
+import MealCheckoutDetails from './MealCheckoutDetails'; // Adjust path if needed
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from 'flowbite-react';
 const EmployeeMealAttendance = () => {
   const [selectedEmpId, setSelectedEmpId] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -21,7 +28,7 @@ const EmployeeMealAttendance = () => {
     {
       name: 'No.',
       selector: (row, index) => index + 1,
-      
+
     },
     {
       name: 'Employee ID',
@@ -61,39 +68,50 @@ const EmployeeMealAttendance = () => {
 
 
   return (
-    <div className="p-4">
+    //  <div className="p-4 rounded-md shadow">
+    <div>
       {!showDetails ? (
-        <Datatable
-          title="Employee Attendance"
-          columns={columns}
-          data={displayData}
-          pagination
-          paginationPerPage={10}
-          paginationRowsPerPageOptions={[10, 15, 20, 25]}
-          noDataComponent={
-            hasData ? null : <div className="py-4 text-gray-500">No attendance records found</div>
-          }
-          conditionalRowStyles={[
-            {
-              when: row => !row.emp_id && !row.emp_name,
-              style: {
-                display: 'none', 
-              },
-            },
-          ]}
-          customStyles={{
-            headCells: {
-                        style: {
-                            fontSize: "15px",
-                            fontWeight: "bold",
-                            backgroundColor: "#f3f4f6",
-                        },
-                        
-                    },
-          }}
-        />
-
-
+        <>
+          <h2 className="text-lg font-semibold mb-4">Employee Attendance</h2>
+          <div className="overflow-x-auto">
+            <Table hoverable striped>
+              <TableHead className="bg-gray-100">
+                <TableHeadCell>No.</TableHeadCell>
+                <TableHeadCell>Employee ID</TableHeadCell>
+                <TableHeadCell>Employee Name</TableHeadCell>
+                <TableHeadCell>Actions</TableHeadCell>
+              </TableHead>
+              <TableBody>
+                {hasData ? (
+                  displayData.map((row, index) => (
+                    <TableRow key={row.emp_id}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{row.emp_id}</TableCell>
+                      <TableCell>{row.emp_name}</TableCell>
+                      <TableCell>
+                        <button
+                          onClick={() => {
+                            setSelectedEmpId(row.emp_id);
+                            setShowDetails(true);
+                          }}
+                          className="text-blue-600 hover:underline"
+                        >
+                          View Details
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center py-4 text-gray-500">
+                      No attendance records found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </>
       ) : (
         <MealCheckoutDetails
           empId={selectedEmpId}

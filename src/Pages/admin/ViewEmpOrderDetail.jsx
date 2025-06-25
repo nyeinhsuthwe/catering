@@ -1,101 +1,93 @@
 import React, { useState } from 'react';
-import Datatable from 'react-data-table-component';
-import MenuOrderPie from './MenuOrderPie';
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeadCell
+} from 'flowbite-react';
+// import MenuOrderPie from './MenuOrderPie'; // Uncomment if needed
 
 const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
-    const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
 
-    // All orders for selected employee
-    const empOrders = data.filter(d => d.emp_id === empId);
+  // Filter employee orders
+  const empOrders = data.filter(d => d.emp_id === empId);
 
-    // Filter by selected month if provided
-    const detailData = selectedMonth
-        ? empOrders.filter(order => {
-            const orderDate = new Date(order.date);
-            const month = String(orderDate.getMonth() + 1).padStart(2, '0');
-            const year = orderDate.getFullYear();
-            return `${year}-${month}` === selectedMonth;
-        })
-        : empOrders;
+  const detailData = selectedMonth
+    ? empOrders.filter(order => {
+      const orderDate = new Date(order.date);
+      const month = String(orderDate.getMonth() + 1).padStart(2, '0');
+      const year = orderDate.getFullYear();
+      return `${year}-${month}` === selectedMonth;
+    })
+    : empOrders;
 
-    const detailColumns = [
-        {
-            name: 'No.',
-            selector: (row, index) => index + 1,
-        },
-        {
-            name: 'Employee ID',
-            selector: row => row.emp_id,
-            sortable: true,
-        },
-        {
-            name: 'Employee Name',
-            selector: row => row.emp_name,
-            sortable: true,
-        },
-        {
-            name: 'Food Name',
-            selector: row => row.food_name,
-            sortable: true,
-        },
-        {
-            name: 'Price',
-            selector: row => row.price,
-            sortable: true,
-        },
-        {
-            name: 'Order Date',
-            selector: row => row.date,
-            sortable: true,
-        },
-    ];
+  const totalAmount = detailData.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
 
-    const totalAmount = detailData.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+  return (
+    <div className="mt-6">
+      <button onClick={onBack} className="mb-4 text-blue-500 hover:underline">
+        ← Back to List
+      </button>
 
-    return (
-        <div className="mt-6">
-            <button onClick={onBack} className="mb-4 text-red-500 hover:underline">
-                ← Back to List
-            </button>
-            <h2 className="text-xl font-semibold mb-4">Details for Employee ID: {empId}</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        Details for Employee ID: {empId}
+      </h2>
 
+      {/* Month Filter */}
+      <div className="mb-4">
+        <label className="block mb-1 font-medium">Filter by Month</label>
+        <input
+          type="month"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2 text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
+        />
+      </div>
 
-            {/* Month Filter */}
-            <div className="mb-4">
-                <label className="block mb-1 font-medium">Filter by Month</label>
-                <input
-                    type="month"
-                    value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2"
-                />
-            </div>
+      <div className="overflow-x-auto">
+        <Table striped hoverable>
+          <TableHead className="bg-gray-100 text-sm">
+            <TableHeadCell>No.</TableHeadCell>
+            <TableHeadCell>Employee ID</TableHeadCell>
+            <TableHeadCell>Employee Name</TableHeadCell>
+            <TableHeadCell>Food Name</TableHeadCell>
+            <TableHeadCell>Price</TableHeadCell>
+            <TableHeadCell>Order Date</TableHeadCell>
+          </TableHead>
+          <TableBody>
+            {detailData.length > 0 ? (
+              detailData.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{row.emp_id}</TableCell>
+                  <TableCell>{row.emp_name}</TableCell>
+                  <TableCell>{row.food_name}</TableCell>
+                  <TableCell>{row.price}</TableCell>
+                  <TableCell>{row.date}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-gray-500 py-6">
+                  No order records found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
-            <Datatable
-                columns={detailColumns}
-                data={detailData}
-                pagination
-                paginationPerPage={10}
-                paginationRowsPerPageOptions={[10, 15, 20, 25]}
-                customStyles={{
-                    headCells: {
-                        style: {
-                            fontSize: '15px',
-                            fontWeight: 'bold',
-                            backgroundColor: '#f3f4f6',
-                        },
-                    },
-                }}
-            />
+      <div className="mt-4 text-right font-semibold text-lg">
+        Total Amount: <span className="text-green-600">{totalAmount}</span>
+      </div>
 
-            <div className="mt-4 text-right font-semibold text-lg">
-                Total Amount: <span className="text-green-600">{totalAmount}</span>
-            </div>
-
-            {/* Optionally show Pie Chart for filtered data */}
-            {/* <MenuOrderPie detailData={detailData} /> */}
-        </div>
-    );
+      {/* Optional: Add pie chart */}
+      {/* <MenuOrderPie detailData={detailData} /> */}
+    </div>
+  );
 };
 
 export default ViewEmpOrderDetail;

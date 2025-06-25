@@ -5,6 +5,14 @@ import { useApiMutation } from '../../hooks/useMutation';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import DataTable from 'react-data-table-component';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from 'flowbite-react';
 
 const SendInvoice = () => {
     const { state } = useLocation(); // contains emp_id, emp_name, emp_email
@@ -56,7 +64,7 @@ const SendInvoice = () => {
                 body: {
                     month: selectedMonth,
                     total_amount: totalAmount,
-                    orders: filteredData, 
+                    orders: filteredData,
                 },
             });
         } catch (error) {
@@ -64,16 +72,11 @@ const SendInvoice = () => {
         }
     };
 
-    const columns = [
-        { name: 'No.', selector: (row, index) => index + 1, },
-        { name: 'Date', selector: row => row.date, sortable: true },
-        { name: 'Menu', selector: row => row.food_name || '-', sortable: true },
-        { name: 'Price (MMK)', selector: row => parseFloat(row.price).toLocaleString(), sortable: true },
-    ];
+    
 
     return (
-        <div className="p-6 bg-white rounded shadow">
-            <h2 className="text-2xl font-bold mb-4">Invoice Details</h2>
+        <div className="p-6  rounded shadow text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
+            <h2 className="text-2xl font-bold mb-4 text-gray-700 dark:text-white">Invoice Details</h2>
             <p><strong>Employee ID:</strong> {state.emp_id}</p>
             <p><strong>Name:</strong> {state.emp_name}</p>
             <p><strong>Email:</strong> {state.emp_email}</p>
@@ -84,34 +87,49 @@ const SendInvoice = () => {
                     type="month"
                     value={selectedMonth}
                     onChange={(e) => setSelectedMonth(e.target.value)}
-                    className="p-2 border border-gray-300 rounded"
+                    className="p-2 border rounded text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
                 />
             </div>
 
-            <DataTable
-                title={`Orders for ${selectedMonth || 'All Months'}`}
-                columns={columns}
-                data={filteredData}
-                progressPending={isLoading}
-                pagination
-                highlightOnHover
-                customStyles={{
-                    headCells: {
-                        style: {
-                            fontWeight: 'bold',
-                            fontSize: '14px',
-                            backgroundColor: '#f9fafb',
-                        },
-                    },
-                }}
-            />
+            <h3 className="text-lg font-semibold mb-2">
+                Orders for {selectedMonth || 'All Months'}
+            </h3>
+
+            <Table striped hoverable>
+                <TableHead>
+                    <TableHeadCell>No.</TableHeadCell>
+                    <TableHeadCell>Date</TableHeadCell>
+                    <TableHeadCell>Menu</TableHeadCell>
+                    <TableHeadCell>Price (MMK)</TableHeadCell>
+                </TableHead>
+                <TableBody className="divide-y">
+                    {isLoading ? (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center py-4">Loading...</TableCell>
+                        </TableRow>
+                    ) : filteredData.length > 0 ? (
+                        filteredData.map((order, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{order.date}</TableCell>
+                                <TableCell>{order.food_name || '-'}</TableCell>
+                                <TableCell>{parseFloat(order.price).toLocaleString()}</TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center py-4">No data available</TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
 
             <div className="mt-4 text-lg font-semibold">
                 Total Amount: {totalAmount.toLocaleString()} MMK
             </div>
 
             <button
-                className="mt-4 px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500 dark:bg-yellow-400 dark:hover:bg-yellow-500"
+                className="mt-4 px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500 dark:bg-yellow-400 dark:hover:bg-yelow-500"
                 onClick={handleSendInvoice}
             >
                 Send Invoice

@@ -123,15 +123,15 @@ const MenuUpdate = () => {
 
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Edit Menu</h2>
+    <div className=" p-6 rounded-lg shadow-sm text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+      <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-white">Edit Menu</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <label className="block mb-1 text-sm font-medium">Price</label>
           <input
             type="text"
             {...register("price", { required: true })}
-            className="w-full p-2 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 rounded text-gray-700 dark:text-white bg-white dark:bg-gray-700 "
             placeholder="Enter price"
           />
         </div>
@@ -139,7 +139,7 @@ const MenuUpdate = () => {
         {fields.map((item, index) => (
           <div
             key={item.id}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 border p-4 rounded-lg bg-gray-50"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 border p-4 rounded-lg text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
           >
             <div>
               <label className="block mb-1 text-sm font-medium">
@@ -155,7 +155,7 @@ const MenuUpdate = () => {
                     onChange={(e) => field.onChange(e.value)}
                     optionLabel="name"
                     display="chip"
-                    className="w-full"
+                    className="w-full text-gray-700 dark:bg-gray-700 bg-white dark:text-white "
                     placeholder="Select food items"
                   />
                 )}
@@ -170,7 +170,7 @@ const MenuUpdate = () => {
                 render={({ field }) => (
                   <input
                     type="date"
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded text-gray-700 dark:bg-gray-700 bg-white dark:text-white"
                     {...field}
                   />
                 )}
@@ -200,14 +200,14 @@ const MenuUpdate = () => {
         <div className="flex gap-3">
           <button
             type="submit"
-            className="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
+            className="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500 "
           >
             Update Menu
           </button>
           <button
             type="button"
             onClick={() => navigate("/admin/menu")}
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+            className="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500"
           >
             Cancel
           </button>
