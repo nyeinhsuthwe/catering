@@ -84,7 +84,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
 
       <div className="flex  flex-wrap gap-4 w-full mb-4">
         {/* Bar Chart */}
-        <div className=" w-[400px] bg-white rounded shadow p-4 ">
+        <div className=" w-[400px]  rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
           <h2 className="text-xl font-semibold">Monthly Employee Order Chart</h2>
           {/* <Link to="viewEmpOrderDetail">
             <Button>Details</Button>
@@ -94,7 +94,8 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis label={{ value: 'Menu Orders', angle: -90, position: 'insideLeft' }} />                <Tooltip />
+                <YAxis label={{value: 'Menu Orders', angle: -90, position: 'insideLeft' }} />     
+                          <Tooltip />
                 <Bar dataKey="menuCount" fill="#3B82F6" />              </BarChart>
             </ResponsiveContainer>
           ) : (
@@ -103,7 +104,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
         </div>
 
         {/* Pie Chart */}
-        <div className="w-[550px] bg-white rounded shadow p-4">
+        <div className=" w-[550px]  rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
           <h3 className="text-lg font-semibold mb-2">Menu Ordered Dishes by Employee</h3>
           {/* <MenuOrderPie detailData={filteredData} /> */}
           <MenuOrderBar detailData={filteredData} />

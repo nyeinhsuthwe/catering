@@ -30,7 +30,7 @@ const Report = () => {
 
     <>
 
-      <h2 className="text-xl font-semibold mb-4">Employee Reports</h2>
+      <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-white">Employee Reports</h2>
 
       
       

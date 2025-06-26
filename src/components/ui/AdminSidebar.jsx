@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaTachometerAlt, FaClipboardList, FaUtensils, FaUsers, FaChartBar, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
-
+import {HiUser } from "react-icons/hi";
 import {
   Sidebar,
   SidebarItem,
   SidebarItemGroup,
   SidebarItems,
+  SidebarCollapse
 } from "flowbite-react";
 
 const AdminSidebar = () => {
@@ -30,13 +30,16 @@ const AdminSidebar = () => {
                     className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
                   >
                     <i class="fa-solid fa-gauge me-3"></i>
-                      Dashboard
+                    Dashboard
                   </SidebarItem>
                 )}
               />
+                          
+
+
               <hr className="text-gray-300" />
               <NavLink
-                
+
                 to="reservation"
                 end
                 children={({ isActive }) => (
@@ -69,7 +72,7 @@ const AdminSidebar = () => {
                   <SidebarItem
                     className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
                   >
-                   <i class="fa-solid fa-users me-3"></i>
+                    <i class="fa-solid fa-users me-3"></i>
                     Employee Lists
                   </SidebarItem>
                 )}
@@ -114,6 +117,34 @@ const AdminSidebar = () => {
                 )}
               />
               <hr className="text-gray-300" />
+              
+              <SidebarCollapse icon={HiUser} label="Profile" >
+
+                <NavLink
+
+                  to="adminProfile"
+                  end
+                  children={({ isActive }) => (
+                    <SidebarItem
+                      className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                    >
+                      View Profile
+                    </SidebarItem>
+                  )}
+                />
+                <NavLink
+
+                  to="/admin/adminProfile/adminResetPassword"
+                  end
+                  children={({ isActive }) => (
+                    <SidebarItem
+                      className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                    >
+                      Change Password
+                    </SidebarItem>
+                  )}
+                />
+              </SidebarCollapse>
             </SidebarItemGroup>
           </SidebarItems>
         </Sidebar>

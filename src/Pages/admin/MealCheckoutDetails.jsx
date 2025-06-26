@@ -1,5 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import Datatable from 'react-data-table-component';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow, Pagination
+} from 'flowbite-react';
 
 const MealCheckoutDetails = ({ empId, onBack, data }) => {
   const [filters, setFilters] = useState({
@@ -39,17 +47,27 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
       }));
   }, [data, filters, empId]);
 
-  const columns = [
-    { name: 'Emp ID', selector: row => row.emp_id, sortable: true },
-    { name: 'Name', selector: row => row.emp_name, sortable: true },
-    { name: 'Email', selector: row => row.emp_email },
-    { name: 'Date', selector: row => row.date, sortable: true },
-    { name: 'Food', selector: row => row.food_name },
-    { name: 'Price', selector: row => row.price },
-    { name: 'Status', selector: row => row.status, sortable: true },
-    { name: 'Check Out', selector: row => String(row.check_out) },
-  ];
+  // const columns = [
+  //   { name: 'Emp ID', selector: row => row.emp_id, sortable: true },
+  //   { name: 'Name', selector: row => row.emp_name, sortable: true },
+  //   { name: 'Email', selector: row => row.emp_email },
+  //   { name: 'Date', selector: row => row.date, sortable: true },
+  //   { name: 'Food', selector: row => row.food_name },
+  //   { name: 'Price', selector: row => row.price },
+  //   { name: 'Status', selector: row => row.status, sortable: true },
+  //   { name: 'Check Out', selector: row => String(row.check_out) },
+  // ];
 
+  //pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
+    //Pagination
+    const onPageChange = (page) => setCurrentPage(page);
+    const totalItems = filteredData.length;
+    const paginatedData = filteredData.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
   return (
     <div className="p-4">
       <button onClick={onBack} className="mb-4 text-blue-600 hover:underline">
@@ -73,7 +91,7 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
         <input
           type="date"
           name="date"
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
           value={filters.date}
           onChange={handleChange}
         />
@@ -90,7 +108,7 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
       </div>
 
       {/* Data Table */}
-      <Datatable
+      {/* <Datatable
         title="Filtered Attendance"
         columns={columns}
         data={filteredData}
@@ -110,7 +128,74 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
 
             },
           }}
-      />
+      /> */}
+
+      <div className="overflow-x-auto bg-white text-gray-700 dark:bg-gray-800 dark:text-white p-4 rounded">
+
+        <div className="flex justify-end items-center mb-4">
+          <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
+            Items per page:
+          </label>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1); // reset to first page when limit changes
+            }}
+            className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
+          >
+            {[1, 5, 10, 15, 20, 30].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <Table striped>
+          <TableHead>
+            <TableHeadCell>No</TableHeadCell>
+            <TableHeadCell>Emp ID</TableHeadCell>
+            <TableHeadCell>Name</TableHeadCell>
+            <TableHeadCell>Email</TableHeadCell>
+            <TableHeadCell>Date</TableHeadCell>
+            <TableHeadCell>Food</TableHeadCell>
+            <TableHeadCell>Price</TableHeadCell>
+            <TableHeadCell>Status</TableHeadCell>
+            <TableHeadCell>Checkout </TableHeadCell>
+          </TableHead>
+          <TableBody className="divide-y">
+            {paginatedData.map((row, index) => (
+              <TableRow key={row.emp_id} className="bg-white dark:border-gray-700 dark:bg-gray-800 border-0">
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{row.emp_id}</TableCell>
+                <TableCell>{row.emp_name}</TableCell>
+                <TableCell>{row.emp_email}</TableCell>
+                <TableCell>{row.date}</TableCell>
+                <TableCell>{row.food_name}</TableCell>
+                <TableCell>{row.price}</TableCell>
+                <TableCell>{row.status}</TableCell>
+                <TableCell>{String(row.check_out)}</TableCell>
+                
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {totalItems > itemsPerPage && (
+        <div className="flex overflow-x-auto justify-center mt-4">
+          <Pagination
+            layout="table"
+            currentPage={currentPage}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            onPageChange={onPageChange}
+            showIcons
+          />
+        </div>
+      )}
+
       {filteredData.length > 0 && (
         <div className="mt-4 text-right font-semibold text-lg">
           Total Amount: {filteredData[0].total_amount} MMK

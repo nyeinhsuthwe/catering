@@ -7,15 +7,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
-import {
-  Table,
-  TableHead,
-  TableHeadCell,
-  TableBody,
-  TableRow,
-  TableCell,
-  Pagination,
-} from "flowbite-react";
+import {  Table,  TableHead,  TableHeadCell,  TableBody,  TableRow,  TableCell, Pagination} from "flowbite-react";
 
 const MenuListTable = () => {
     const [editIndex, setEditIndex] = useState(null);
@@ -96,7 +88,10 @@ const MenuListTable = () => {
                 method: "DELETE",
             });
         }
+            console.log("Deleting menu for date:", date);
     };
+
+
     const navigate = useNavigate();
 
     const handleEdit = (selectedRow) => {
@@ -124,84 +119,103 @@ const MenuListTable = () => {
         navigate("/admin/menu/edit-menu", { state: groupedMenu });
     };
 
-
-    const columns = [
-        {
-            name: "No.",
-            selector: (row, index) => index + 1,
-            width: "70px",
-        },
-        {
-            name: "Menu Name",
-            selector: (row) => row.food_name,
-            sortable: true,
-        },
-        {
-            name: "Price (MMK)",
-            selector: (row) => parseFloat(row.price).toFixed(2),
-            sortable: true,
-        },
-        {
-            name: "Month",
-            selector: (row) => row.date,
-        },
-        {
-            name: "Actions",
-            cell: (row) => (
-                <div className="space-x-2">
-                    <button onClick={() => handleEdit(row)}>
-                        <i className="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
-                    </button>
-
-                    <button onClick={() => handleDelete(row.date)}>
-                        <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-2"></i>
-                    </button>
-                </div>
-            ),
-        },
-    ];
-
     const filteredData = (foodMonthCreate || []).filter((item) =>
         item.food_name.toLowerCase().includes(searchText.toLowerCase())
     );
 
+    //pagination
+        const [currentPage, setCurrentPage] = useState(1);
+        const [itemsPerPage, setItemsPerPage] = useState(5);
+    
+        //Pagination
+      const onPageChange = (page) => setCurrentPage(page);
+      const totalItems = filteredData.length;
+      const paginatedData = filteredData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      );
+
     return (
-        <div className="p-6 bg-white rounded-lg shadow-md mb-6">            {/* Optional search input */}
-            {/* <input
-        type="text"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        placeholder="Search menus..."
-        className="mb-2 p-2 border border-gray-300 rounded"
-      /> */}
+   
+    <div className="p-6 mb-3 rounded-lg shadow-md text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+      
+        <>
+          <h2 className="text-xl font-bold mb-4">Menu Lists</h2>
+            <div className="flex justify-end items-center mb-4">
+            <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
+              Items per page:
+            </label>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1); // reset to first page when limit changes
+              }}
+              className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
+            >
+              {[1, 5, 10, 15, 20, 30].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Table hoverable striped>
+            <TableHead>
+              <TableHeadCell>No.</TableHeadCell>
+              <TableHeadCell>Menu Name</TableHeadCell>
+              <TableHeadCell>Price (MMK)</TableHeadCell>
+              <TableHeadCell>Month</TableHeadCell>
+              <TableHeadCell>Actions</TableHeadCell>
+            </TableHead>
+            <TableBody>
+              {filteredData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan="4" className="text-center py-6 text-gray-500">
+                    No menu records found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+            paginatedData.map((row, index) => (
+                  <TableRow key={row.emp_id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{row.food_name}</TableCell>
+                    <TableCell>{row.price}</TableCell>
+                    <TableCell>{row.date}</TableCell>
+                    <TableCell>
+                       <div className="space-x-2">
+                    <button onClick={() => handleEdit(row)}>
+                        <i className="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
+                  </button>
 
-            <DataTable
-                title="Menu Lists"
-                columns={columns}
-                data={filteredData || []}
-                pagination
-                highlightOnHover
-                striped
-                responsive
-                noDataComponent={<div className="py-6 text-gray-500">No menu items found</div>}
-                customStyles={{
-                    headCells: {
-                        style: {
-                            fontSize: "15px",
-                            fontWeight: "bold",
-                            backgroundColor: "#f3f4f6",
-                        },
-                    },
-                    cells: {
-                        style: {
-                            paddingLeft: "13px",
-                            paddingRight: "8px",
-                        },
-                    },
-                }}
-            />
+                    <button onClick={() => handleDelete(row.date)}>
+                         <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-2"></i>
+                   </button>
+                 </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+              {totalItems > itemsPerPage && (
+                        <div className="flex overflow-x-auto justify-center mt-4">
+                          <Pagination
+                            layout="table"
+                            currentPage={currentPage}
+                            totalItems={totalItems}
+                            itemsPerPage={itemsPerPage}
+                            onPageChange={onPageChange}
+                            showIcons
+                          />
+                        </div>
+                      )}
 
-        </div>
+
+         
+        </>
+      
+    </div>
     );
 };
 

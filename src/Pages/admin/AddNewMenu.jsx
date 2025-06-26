@@ -76,7 +76,7 @@ const AddNewMenu = () => {
   };
 
   return (
-    <div className=" p-6 rounded-lg shadow-sm text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
+    <div className=" p-6 rounded-lg shadow-sm text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
       <h3 className="text-lg font-semibold mb-4 text-gray-700 dark:text-white">Add New Menu</h3>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -84,7 +84,7 @@ const AddNewMenu = () => {
           <div className="mb-6">
             <label
               htmlFor="price"
-              className="block text-sm font-medium  mb-2 ext-gray-700  dark:text-white"
+              className="block text-sm font-medium   mb-2 text-gray-700  dark:text-white"
             >
               Enter Price
             </label>
@@ -118,7 +118,7 @@ const AddNewMenu = () => {
                       onChange={(e) => field.onChange(e.value)}
                       optionLabel="name"
                       placeholder="Select Food"
-                      className="w-full md:w-20rem text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
+                      className=" md:w-20rem rounded w-full text-gray-800 dark:bg-gray-800 bg-white dark:text-white "
                       display="chip"
                     />
                   )}

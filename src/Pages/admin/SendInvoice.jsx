@@ -11,7 +11,7 @@ import {
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
+  TableRow, Pagination
 } from 'flowbite-react';
 
 const SendInvoice = () => {
@@ -73,7 +73,17 @@ const SendInvoice = () => {
     };
 
     
-
+     //pagination
+        const [currentPage, setCurrentPage] = useState(1);
+         const [itemsPerPage, setItemsPerPage] = useState(5);
+      
+         //Pagination
+      const onPageChange = (page) => setCurrentPage(page);
+      const totalItems = filteredData.length;
+      const paginatedData = filteredData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      );
     return (
         <div className="p-6  rounded shadow text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
             <h2 className="text-2xl font-bold mb-4 text-gray-700 dark:text-white">Invoice Details</h2>
@@ -94,7 +104,25 @@ const SendInvoice = () => {
             <h3 className="text-lg font-semibold mb-2">
                 Orders for {selectedMonth || 'All Months'}
             </h3>
-
+            <div className="flex justify-end items-center mb-4">
+            <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
+              Items per page:
+            </label>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1); // reset to first page when limit changes
+              }}
+              className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
+            >
+              {[1, 5, 10, 15, 20, 30].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
             <Table striped hoverable>
                 <TableHead>
                     <TableHeadCell>No.</TableHeadCell>
@@ -108,7 +136,7 @@ const SendInvoice = () => {
                             <TableCell colSpan={4} className="text-center py-4">Loading...</TableCell>
                         </TableRow>
                     ) : filteredData.length > 0 ? (
-                        filteredData.map((order, index) => (
+                        paginatedData.map((order, index) => (
                             <TableRow key={index}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{order.date}</TableCell>
@@ -123,6 +151,18 @@ const SendInvoice = () => {
                     )}
                 </TableBody>
             </Table>
+            {totalItems > itemsPerPage && (
+                                <div className="flex overflow-x-auto justify-center mt-4">
+                                  <Pagination
+                                    layout="table"
+                                    currentPage={currentPage}
+                                    totalItems={totalItems}
+                                    itemsPerPage={itemsPerPage}
+                                    onPageChange={onPageChange}
+                                    showIcons
+                                  />
+                                </div>
+                              )}
 
             <div className="mt-4 text-lg font-semibold">
                 Total Amount: {totalAmount.toLocaleString()} MMK

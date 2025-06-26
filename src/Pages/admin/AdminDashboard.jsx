@@ -55,7 +55,7 @@ const AdminDashboard = () => {
           <div className="flex items-center mb-1">
             <i class="fa-solid fa-utensils  text-blue-600 mr-2"></i>
             <h2 className="text-lg font-semibold text-gray-800">
-               Menu
+              Menu
             </h2>
           </div>
           <p className="text-2xl font-bold text-blue-600 mt-2">
@@ -100,39 +100,47 @@ const AdminDashboard = () => {
 
 
       <div className='w-full mb-4'>
-        <Report/>
+        <Report />
       </div>
       <div className="flex  flex-wrap gap-4 w-full mb-4">
 
-      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6 w-[550px]">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">Upcoming Events</h2>
-        <ul className="space-y-2 text-sm">
-          {announcement?.map((announcement, idx) => (
-            <li key={idx}>
-              <strong>{announcement.date}</strong> — {announcement.text}
-            </li>
-          ))}
-        </ul>
-      </div>
+         <div className="p-4  rounded-lg shadow mb-6 w-[400px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+          <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">Recent Orders</h2>
+          <ul className="divide-y ">
+            {data?.slice(0, 5).map((order, idx) => (
+              <li key={idx} className="py-2 flex justify-between text-sm">
+                <div className="flex flex-col">
+                  <span className="font-medium text-gray-700 dark:text-white">{order.emp_name}</span>
+                  <span className="text-gray-500">{order.food_name}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium text-gray-700 dark:text-white">{order.date}</span>
+                  <span className='text-gray-500'>{order.price}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="p-4 rounded-lg shadow mb-6 w-[550px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+          <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">Upcoming Events</h2>
+          <ul className="space-y-2 text-sm">
+            {announcement?.map((announcement, idx) => (
+              <li key={idx} className='py-2 flex justify-between text-sm'>
+                <div className="flex flex-col ">
+                <span>{announcement.date}  </span> 
+                
+                </div>
+                <div className="flex flex-col ">
+                <span className="">{announcement.title}</span>
+                <span className="">{announcement.text}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <div className="p-4 bg-gray-200 rounded-lg shadow mb-6 w-[400px] ">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">Recent Orders</h2>
-        <ul className="divide-y divide-gray-200">
-          {data?.slice(0, 5).map((order, idx) => (
-            <li key={idx} className="py-2 flex justify-between text-sm">
-              <div className="flex flex-col">
-                <span className="font-medium text-gray-800">{order.emp_name}</span>
-                <span className="text-gray-600">{order.food_name}</span>
-              </div>
-              <div className="flex flex-col">
-              <span className="font-medium text-gray-800">{order.date}</span>
-              <span className='text-gray-600'>{order.price}</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-          
+       
+
       </div>
 
       {/* <MenuOrderPie data={data}/> */}

@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { FileInput, Label, Modal, Button } from "flowbite-react";
+import { FileInput, Label} from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useApiMutation } from "../../hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
-import Cookies from "js-cookie";
-import Datatable from "react-data-table-component";
 import { toast } from "react-hot-toast";
-import { AlignLeft } from "lucide-react";
+import { Button, Modal, ModalBody, ModalHeader } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
-  TableRow,
+  TableRow, Pagination
 } from "flowbite-react";
 
 
@@ -33,61 +32,13 @@ const Customer = () => {
 
   const queryClient = useQueryClient();
 
-  const columns = [
-    {
-      name: "No",
-      selector: (row, index) => index + 1,
-      sortable: true,
-      width: "75px",
-    },
-    {
-      name: "Emp ID",
-      selector: (row) => row.emp_id,
-      sortable: true,
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
 
-    },
-    {
-      name: "Name",
-      selector: (row) => row.name,
-      sortable: true,
-    },
-    {
-      name: "Email",
-      selector: (row) => row.email,
-      sortable: true,
-    },
-    {
-      name: "Role",
-      selector: (row) => row.role,
-      sortable: true,
-    },
-    {
-      name: "Actions",
-      cell: (row) => (
-        <div className="space-x-2 flex items-center">
-          <button
-            className="text-blue-600 hover:text-blue-800"
-            onClick={() => {
-              setEditEmployee(row); // carry all data
-              setIsEditModalOpen(true);
-            }}
-          >
-            <i className="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
-          </button>
-
-          <button
-            className="text-red-600 hover:text-red-800"
-            onClick={() => handleDelete(row.emp_id)}
-          >
-            <i className="fa-solid fa-trash text-red-500 cursor-pointer ml-3"></i>
-          </button>
-        </div>
-      ),
-    }
 
 
-  ];
 
   const deleteMutation = useApiMutation({
     onSuccess: () => {
@@ -100,16 +51,12 @@ const Customer = () => {
   });
 
 
-
-  const handleDelete = (emp_id) => {
-    const confirmed = window.confirm("Are you sure you want to delete?");
-    if (!confirmed) return;
-    deleteMutation.mutate({
-      endpoint: `employees/destroy/${emp_id}`,
-      method: "DELETE",
-    });
-    console.log(`Deleting Employee Data at: employees/destroy/${emp_id}`);
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setOpenDeleteModal(true);
   };
+
+  
 
   const mutation = useApiMutation({
     onSuccess: (data) => {
@@ -211,6 +158,18 @@ const Customer = () => {
   });
 
 
+  //Pagination
+  const onPageChange = (page) => setCurrentPage(page);
+  const totalItems = filteredCustomers.length;
+  const paginatedData = filteredCustomers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  //delete emp 
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
 
 
   return (
@@ -294,52 +253,122 @@ const Customer = () => {
         </div>
         <div className="overflow-x-auto bg-white text-gray-700 dark:bg-gray-800 dark:text-white p-4 rounded">
 
-        <Table striped>
-          <TableHead>
-            <TableHeadCell>No</TableHeadCell>
-            <TableHeadCell>Emp ID</TableHeadCell>
-            <TableHeadCell>Name</TableHeadCell>
-            <TableHeadCell>Email</TableHeadCell>
-            <TableHeadCell>Role</TableHeadCell>
-            <TableHeadCell>
-              <span className="sr-only">Actions</span>
-            </TableHeadCell>
-          </TableHead>
-          <TableBody className="divide-y">
-            {filteredCustomers.map((row, index) => (
-              <TableRow key={row.emp_id} className="bg-white dark:border-gray-700 dark:bg-gray-800 border-0">
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{row.emp_id}</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.role}</TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    <button
-                      className="text-blue-600 hover:text-blue-800"
-                      onClick={() => {
-                        setEditEmployee(row);
-                        setIsEditModalOpen(true);
-                      }}
-                    >
-                      <i className="fas fa-edit text-blue-600 cursor-pointer"></i>
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-800"
-                      onClick={() => handleDelete(row.emp_id)}
-                    >
-                      <i className="fa-solid fa-trash text-red-500 cursor-pointer"></i>
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+          <div className="flex justify-end items-center mb-4">
+            <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
+              Items per page:
+            </label>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1); // reset to first page when limit changes
+              }}
+              className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
+            >
+              {[5, 10, 15, 20, 30].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <Table striped>
+            <TableHead>
+              <TableHeadCell>No</TableHeadCell>
+              <TableHeadCell>Emp ID</TableHeadCell>
+              <TableHeadCell>Name</TableHeadCell>
+              <TableHeadCell>Email</TableHeadCell>
+              <TableHeadCell>Role</TableHeadCell>
+              <TableHeadCell>
+                <span className="sr-only">Actions</span>
+              </TableHeadCell>
+            </TableHead>
+            <TableBody className="divide-y">
+              {paginatedData.map((row, index) => (
+                <TableRow key={row.emp_id} className="bg-white dark:border-gray-700 dark:bg-gray-800 border-0">
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{row.emp_id}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.email}</TableCell>
+                  <TableCell>{row.role}</TableCell>
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <button
+                        className="text-blue-600 hover:text-blue-800"
+                        onClick={() => {
+                          setEditEmployee(row);
+                          setIsEditModalOpen(true);
+                        }}
+                      >
+                        <i className="fas fa-edit text-blue-600 cursor-pointer"></i>
+                      </button>
+                      <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => handleDeleteClick(row.emp_id)}
+                      >
+                        <i className="fa-solid fa-trash text-red-500 cursor-pointer"></i>
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
 
+        {totalItems > itemsPerPage && (
+          <div className="flex overflow-x-auto justify-center mt-4">
+            <Pagination
+              layout="table"
+              currentPage={currentPage}
+              totalItems={totalItems}
+              itemsPerPage={itemsPerPage}
+              onPageChange={onPageChange}
+              showIcons
+            />
+          </div>
+        )}
 
+        {/* Delete emp  */}
+        <Modal
+          show={openDeleteModal}
+          size="md"
+          onClose={() => setOpenDeleteModal(false)}
+          popup
+        >
+          <ModalHeader />
+          <ModalBody>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+              <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                Are you sure you want to delete this employee?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button
+                  color="red"
+                  onClick={() => {
+                    if (deleteId) {
+                      deleteMutation.mutate({
+                        endpoint: `employees/destroy/${deleteId}`,
+                        method: "DELETE",
+                      });
+                      console.log(`Deleting Employee Data at: employees/destroy/${deleteId}`);
+                    }
+                    setOpenDeleteModal(false);
+                  }}
+                >
+                  Yes, I'm sure
+                </Button>
+                <Button color="alternative" onClick={() => setOpenDeleteModal(false)}>
+                  No, cancel
+                </Button>
+              </div>
+            </div>
+          </ModalBody>
+        </Modal>
 
+        {/* Change role  */}
         <Modal
           show={isEditModalOpen}
           size="md"

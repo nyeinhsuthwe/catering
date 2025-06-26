@@ -1,10 +1,11 @@
-import { Avatar, Dropdown, DropdownItem } from "flowbite-react";
+import { Avatar, Dropdown, DropdownItem , DropdownDivider} from "flowbite-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useApiQuery } from "../../hooks/useQuery";
 import toast from "react-hot-toast";
 import { userStore } from "../../store/userStore"; // adjust path as needed
 import Cookies from "js-cookie"
 import DarkModeToggle from './DarkModeToggle';
+import {HiLogout} from "react-icons/hi";
 
 export default function AdminTopbar() {
     const navigate = useNavigate();
@@ -57,16 +58,21 @@ export default function AdminTopbar() {
 
                 <Dropdown inline>
                     <DropdownItem className="block text-sm font-medium text-left">
-                        <span className="block text-sm text-gray-400 lowercase">
+                        <span className="block text-sm text-gray-700 dark:text-white lowercase">
                             {profile?.email || "email@example.com"}
                         </span>
-                        <span className="block text-sm text-gray-400 capitalize">
+                        <span className="block text-sm text-gray-700 dark:text-white capitalize">
                             Role: {profile?.role || "admin"}
                         </span>
+                     
                     </DropdownItem>
-
-                    <DropdownItem>
-                        <button className="w-full" onClick={handleSignOut}>Logout</button>
+                    <DropdownDivider />
+                    <Link to="adminProfile">
+                    <DropdownItem className="text-gray-700 dark:text-white">Profile</DropdownItem>
+                    </Link>
+                    <DropdownDivider />
+                    <DropdownItem icon={HiLogout}>
+                        <button className="w-full text-gray-700 dark:text-white" onClick={handleSignOut}>Logout</button>
                     </DropdownItem>
                 </Dropdown>
                 <DarkModeToggle/>
