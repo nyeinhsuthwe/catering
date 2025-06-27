@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { FileInput, Label} from "flowbite-react";
+import { FileInput, Label } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useApiMutation } from "../../hooks/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -56,7 +56,7 @@ const Customer = () => {
     setOpenDeleteModal(true);
   };
 
-  
+
 
   const mutation = useApiMutation({
     onSuccess: (data) => {
@@ -375,18 +375,41 @@ const Customer = () => {
           popup
           onClose={() => setIsEditModalOpen(false)}
         >
-          <div className="p-6 text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
-            <h3 className="text-xl font-medium text-gray-700 dark:text-white mb-4">Edit Role</h3>
+          <div className="p-6 rounded text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
+            <h3 className="text-xl font-medium text-gray-700 dark:text-white mb-4">Edit Employee</h3>
 
             {editEmployee && (
               <div className="space-y-4">
-                <p><strong>ID:</strong> {editEmployee.emp_id}</p>
-                <p><strong>Name:</strong> {editEmployee.name}</p>
-                <p><strong>Email:</strong> {editEmployee.email}</p>
+                <p><strong>Employee ID:</strong> {editEmployee.emp_id}</p>
+               
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Role
+                  
+                  <label className="block text-sm font-medium  mb-2 ">
+                    Enter Name:
+                  </label>
+                  <input
+                    type="text"
+                    value={editEmployee.name}
+                    className="w-full block text-sm font-medium  mb-2 border-gray-200 text-gray-700 dark:text-white bg-white dark:bg-gray-800"
+                    onChange={(e) =>
+                      setEditEmployee((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                  />
+                  <label className="block text-sm font-medium  mb-2 ">
+                    Enter Email:
+                  </label>
+                  <input
+                    type="text"
+                    value={editEmployee.email}
+                    className="w-full block text-sm font-medium  mb-2 border-gray-200 text-gray-700 dark:text-white bg-white dark:bg-gray-800"
+                    onChange={(e) =>
+                      setEditEmployee((prev) => ({ ...prev, email: e.target.value }))
+                    }
+                  />
+
+                  <label className="block text-sm font-medium  mb-2 ">
+                    Select Role:
                   </label>
                   <select
                     value={editEmployee.role}
@@ -410,7 +433,7 @@ const Customer = () => {
                   setIsEditModalOpen(false);
                 }}
               >
-                Save
+                Update
               </Button>
               <Button className="text-white rounded bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400" onClick={() => setIsEditModalOpen(false)}>
                 Cancel

@@ -94,12 +94,16 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis label={{value: 'Menu Orders', angle: -90, position: 'insideLeft' }} />     
-                          <Tooltip />
-                <Bar dataKey="menuCount" fill="#3B82F6" />              </BarChart>
+                <YAxis label={{ value: 'Menu Orders', angle: -90, position: 'insideLeft' }} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#333', borderRadius: '8px', color: '#fff', border: 'none' }}
+                  labelStyle={{ color: '#fff', fontWeight: 'bold' }}
+                  itemStyle={{ color: '#fff' }}
+                />
+                <Bar dataKey="menuCount" fill="#0049FF" />              </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-gray-500 text-center">No data to display for this Month</p>
+            <p className="text-gray-700 dark:text-white text-center">No data to display for this Month</p>
           )}
         </div>
 

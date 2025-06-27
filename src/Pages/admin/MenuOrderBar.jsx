@@ -16,8 +16,11 @@ const MenuOrderBar = ({ detailData }) => {
     }));
 
     if (chartData.length === 0) {
-        return <p className="text-gray-500 mt-4">No orders available</p>;
+        return <p className="text-gray-700 dark:text-white mt-4">No orders available</p>;
     }
+
+    const COLORS = ['#0062FF', '#00AAFF', '#FF9200', '#FFD000', '#36A2EB', '#9966FF'];
+
 
     return (
         <ResponsiveContainer width="100%" height={350}>
@@ -28,7 +31,12 @@ const MenuOrderBar = ({ detailData }) => {
             >
                 <XAxis type="number" />
                 <YAxis dataKey="name" type="category" />
-                <Tooltip />
+                <Tooltip
+                    contentStyle={{ backgroundColor: '#333', borderRadius: '8px', color: '#fff', border: 'none' }}
+                    labelStyle={{ color: '#fff', fontWeight: 'bold' }}
+                    itemStyle={{ color: '#fff' }}
+                />
+
                 <Bar dataKey="value" fill="#8884d8">
                     {chartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

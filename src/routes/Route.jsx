@@ -23,12 +23,13 @@ import MenuUpdate from "../Pages/admin/MenuUpdate";
 import AdminProfile from "../Pages/admin/AdminProfile";
 import AdminEditProfile from "../Pages/admin/AdminEditProfile";
 import AdminResetPassword from "../Pages/admin/AdminResetPassword"
-import Order from "../Pages/admin/Order"
 import InvoiceInfo from "../Pages/admin/InvoiceInfo"
 import ViewEmpOrderDetail from "../Pages/admin/ViewEmpOrderDetail";
 import SendInvoice from "../Pages/admin/SendInvoice"
 import MenuOrderBar from "../Pages/admin/MenuOrderBar";
 import MealAttendanceDonut from "../Pages/admin/MealAttendanceDonut";
+import MenuOrderPie from "../Pages/admin/MenuOrderPie";
+import RatingPieChart from "../Pages/admin/RatingPieChart";
 
 
 
@@ -170,9 +171,18 @@ const router = createBrowserRouter([
         path: "menuOrderBar",
         element: <MenuOrderBar/>
       },
+      
+      {
+        path: "menuOrderPie",
+        element: <MenuOrderPie/>
+      },
       {
         path: "mealAttendanceDonut",
         element: <MealAttendanceDonut/>
+      },
+      {
+        path: "ratingPieChart",
+        element: <RatingPieChart/>
       }
 
 

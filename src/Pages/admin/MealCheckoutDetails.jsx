@@ -47,16 +47,6 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
       }));
   }, [data, filters, empId]);
 
-  // const columns = [
-  //   { name: 'Emp ID', selector: row => row.emp_id, sortable: true },
-  //   { name: 'Name', selector: row => row.emp_name, sortable: true },
-  //   { name: 'Email', selector: row => row.emp_email },
-  //   { name: 'Date', selector: row => row.date, sortable: true },
-  //   { name: 'Food', selector: row => row.food_name },
-  //   { name: 'Price', selector: row => row.price },
-  //   { name: 'Status', selector: row => row.status, sortable: true },
-  //   { name: 'Check Out', selector: row => String(row.check_out) },
-  // ];
 
   //pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -107,28 +97,7 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
         </select>
       </div>
 
-      {/* Data Table */}
-      {/* <Datatable
-        title="Filtered Attendance"
-        columns={columns}
-        data={filteredData}
-        pagination
-        highlightOnHover
-        pointerOnHover
-        responsive
-        striped
-
-        customStyles={{
-            headCells: {
-              style: {
-                fontSize: "15px",
-                fontWeight: "bold",
-                backgroundColor: "#f3f4f6",
-              },
-
-            },
-          }}
-      /> */}
+    
 
       <div className="overflow-x-auto bg-white text-gray-700 dark:bg-gray-800 dark:text-white p-4 rounded">
 

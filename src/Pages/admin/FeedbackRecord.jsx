@@ -3,7 +3,6 @@ import { useApiQuery } from '../../hooks/useQuery';
 import {  Card, Button } from 'flowbite-react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
-
 import {
   LineChart,
   Line,
@@ -13,7 +12,7 @@ import {
   CartesianGrid,
   ResponsiveContainer
 } from 'recharts';
-import FeedbackTable from './FeedbackTable'; // adjust path as needed
+import FeedbackTable from './FeedbackTable'; 
 
 const FeedbackRecord = () => {
   const { data: feedbackData = [] } = useApiQuery(
@@ -38,7 +37,7 @@ const FeedbackRecord = () => {
   return (
     <Card>
       <div className="flex justify-between items-center mt-2">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Employee Satisfaction Over Time</h2>
+        <h2 className="text-xl font-semibold text-gray-700 dark:text-white">Employee Satisfaction Over Time</h2>
         <Link to="feedbackTable">
         <Button className='bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400'>Details</Button>
         </Link>
@@ -55,7 +54,7 @@ const FeedbackRecord = () => {
           </LineChart>
         </ResponsiveContainer>
       </div>
-
+    
       {showDetails && (
         <div className="mt-6 mb-4">
           <FeedbackTable feedbackData={feedbackData} />

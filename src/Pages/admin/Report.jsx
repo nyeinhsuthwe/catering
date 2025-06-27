@@ -6,6 +6,7 @@ import FeedbackRecord from './FeedbackRecord';
 import MenuOrderPie from './MenuOrderPie';
 import { useState } from 'react';
 import MealAttendanceDonut from './MealAttendanceDonut';
+import RatingPieChart from './RatingPieChart';
 
 const Report = () => {
 
@@ -26,6 +27,16 @@ const Report = () => {
   );
   console.log("Employee Menu Orders Data:", employeeMenuOrders);
 
+  const { data: feedbackData = [] } = useApiQuery(
+  {
+    endpoint: "/feedback/list",
+    queryKey: ["feedback"],
+  },
+  {
+    refetchOnWindowFocus: false,
+  }
+);
+
   return (
 
     <>
@@ -38,9 +49,12 @@ const Report = () => {
         <MonthlyEmpOrderChart data={data} />
 
        
-      <MealAttendanceDonut/>
-      
+      {/* <MealAttendanceDonut/> */}
+       {/* <RatingPieChart feedbackData={feedbackData} /> */}
       <FeedbackRecord />
+                {/* <MenuOrderPie detailData={filteredData} /> */}
+               
+
     </>
   );
 };

@@ -318,7 +318,7 @@ const AdminAnnouncement = () => {
                       endpoint: `announcement/destroy/${deleteId}`,
                       method: "DELETE",
                     });
-                    console.log(`Deleting MenuList at: announcement/destroy/${deleteId}`);
+                    console.log(`Deleting Announcement at: announcement/destroy/${deleteId}`);
                   }
                   setOpenDeleteModal(false);
                 }}

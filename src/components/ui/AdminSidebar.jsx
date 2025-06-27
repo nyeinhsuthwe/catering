@@ -145,6 +145,18 @@ const AdminSidebar = () => {
                   )}
                 />
               </SidebarCollapse>
+              <NavLink
+                to="ratingPieChart"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-solid fa-file-invoice-dollar me-3"></i>
+                    Feedback
+                  </SidebarItem>
+                )}
+              />
             </SidebarItemGroup>
           </SidebarItems>
         </Sidebar>
