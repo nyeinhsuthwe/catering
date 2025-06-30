@@ -135,7 +135,7 @@ const AdminSidebar = () => {
                   <div className="pl-6">
                     <NavLink to="adminProfile" children={({ isActive }) => (
                       <SidebarItem className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}>
-                        <i className="fa-solid fa-edit me-3"></i>
+                        <i className="fa-solid fa-user me-3"></i>
                         View Profile
                       </SidebarItem>
                     )} />
