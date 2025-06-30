@@ -3,15 +3,11 @@ import { FileInput, Label } from "flowbite-react";
 import { useApiMutation } from "../../hooks/useMutation";
 import { useApiQuery } from "../../hooks/useQuery";
 import { useQueryClient } from "@tanstack/react-query";
-import * as XLSX from "xlsx";
-import DataTable from 'react-data-table-component';
 import { toast } from "react-hot-toast";
 import Holiday from './Holiday';
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Pagination } from "flowbite-react";
 import { Button, Modal, ModalBody, ModalHeader } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-
-
 
 const AdminAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -87,9 +83,9 @@ const AdminAnnouncement = () => {
     },
   });
   const handleDeleteClick = (id) => {
-  setDeleteId(id);
-  setOpenDeleteModal(true);
-};
+    setDeleteId(id);
+    setOpenDeleteModal(true);
+  };
 
 
   //For Updating Announcement

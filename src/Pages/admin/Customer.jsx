@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import * as XLSX from "xlsx";
 import { FileInput, Label } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useApiMutation } from "../../hooks/useMutation";
@@ -16,8 +15,6 @@ import {
   TableHeadCell,
   TableRow, Pagination
 } from "flowbite-react";
-
-
 
 const Customer = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -37,9 +34,6 @@ const Customer = () => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
 
-
-
-
   const deleteMutation = useApiMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
@@ -55,7 +49,6 @@ const Customer = () => {
     setDeleteId(id);
     setOpenDeleteModal(true);
   };
-
 
 
   const mutation = useApiMutation({
@@ -174,8 +167,6 @@ const Customer = () => {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-
-
       <form onSubmit={handleSubmit(onSubmit)} className="mb-6">
         <div id="fileUpload" className="max-w-md mb-4">
           <Label className="mb-2 block " htmlFor="file">
@@ -381,10 +372,10 @@ const Customer = () => {
             {editEmployee && (
               <div className="space-y-4">
                 <p><strong>Employee ID:</strong> {editEmployee.emp_id}</p>
-               
+
 
                 <div>
-                  
+
                   <label className="block text-sm font-medium  mb-2 ">
                     Enter Name:
                   </label>

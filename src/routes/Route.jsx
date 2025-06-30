@@ -183,7 +183,8 @@ const router = createBrowserRouter([
       {
         path: "ratingPieChart",
         element: <RatingPieChart/>
-      }
+      },
+     
 
 
      

@@ -87,9 +87,6 @@ const MenuListTable = () => {
     setOpenDeleteModal(true);
   };
 
-
-
-
   const navigate = useNavigate();
 
   const handleEdit = (selectedRow) => {

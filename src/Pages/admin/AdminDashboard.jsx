@@ -1,13 +1,11 @@
 import React from 'react';
-import { useApiQuery } from '../../hooks/useQuery'; // your custom hook
-import DataTable from 'react-data-table-component'; // assuming you are using react-data-table-component for the table
+import { useApiQuery } from '../../hooks/useQuery'; 
+import DataTable from 'react-data-table-component'; 
 import { DarkThemeToggle } from 'flowbite-react';
-import MonthlyEmpOrderChart from './MonthlyEmpOrderChart'; // your chart component
+import MonthlyEmpOrderChart from './MonthlyEmpOrderChart'; 
 import MenuOrderPie from './MenuOrderPie';
 import Report from './Report';
 const AdminDashboard = () => {
-
-
 
   const { data: announcement } = useApiQuery(
     {
@@ -30,8 +28,6 @@ const AdminDashboard = () => {
   );
   console.log("Fetched Data:", data);
 
-
-
   const { data: stats = {} } = useApiQuery(
     {
       endpoint: "/dashboard/stats",
@@ -46,9 +42,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="">
-
-
-
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
 
         <div className="p-4 bg-blue-100 rounded-lg shadow">

@@ -2,11 +2,10 @@
 import React from 'react';
 import { useApiQuery } from '../../hooks/useQuery';
 import MonthlyEmpOrderChart from './MonthlyEmpOrderChart';
-import FeedbackRecord from './FeedbackRecord';
-import MenuOrderPie from './MenuOrderPie';
 import { useState } from 'react';
 import MealAttendanceDonut from './MealAttendanceDonut';
 import RatingPieChart from './RatingPieChart';
+
 
 const Report = () => {
 
@@ -49,11 +48,12 @@ const Report = () => {
         <MonthlyEmpOrderChart data={data} />
 
        
-      {/* <MealAttendanceDonut/> */}
+     
        {/* <RatingPieChart feedbackData={feedbackData} /> */}
-      <FeedbackRecord />
+      <RatingPieChart/>
                 {/* <MenuOrderPie detailData={filteredData} /> */}
-               
+        {/* <AbsentDonut/>        */}
+         <MealAttendanceDonut/>
 
     </>
   );

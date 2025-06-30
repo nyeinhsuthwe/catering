@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApiQuery } from "../../hooks/useQuery";
 
-import MealCheckoutDetails from './MealCheckoutDetails'; // Adjust path if needed
+import MealCheckoutDetails from './MealCheckoutDetails'; 
 import {
   Table,
   TableBody,
@@ -24,37 +24,7 @@ const EmployeeMealAttendance = () => {
     }
   );
 
-  // const columns = [
-  //   {
-  //     name: 'No.',
-  //     selector: (row, index) => index + 1,
-
-  //   },
-  //   {
-  //     name: 'Employee ID',
-  //     selector: row => row.emp_id,
-  //     sortable: true,
-  //   },
-  //   {
-  //     name: 'Employee Name',
-  //     selector: row => row.emp_name,
-  //     sortable: true,
-  //   },
-  //   {
-  //     name: 'Actions',
-  //     cell: row => (
-  //       <button
-  //         onClick={() => {
-  //           setSelectedEmpId(row.emp_id);
-  //           setShowDetails(true);
-  //         }}
-  //         className="text-blue-600 hover:underline"
-  //       >
-  //         View Details
-  //       </button>
-  //     ),
-  //   }
-  // ];
+  
   const hasData = Array.isArray(data) && data.length > 0;
 
   const displayData = hasData
