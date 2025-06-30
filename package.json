@@ -18,6 +18,8 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "flowbite-react": "^0.11.8",
+    "html2pdf": "^0.0.11",
+    "html2pdf.js": "^0.10.3",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.510.0",
