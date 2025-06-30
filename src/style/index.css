@@ -5,3 +5,25 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 
+.dark .rbc-toolbar {
+  color: orange;
+  font-weight: 600;
+  margin :auto;
+  margin-bottom: 15px;
+}
+
+.rbc-toolbar {
+  color: orange;
+  font-weight: 600;
+  margin :auto;
+  margin-bottom: 15px;
+}
+
+.dark .rbc-btn-group button {
+  color: white;
+}
+
+.dark .rbc-toolbar button:hover {
+  background-color: #374151; 
+  color: white;
+}

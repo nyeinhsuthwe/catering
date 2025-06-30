@@ -31,7 +31,19 @@ const MyCalendar = () => {
   const { user } = userStore();
   const [isBlocked, setIsBlocked] = useState(false);
 
-  // Attendance check for missed checkouts
+  const [isDark, setIsDark] = useState(document.documentElement.classList.contains("dark"));
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const { data: checkout } = useApiQuery({
     endpoint: "/attendance/list",
     queryKey: ["checkout", user.employeeId],
@@ -46,26 +58,21 @@ const MyCalendar = () => {
           date.getMonth() === now.getMonth() &&
           date.getFullYear() === now.getFullYear();
         const isPastDay = date < new Date().setHours(0, 0, 0, 0);
-
         return isCurrentMonth && isPastDay && att.check_out === false;
       });
-
       if (missed.length >= 5) {
         setIsBlocked(true);
       }
     }
   }, [checkout]);
 
-  // API for food
   const { data: Foods } = useApiQuery(
     {
       endpoint: "foodmonth/list",
       queryKey: ["food"],
     },
     {
-      onSuccess: (data) => {
-        setFoodList(data);
-      },
+      onSuccess: (data) => setFoodList(data),
     }
   );
 
@@ -88,6 +95,24 @@ const MyCalendar = () => {
       (e) => new Date(e.start).toDateString() === date.toDateString()
     );
 
+  const eventStyleGetter = (event) => {
+    const isSelected = selectedEvents.some((e) => e.id === event.id);
+    const textColor = isDark ? "#d8d8d8" : "#3e3e3e"; // yellow-500 or yellow-400
+
+    return {
+      style: {
+        backgroundColor: "transparent",
+        color: textColor,
+        fontWeight: 500,
+        padding: "2px 6px",
+        fontSize: "0.875rem",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+      },
+    };
+  };
+
   const dayPropGetter = (date) => {
     const today = new Date();
     const nextMonthDate = new Date(
@@ -99,50 +124,36 @@ const MyCalendar = () => {
       date.getMonth() === nextMonthDate.getMonth() &&
       date.getFullYear() === nextMonthDate.getFullYear();
     const isWeekend = [0, 6].includes(date.getDay());
+    const isSelected = isDateSelected(date);
+
+    const base = {
+      cursor: isSameMonth && !isWeekend ? "pointer" : "not-allowed",
+      backgroundColor: "transparent",
+      color: "inherit",
+    };
 
     if (!isSameMonth || isWeekend) {
       return {
         style: {
-          backgroundColor: "#eee",
-          color: "#aaa",
-          pointerEvents: "none",
-          cursor: "not-allowed",
+          ...base,
+          backgroundColor: isDark ? "#333b47" : "#e7e7e9",
         },
       };
     }
 
-    if (isDateSelected(date)) {
+    if (isSelected) {
       return {
         style: {
-          backgroundColor: "#c6f6d5",
-          cursor: "pointer",
+          ...base,
+          backgroundColor: "rgba(234, 179, 8, 0.2)", // yellow-500 transparent
+          border: "1px solid rgba(234, 179, 8)", // yellow-500
+          color: isDark ? "#f59e0b" : "#fbbf24", // yellow-500 dark / yellow-400 light
+          fontWeight: "600",
         },
       };
     }
 
-    return {
-      style: {
-        cursor: "pointer",
-      },
-    };
-  };
-
-  const eventStyleGetter = (event) => {
-    const isSelected = selectedEvents.some((e) => e.id === event.id);
-
-    let backgroundColor = "#d3d3d3";
-    if (event.title === "Food") backgroundColor = "#f0cd00";
-    else if (event.title === "Beverages") backgroundColor = "#add8e6";
-
-    return {
-      style: {
-        backgroundColor,
-        borderRadius: "5px",
-        border: isSelected ? "2px solid green" : "none",
-        color: "black",
-        padding: "2px 5px",
-      },
-    };
+    return { style: base };
   };
 
   const handleSelectSlot = (slotInfo) => {
@@ -197,8 +208,8 @@ const MyCalendar = () => {
   };
 
   return (
-    <div className="flex mt-[50px] dark:bg-black">
-      <div className="w-2/3 p-5 bg-gray-100 h-full">
+    <div className="mt-6 max-w-5xl mx-auto px-4">
+      <div className="bg-gray-100 dark:bg-gray-800 dark:text-white text-gray-800 p-6 rounded-lg shadow-md">
         <Calendar
           localizer={localizer}
           startAccessor="start"
@@ -215,10 +226,15 @@ const MyCalendar = () => {
           onSelectEvent={handleSelectEvent}
           dayPropGetter={dayPropGetter}
           eventPropGetter={eventStyleGetter}
-          style={{ height: 600 }}
+          style={{
+            height: 600,
+            backgroundColor: "transparent",
+            color: "inherit",
+          }}
         />
       </div>
-      <div className="w-1/3">
+
+      <div className="mt-8">
         <History />
       </div>
     </div>
