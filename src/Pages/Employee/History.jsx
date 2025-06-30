@@ -54,7 +54,7 @@ const History = () => {
   };
 
   const count = 5;
-  const totalPages = Math.ceil(selectedEvents.length / count);
+  const totalPages = Math.max(1, Math.ceil(selectedEvents.length / count));
   const paginatedEvents = selectedEvents.slice(
     (currentPage - 1) * count,
     currentPage * count
