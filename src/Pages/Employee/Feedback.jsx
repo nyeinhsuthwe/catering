@@ -70,7 +70,8 @@ const Feedback = () => {
     (currentPage - 1) * count,
     currentPage * count
   );
-  const totalPages = Math.ceil(sortedFeedback.length / count);
+    const totalPages = Math.max(1, Math.ceil(sortedFeedback.length / count));
+
 
   // feedback delete mutation
   const deleteMutation = useApiMutation({

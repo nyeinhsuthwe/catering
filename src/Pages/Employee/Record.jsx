@@ -90,7 +90,9 @@ console.log("data", data);
     (currentPage - 1) * count,
     currentPage * count
   );
-  const totalPages = Math.ceil(filteredRecords.length / count);
+      const totalPages = Math.max(1, Math.ceil(filteredRecords.length / count));
+
+
 
   const totalAmount = filteredRecords.reduce((sum, record) => {
     const price = parseFloat(record.food_month_prices_by_date[0]?.price || 0);

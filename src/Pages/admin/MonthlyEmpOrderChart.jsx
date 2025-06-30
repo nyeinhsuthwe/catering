@@ -84,7 +84,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
 
       <div className="flex  flex-wrap gap-4 w-full mb-4">
         {/* Bar Chart */}
-        <div className=" w-[400px]  rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+        <div className=" w-[450px]  rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
           <h2 className="text-xl font-semibold">Monthly Employee Order Chart</h2>
           {/* <Link to="viewEmpOrderDetail">
             <Button>Details</Button>

@@ -13,7 +13,8 @@ const Announce = () => {
   );
 
   const count = 4;
-  const totalPages = Math.ceil(sortedAnnouncements.length / count);
+    const totalPages = Math.max(1, Math.ceil(sortedAnnouncements.length / count));
+
   const paginatedAnnouncements = sortedAnnouncements.slice(
     (currentPage - 1) * count,
     currentPage * count
