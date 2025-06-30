@@ -1,79 +1,111 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Card, Label, TextInput } from "flowbite-react";
 import { userStore } from "../../store/userStore";
+import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useApiMutation } from "../../hooks/useMutation";
 
 const Profile = () => {
-  const { user } = userStore();
-  const fileInputRef = useRef(null);
-  const [imagePreview, setImagePreview] = useState(
-    "https://tse2.mm.bing.net/th?id=OIP.PoS7waY4-VeqgNuBSxVUogAAAA&pid=Api&P=0&h=220"
-  );
-console.log("user:",user);
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
-  };
+  const { user, setUser } = userStore();
+  const { handleSubmit, register, setValue } = useForm();
+  const queryClient = useQueryClient();
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
+  useEffect(() => {
+    if (user) {
+      setValue("name", user.name);
+      setValue("email", user.email);
     }
+  }, [user, setValue]);
+
+  const editMutation = useApiMutation({
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["edit"],
+      });
+
+      setUser({
+        ...user,
+        name: variables.body.name,
+        email: variables.body.email,
+      });
+
+      toast.success("Successfully Updated!");
+    },
+    onError: (error) => {
+      if (error.response && error.response.status === 422) {
+        const errors = error.response.data.errors;
+        console.error("Validation errors:", errors);
+
+        Object.values(errors).forEach((msgArr) =>
+          toast.error(msgArr.join(", "))
+        );
+      } else {
+        toast.error("Something went wrong!");
+        console.error(error);
+      }
+    },
+  });
+
+  const onSubmit = (data) => {
+    editMutation.mutate({
+      endpoint: `employees/${user.employeeId}`,
+      method: "PUT",
+      body: {
+        name: data.name,
+        email: data.email,
+      },
+    });
   };
 
   return (
-    <Card className="max-w-md mx-auto mt-23">
-      <div className="mx-auto flex flex-col items-center">
-        <img
-          src={imagePreview}
-          alt="Profile"
-          className="rounded-full w-40 h-40 object-cover"
-        />
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <Button onClick={handleButtonClick} className="mt-3 w-[200px]">
-          <i className="fa-solid fa-pen-to-square me-2"></i> Upload Profile
-        </Button>
-      </div>
+    <div>
+      <p className="dark:text-yellow-500 mx-auto text-yellow-400 max-w-lg text-2xl mb-4 font-bold mt-[80px]">
+        Edit Your Info
+      </p>
 
-      <form className="flex flex-col gap-4 w-100 mt-4">
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="id">Your ID</Label>
+      <Card className="max-w-lg mx-auto">
+        <form
+          className="flex mx-auto flex-col gap-4 w-100 mt-4 mb-4"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="id">Your ID</Label>
+            </div>
+            <TextInput id="id" value={user.employeeId} disabled />
           </div>
-          <TextInput
-            id="id"
-            type="text"
-            value={`${user.employeeId}`}
-            disabled
-          />
-        </div>
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="role">Your Role</Label>
-          </div>
-          <TextInput id="role" type="text" value={`${user.role}`} disabled />
-        </div>
 
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="name">Your Name</Label>
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="role">Your Role</Label>
+            </div>
+            <TextInput id="role" type="text" value={user.role} disabled />
           </div>
-          <TextInput id="name" type="text" value={`${user.name}`} disabled />
-        </div>
 
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="email">Your Email</Label>
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="name">Your Name</Label>
+            </div>
+            <TextInput id="name" type="text" {...register("name")} />
           </div>
-          <TextInput id="email" type="text" value={`${user.email}`} disabled />
-        </div>
-      </form>
-    </Card>
+
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="email">Your Email</Label>
+            </div>
+            <TextInput id="email" type="text" {...register("email")} />
+          </div>
+
+          <Button
+            className="w-[200px] bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400 mt-4"
+            type="submit"
+          >
+            <i className="fa-solid fa-check me-2"></i> Submit
+          </Button>
+        </form>
+      </Card>
+    </div>
   );
 };
 

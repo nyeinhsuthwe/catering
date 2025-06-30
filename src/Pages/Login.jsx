@@ -43,7 +43,7 @@ const Login = () => {
 
   return (
     <div>
-      <h3 className="text-3xl font-bold mt-23 text-gray-500 text-center">
+      <h3 className="text-3xl font-bold mt-23 text-yellow-400 dark:text-yellow-500 text-center">
         Login Form
       </h3>
       <Card className="max-w-md mt-6 mx-auto bg-gray-100">
@@ -83,7 +83,7 @@ const Login = () => {
                 shadow
               />
             </div>
-            <Button type="submit" disabled={mutation.isPending}>
+            <Button type="submit" disabled={mutation.isPending} className="bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400 mt-3">
               {mutation.isPending ? (
                 <div className="flex items-center gap-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-white" />
@@ -99,6 +99,6 @@ const Login = () => {
       </Card>
     </div>
   );
-};
+};            
 
 export default Login;

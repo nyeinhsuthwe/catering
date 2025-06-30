@@ -35,7 +35,7 @@ const Nav = () => {
           </span>
         </NavbarBrand>
         <div className="flex md:order-2">
-          <Button onClick={token ? handleLogout : handleLogin} className='me-3'>
+          <Button onClick={token ? handleLogout : handleLogin} className='me-3 bg-yellow-400 dark:bg-yellow-500 hover:bg-yellow-500 dark:hover:bg-yellow-400 '>
             {token ? "Logout" : "Login"}
           </Button>
           <DarkModeToggle/>
