@@ -10,9 +10,7 @@ import Menu from '../Pages/admin/Menu'
 import AdminDashboard from '../Pages/admin/AdminDashboard'
 import Reservation from '../Pages/admin/Reservation'
 import Customer from '../Pages/admin/Customer'
-import AdminProfile from '../Pages/admin/AdminProfile'
 import Login from '../Pages/Login'
-import AdminEditProfile from '../Pages/admin/AdminEditProfile'
 import Record from '../Pages/Employee/Record';
 import Announce from "../Pages/Employee/Announce";
 import { restrictLoader } from "../hooks/restrictLoader";
@@ -20,6 +18,24 @@ import { Voucher } from "../Pages/Employee/Voucher";
 import { TermsConditions } from "../Pages/Employee/TermsConditions";
 import Password from "../Pages/Employee/Password";
 import MailTesting from "../Pages/Employee/MailTesting";
+import AdminAnnouncement from "../Pages/admin/AdminAnnouncement";
+import Report from "../Pages/admin/Report";
+import FeedbackRecord from "../Pages/admin/FeedbackRecord";
+import FeedbackTable from "../Pages/admin/FeedbackTable";
+import MealCheckoutDetails from "../Pages/admin/MealCheckoutDetails";
+import MenuUpdate from "../Pages/admin/MenuUpdate";
+import AdminProfile from "../Pages/admin/AdminProfile";
+import AdminEditProfile from "../Pages/admin/AdminEditProfile";
+import AdminResetPassword from "../Pages/admin/AdminResetPassword"
+import InvoiceInfo from "../Pages/admin/InvoiceInfo"
+import ViewEmpOrderDetail from "../Pages/admin/ViewEmpOrderDetail";
+import SendInvoice from "../Pages/admin/SendInvoice"
+import MenuOrderBar from "../Pages/admin/MenuOrderBar";
+import MealAttendanceDonut from "../Pages/admin/MealAttendanceDonut";
+import MenuOrderPie from "../Pages/admin/MenuOrderPie";
+import RatingPieChart from "../Pages/admin/RatingPieChart";
+
+
 
 // import Router from "./Router";
 
@@ -114,21 +130,86 @@ const router = createBrowserRouter([
         element: <Customer />,
       },
       {
-        path: "profile",
-        element: <AdminProfile />,
-      },
-      {
         path: "login",
         element: <Login />,
       },
+           
       {
-        path: "edit",
-        element: <AdminEditProfile />,
+        path: "adminAnnouncement",
+        element: <AdminAnnouncement />,
+      },
+      {
+        path: "report",
+        element: <Report/>,
+      },
+      {
+        path: "feedback",
+        element: <FeedbackRecord />,
+      },
+      {
+        path: "feedbackTable",
+        element: <FeedbackTable />,
+      },
+      {
+        path: "mealCheckoutDetails",
+        element: <MealCheckoutDetails />,
+      },
+      {
+        path: "menu/edit-menu",
+        element: <MenuUpdate />,
+      },
+      {
+        path: "adminProfile",
+        element: <AdminProfile/>
+
+      },
+      {
+        path: "/admin/adminProfile/adminEditProfile",
+        element: <AdminEditProfile/>
+      },
+      {
+        path: "/admin/adminProfile/adminResetPassword",
+        element: <AdminResetPassword/>
       },
       // {
-      //     path: 'addnewfood',
-      //     element: <AddNewFood/>
-      // },
+      //   path: "/admin/adminProfile/order",
+      //   element: <Order/>
+      // }
+      {
+        path: "invoiceInfo",
+        element: <InvoiceInfo/>
+      },
+      {
+        path: "viewEmpOrderDetail",
+        element: <ViewEmpOrderDetail/>
+      },
+      {
+        path: "/admin/invoiceInfo/sendInvoice",
+        element: <SendInvoice/>
+      },
+      {
+        path: "menuOrderBar",
+        element: <MenuOrderBar/>
+      },
+      
+      {
+        path: "menuOrderPie",
+        element: <MenuOrderPie/>
+      },
+      {
+        path: "mealAttendanceDonut",
+        element: <MealAttendanceDonut/>
+      },
+      {
+        path: "ratingPieChart",
+        element: <RatingPieChart/>
+      },
+     
+
+
+     
+     
+  
     ],
   },
 ]);

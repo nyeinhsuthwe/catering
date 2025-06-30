@@ -1,88 +1,165 @@
 import React, { useState } from 'react';
-import { FaTachometerAlt, FaClipboardList, FaUtensils, FaUsers, FaChartBar, FaChevronRight, FaChevronLeft } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import {HiUser } from "react-icons/hi";
+import {
+  Sidebar,
+  SidebarItem,
+  SidebarItemGroup,
+  SidebarItems,
+  SidebarCollapse
+} from "flowbite-react";
 
 const AdminSidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false); // State to manage sidebar visibility
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
 
   return (
-    <div className={`h-full bg-white shadow-lg ${isCollapsed ? 'w-16' : 'w-64'} transition-all duration-300`}>
-      {/* Toggle Button */}
-      <div className={`flex ${isCollapsed ? 'justify-center' : 'justify-end'} p-2`}>
-        <button
-          onClick={toggleSidebar}
-          className={`p-2 ${isCollapsed ? 'text-gray-700 hover:text-gray-900' : 'bg-gray-100 rounded-full shadow hover:bg-gray-200'} transition`}
-        >
-          {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
-        </button>
-      </div>
-
-      {/* Sidebar Content */}
-      <div className="p-6">
+    <div className="">
+      <div className="h-full">
         {/* Navigation Link */}
-        
-        <ul className="space-y-4">
-          <li>
-            <Link
-              to="/admin"
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
-            >
-              <FaTachometerAlt className="text-gray-500" />
-              {!isCollapsed && <span className="ml-3">Dashboard</span>}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="reservation"
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
-            >
-              <FaClipboardList className="text-gray-500" />
-              {!isCollapsed && <span className="ml-3">Reservation</span>}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="menu"
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
-            >
-              <FaUtensils className="text-gray-500" />
-              {!isCollapsed && <span className="ml-3">Menu Lists</span>}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="employee"
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
-            >
-              <FaUsers className="text-gray-500" />
-              {!isCollapsed && <span className="ml-3">Employee Lists</span>}
-            </Link>
-          </li>
-          
-          <li>
-            <Link
-              to="/report"
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
-            >
-              <FaChartBar className="text-gray-500" />
-              {!isCollapsed && <span className="ml-3">Report</span>}
-            </Link>
-          </li>
-          <li>
-            
-            <Link
-              to="announcement"
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'p-3 bg-gray-50 hover:bg-gray-100'} rounded-lg shadow-sm text-gray-700 hover:text-gray-900 font-medium transition`}
-            >
-              <i className="fa-solid fa-bullhorn text-gray-500"></i>
-              {!isCollapsed && <span className="ml-3">Announcement</span>}
-            </Link>
-          </li>
-        </ul>
+        <Sidebar
+          aria-label="Default sidebar example"
+          className="z-[100] [&>div]:rounded-none "
+        >
+          <SidebarItems>
+            <SidebarItemGroup>
+              <NavLink
+                to="/admin"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-solid fa-gauge me-3"></i>
+                    Dashboard
+                  </SidebarItem>
+                )}
+              />
+                          
+
+
+              <hr className="text-gray-300" />
+              <NavLink
+
+                to="reservation"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-regular fa-calendar-days me-3"></i>
+                    Reservation
+                  </SidebarItem>
+                )}
+              />
+              <hr className="text-gray-300" />
+              <NavLink
+                to="menu"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-solid fa-utensils me-3"></i>
+                    Menu Lists
+                  </SidebarItem>
+                )}
+              />
+              <hr className="text-gray-300" />
+              <NavLink
+                to="employee"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-solid fa-users me-3"></i>
+                    Employee Lists
+                  </SidebarItem>
+                )}
+              />
+              <hr className="text-gray-300" />
+              <NavLink
+                to="report"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i className="fa-solid fa-clock me-3"></i>
+                    Report
+                  </SidebarItem>
+                )}
+              />
+              <hr className="text-gray-300" />
+              <NavLink
+                to="adminAnnouncement"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-solid fa-bullhorn me-3"></i>
+                    Announcement
+                  </SidebarItem>
+                )}
+              />
+              <hr className="text-gray-300" />
+              <NavLink
+                to="invoiceInfo"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-solid fa-file-invoice-dollar me-3"></i>
+                    Invoice
+                  </SidebarItem>
+                )}
+              />
+              <hr className="text-gray-300" />
+              
+              <SidebarCollapse icon={HiUser} label="Profile" >
+
+                <NavLink
+
+                  to="adminProfile"
+                  end
+                  children={({ isActive }) => (
+                    <SidebarItem
+                      className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                    >
+                      View Profile
+                    </SidebarItem>
+                  )}
+                />
+                <NavLink
+
+                  to="/admin/adminProfile/adminResetPassword"
+                  end
+                  children={({ isActive }) => (
+                    <SidebarItem
+                      className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                    >
+                      Change Password
+                    </SidebarItem>
+                  )}
+                />
+              </SidebarCollapse>
+              <NavLink
+                to="ratingPieChart"
+                end
+                children={({ isActive }) => (
+                  <SidebarItem
+                    className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
+                  >
+                    <i class="fa-solid fa-file-invoice-dollar me-3"></i>
+                    Feedback
+                  </SidebarItem>
+                )}
+              />
+            </SidebarItemGroup>
+          </SidebarItems>
+        </Sidebar>
       </div>
     </div>
   );

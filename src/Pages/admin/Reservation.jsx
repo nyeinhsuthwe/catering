@@ -1,12 +1,19 @@
-import React from 'react'
-import Datatable from 'react-data-table-component'
 import { useApiQuery } from '../../hooks/useQuery'
 import EmployeeMealAttendance from './EmployeeMealAttendance';
 import ViewEmpOrderDetail from './ViewEmpOrderDetail';
 import { useState } from 'react';
+import {
+  Table,
+  TableHead,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell, Pagination
+} from "flowbite-react";
+
 
 const Reservation = () => {
-  const { data =[]} = useApiQuery(
+  const { data = [] } = useApiQuery(
     {
       endpoint: "/registered-orders/lists",
       queryKey: ["orders"],
@@ -15,7 +22,8 @@ const Reservation = () => {
       refetchOnWindowFocus: false,
     }
   );
-  console.log("Fetched Data:", data);
+  console.log("Employee Order Data:", data);
+
 
   // Get unique employees (one row per emp_id)
   const groupData = Array.from(
@@ -23,79 +31,106 @@ const Reservation = () => {
   );
   const [selectedEmpId, setSelectedEmpId] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
-  const columns = [
-    {
-      name: 'No.',
-      selector: (row, index) => index + 1,
-    },
-    {
-      name: 'Employee ID',
-      selector: row => row.emp_id,
-      sortable: true,
-    },
-    {
-      name: 'Employee Name',
-      selector: row => row.emp_name,
-      sortable: true,
-    },
-    {
-      name: 'Actions',
-      cell: row => (
-        <button
-          onClick={() => {
-            setSelectedEmpId(row.emp_id);
-            setShowDetails(true);
-          }}
-          className="text-blue-600 hover:underline"
-        >
-          View Details
-        </button>
-      ),
-    }
-  ];
 
-
-
-
-
+  //pagination
+    const [currentPage, setCurrentPage] = useState(1);
+     const [itemsPerPage, setItemsPerPage] = useState(5);
+  
+     //Pagination
+  const onPageChange = (page) => setCurrentPage(page);
+  const totalItems = groupData.length;
+  const paginatedData = groupData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      {/* <div className="mb-4">
-        <div className="flex items-center mb-4">
-          <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg className="w-4 h-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" />
-            </div>
-            <input
-              type="search"
-              id="default-search"
-              className="block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Search name..."
-              required
-            />
-          </div>
-        </div>
-      </div> */}
+    <div className="p-6  rounded-lg shadow-md text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
       {!showDetails ? (
-      <Datatable
-        title="Employee Reservations"
-        columns={columns}
-        data={groupData} // <-- this line is crucial
-        pagination
-        paginationPerPage={10}
-        paginationRowsPerPageOptions={[10, 15, 20, 25]}
-      />
-      ): (
+        <>
+          <h2 className="text-xl font-bold mb-4">Employee Reservations</h2>
+
+          <div className="flex justify-end items-center mb-4">
+            <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
+              Items per page:
+            </label>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1); // reset to first page when limit changes
+              }}
+              className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
+            >
+              {[1, 5, 10, 15, 20, 30].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Table hoverable striped>
+            <TableHead>
+              <TableHeadCell>No.</TableHeadCell>
+              <TableHeadCell>Employee ID</TableHeadCell>
+              <TableHeadCell>Employee Name</TableHeadCell>
+              <TableHeadCell>Actions</TableHeadCell>
+            </TableHead>
+            <TableBody>
+              {groupData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan="4" className="text-center py-6 text-gray-500">
+                    No reservation records found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                paginatedData.map((row, index) => (
+                  <TableRow key={row.emp_id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{row.emp_id}</TableCell>
+                    <TableCell>{row.emp_name}</TableCell>
+                    <TableCell>
+                      <button
+                        onClick={() => {
+                          setSelectedEmpId(row.emp_id);
+                          setShowDetails(true);
+                        }}
+                        className="text-yellow-500 hover:underline"
+                      >
+                        View Details
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+
+          {totalItems > itemsPerPage && (
+                    <div className="flex overflow-x-auto justify-center mt-4">
+                      <Pagination
+                        layout="table"
+                        currentPage={currentPage}
+                        totalItems={totalItems}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={onPageChange}
+                        showIcons
+                      />
+                    </div>
+                  )}
+
+
+
+          <EmployeeMealAttendance />
+        </>
+      ) : (
         <ViewEmpOrderDetail
-        empId={selectedEmpId}
+          empId={selectedEmpId}
           data={data}
           onBack={() => setShowDetails(false)}
         />
-        
       )}
-  
-      {!showDetails && <EmployeeMealAttendance />}
     </div>
   );
 };
