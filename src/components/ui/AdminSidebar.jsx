@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import {HiUser } from "react-icons/hi";
+import { HiUser } from "react-icons/hi";
 import {
   Sidebar,
   SidebarItem,
@@ -10,6 +10,7 @@ import {
 } from "flowbite-react";
 
 const AdminSidebar = () => {
+  const [isProfileOpen, setIsProfileOpen] = useState(true); // toggle for collapsible group
 
 
   return (
@@ -34,7 +35,7 @@ const AdminSidebar = () => {
                   </SidebarItem>
                 )}
               />
-                          
+
 
 
               <hr className="text-gray-300" />
@@ -117,34 +118,45 @@ const AdminSidebar = () => {
                 )}
               />
               <hr className="text-gray-300" />
-              
-              <SidebarCollapse icon={HiUser} label="Profile" >
 
-                <NavLink
+             
+              <div className="ml-1">
+                <button
+                  type="button"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="w-full text-start text-gray-500 dark:text-gray-400 px-4 py-1  hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                >
+                  <i className="fa-solid fa-user me-3"></i>
+                  Profile
+                  <i className={`fa-solid float-right me-2 ${isProfileOpen ? "fa-chevron-up" : "fa-chevron-down"}`}></i>
+                </button>
 
-                  to="adminProfile"
-                  end
-                  children={({ isActive }) => (
-                    <SidebarItem
-                      className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
-                    >
-                      View Profile
-                    </SidebarItem>
-                  )}
-                />
-                <NavLink
+                {isProfileOpen && (
+                  <div className="pl-6">
+                    <NavLink to="adminProfile" children={({ isActive }) => (
+                      <SidebarItem className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}>
+                        <i className="fa-solid fa-edit me-3"></i>
+                        View Profile
+                      </SidebarItem>
+                    )} />
+                    <NavLink to="/admin/adminProfile/adminEditProfile" children={({ isActive }) => (
+                      <SidebarItem className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}>
+                        <i className="fa-solid fa-edit me-3"></i>
+                        Edit Profile
+                      </SidebarItem>
+                    )} />
 
-                  to="/admin/adminProfile/adminResetPassword"
-                  end
-                  children={({ isActive }) => (
-                    <SidebarItem
-                      className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}
-                    >
-                      Change Password
-                    </SidebarItem>
-                  )}
-                />
-              </SidebarCollapse>
+                    <NavLink to="/admin/adminProfile/adminResetPassword" children={({ isActive }) => (
+                      <SidebarItem className={isActive ? "text-yellow-400 dark:text-yellow-500 font-bold" : "text-gray-500 dark:text-gray-400"}>
+                        <i className="fa-solid fa-unlock me-3"></i>
+                        Change Password
+                      </SidebarItem>
+                    )} />
+
+                    
+                  </div>
+                )}
+              </div>
               <NavLink
                 to="ratingPieChart"
                 end

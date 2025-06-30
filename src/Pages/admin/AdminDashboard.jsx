@@ -4,6 +4,7 @@ import DataTable from 'react-data-table-component';
 import { DarkThemeToggle } from 'flowbite-react';
 import MonthlyEmpOrderChart from './MonthlyEmpOrderChart'; 
 import MenuOrderPie from './MenuOrderPie';
+import MealAttendanceDonut from './MealAttendanceDonut';
 import Report from './Report';
 const AdminDashboard = () => {
 
@@ -135,6 +136,7 @@ const AdminDashboard = () => {
        
 
       </div>
+       <MealAttendanceDonut/>
 
       {/* <MenuOrderPie data={data}/> */}
 

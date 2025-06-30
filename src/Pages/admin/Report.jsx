@@ -9,7 +9,7 @@ import RatingPieChart from './RatingPieChart';
 
 const Report = () => {
 
-  
+
   const { data = [] } = useApiQuery({
     endpoint: "/registered-orders/lists",
     queryKey: ["orders"],
@@ -27,14 +27,14 @@ const Report = () => {
   console.log("Employee Menu Orders Data:", employeeMenuOrders);
 
   const { data: feedbackData = [] } = useApiQuery(
-  {
-    endpoint: "/feedback/list",
-    queryKey: ["feedback"],
-  },
-  {
-    refetchOnWindowFocus: false,
-  }
-);
+    {
+      endpoint: "/feedback/list",
+      queryKey: ["feedback"],
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   return (
 
@@ -42,17 +42,16 @@ const Report = () => {
 
       <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-white">Employee Reports</h2>
 
-      
-      
 
-        <MonthlyEmpOrderChart data={data} />
 
-       
-     
-       {/* <RatingPieChart feedbackData={feedbackData} /> */}
-      <RatingPieChart/>
-                {/* <MenuOrderPie detailData={filteredData} /> */}
-         <MealAttendanceDonut/>
+
+      <MonthlyEmpOrderChart data={data} />
+
+
+
+      <RatingPieChart />
+      {/* <MenuOrderPie detailData={filteredData} /> */}
+
 
     </>
   );
