@@ -52,7 +52,6 @@ const Report = () => {
        {/* <RatingPieChart feedbackData={feedbackData} /> */}
       <RatingPieChart/>
                 {/* <MenuOrderPie detailData={filteredData} /> */}
-        {/* <AbsentDonut/>        */}
          <MealAttendanceDonut/>
 
     </>

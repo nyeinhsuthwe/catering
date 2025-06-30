@@ -1,6 +1,6 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import { Card , Button} from "flowbite-react";
+import { Card, Button } from "flowbite-react";
 import { useApiQuery } from "../../hooks/useQuery";
 import { Link } from "react-router-dom";
 
@@ -70,8 +70,11 @@ const RatingPieChart = () => {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend verticalAlign="bottom" />
+            <Tooltip
+              contentStyle={{ backgroundColor: '#333', borderRadius: '8px', color: '#fff', border: 'none' }}
+              labelStyle={{ color: '#fff', fontWeight: 'bold' }}
+              itemStyle={{ color: '#fff' }}
+            />            <Legend verticalAlign="bottom" />
           </PieChart>
         </div>
 
@@ -92,7 +95,7 @@ const RatingPieChart = () => {
         </div>
       </div>
     </Card>
-    
+
   );
 };
 
