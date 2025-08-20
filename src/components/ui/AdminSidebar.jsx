@@ -157,7 +157,7 @@ const AdminSidebar = () => {
                   </div>
                 )}
               </div>
-              <NavLink
+              {/* <NavLink
                 to="ratingPieChart"
                 end
                 children={({ isActive }) => (
@@ -168,7 +168,7 @@ const AdminSidebar = () => {
                     Feedback
                   </SidebarItem>
                 )}
-              />
+              /> */}
             </SidebarItemGroup>
           </SidebarItems>
         </Sidebar>

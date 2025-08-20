@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useApiQuery } from "../../hooks/useQuery";
 import { Controller, useForm, useFieldArray } from "react-hook-form";
 import toast from "react-hot-toast";
+import { TreeSelect } from "primereact/treeselect";
 
 const AddNewMenu = () => {
   const queryClient = useQueryClient();
@@ -18,7 +19,13 @@ const AddNewMenu = () => {
     { refetchOnWindowFocus: false }
   );
 
-  const { register, handleSubmit, control, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       menus: [{ food_name: [], created_at: "" }],
       price: "",
@@ -53,31 +60,37 @@ const AddNewMenu = () => {
       }))
     );
 
-    menuListMutation.mutate({
-      endpoint: "/foodmonth/create",
-      method: "POST",
-      body: {
-        items: newMenus,
-        price: data.price,
+    menuListMutation.mutate(
+      {
+        endpoint: "/foodmonth/create",
+        method: "POST",
+        body: {
+          items: newMenus,
+          price: data.price,
+        },
       },
-    }, {
-      onSuccess: () => {
-        toast.dismiss();
-        toast.success("Menu created successfully!");
-        reset();
-      },
-      onError: (error) => {
-        toast.dismiss();
-        toast.error(
-          error?.response?.data?.message || "Creation failed. Please try again."
-        );
-      },
-    });
+      {
+        onSuccess: () => {
+          toast.dismiss();
+          toast.success("Menu created successfully!");
+          reset();
+        },
+        onError: (error) => {
+          toast.dismiss();
+          toast.error(
+            error?.response?.data?.message ||
+              "Creation failed. Please try again."
+          );
+        },
+      }
+    );
   };
 
   return (
     <div className=" p-6 rounded-lg shadow-sm text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
-      <h3 className="text-lg font-semibold mb-4 text-gray-700 dark:text-white">Add New Menu</h3>
+      <h3 className="text-lg font-semibold mb-4 text-gray-700 dark:text-white">
+        Add New Menu
+      </h3>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className=" rounded-xl shadow-md p-6 border border-gray-200 w-full mb-6 text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
@@ -95,6 +108,11 @@ const AddNewMenu = () => {
               placeholder="Enter price"
               className="p-2 focus:outline-none focus:ring focus:ring-sky-300 rounded w-full text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
             />
+            {errors.price && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.price.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -111,6 +129,7 @@ const AddNewMenu = () => {
                 <Controller
                   control={control}
                   name={`menus.${index}.food_name`}
+                  rules={{ required: "Food menu is required" }}
                   render={({ field }) => (
                     <MultiSelect
                       value={field.value}
@@ -123,6 +142,12 @@ const AddNewMenu = () => {
                     />
                   )}
                 />
+
+                {errors.menus?.[index]?.food_name && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.menus[index].food_name.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -131,8 +156,8 @@ const AddNewMenu = () => {
                 </label>
                 <Controller
                   name={`menus.${index}.created_at`}
+                  rules={{ required: "Date is required" }}
                   control={control}
-                  rules={{ required: true }}
                   render={({ field }) => (
                     <input
                       type="date"
@@ -142,6 +167,11 @@ const AddNewMenu = () => {
                     />
                   )}
                 />
+                {errors.menus?.[index]?.created_at && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.menus[index].created_at.message}
+                  </p>
+                )}
               </div>
 
               <div className="col-span-2 text-right">
