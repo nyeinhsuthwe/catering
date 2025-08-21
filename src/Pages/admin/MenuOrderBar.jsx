@@ -19,7 +19,7 @@ const MenuOrderBar = ({ detailData }) => {
         return <p className="text-gray-700 dark:text-white mt-4">No orders available</p>;
     }
 
-    const COLORS = ['#0062FF', '#00AAFF', '#FF9200', '#FFD000', '#36A2EB', '#9966FF'];
+    // const COLORS = ['#0062FF', '#00AAFF', '#FF9200', '#FFD000', '#36A2EB', '#9966FF'];
 
 
     return (

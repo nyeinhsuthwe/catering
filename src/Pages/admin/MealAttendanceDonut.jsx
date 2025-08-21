@@ -55,7 +55,7 @@ const MealAttendanceDonut = () => {
     ];
 
     return (
-        <Card className="w-full max-w-md mx-auto mt-4 ml-0">
+        <Card className="w-[480px]  max-w-md mx-auto mt-4 ml-0 mb-4">
             <h5 className="text-xl font-bold text-center text-gray-700 dark:text-white mb-4">
                 Employee Meal Attendance
             </h5>

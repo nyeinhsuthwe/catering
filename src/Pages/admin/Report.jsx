@@ -1,15 +1,12 @@
 // Report.jsx
-import React from 'react';
-import { useApiQuery } from '../../hooks/useQuery';
-import MonthlyEmpOrderChart from './MonthlyEmpOrderChart';
-import { useState } from 'react';
-import MealAttendanceDonut from './MealAttendanceDonut';
-import RatingPieChart from './RatingPieChart';
-
+import React from "react";
+import { useApiQuery } from "../../hooks/useQuery";
+import MonthlyEmpOrderChart from "./MonthlyEmpOrderChart";
+import { useState } from "react";
+import MealAttendanceDonut from "./MealAttendanceDonut";
+import RatingPieChart from "./RatingPieChart";
 
 const Report = () => {
-
-
   const { data = [] } = useApiQuery({
     endpoint: "/registered-orders/lists",
     queryKey: ["orders"],
@@ -37,22 +34,16 @@ const Report = () => {
   );
 
   return (
-
     <>
+      <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-white">
+        Employee Reports
+      </h2>
 
-      <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-white">Employee Reports</h2>
-
-
-
-
-      <MonthlyEmpOrderChart data={data} />
-
-
-
+      {/* <MonthlyEmpOrderChart data={data} /> */}
+      <MealAttendanceDonut />
       <RatingPieChart />
       {/* <MenuOrderPie detailData={filteredData} /> */}
-
-
+      
     </>
   );
 };

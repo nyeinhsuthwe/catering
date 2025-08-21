@@ -42,65 +42,65 @@ const AdminDashboard = () => {
 
 
   return (
-    <div className="">
+    <>
+      {/* KPIs Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-
-        <div className="p-4 bg-blue-100 rounded-lg shadow">
+        <div className="p-4 rounded-lg shadow text-white dark:bg-gray-800 bg-white dark:text-white">
           <div className="flex items-center mb-1">
             <i class="fa-solid fa-utensils  text-blue-600 mr-2"></i>
-            <h2 className="text-lg font-semibold text-gray-800">
-              Menu
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+              Menus
             </h2>
           </div>
-          <p className="text-2xl font-bold text-blue-600 mt-2">
+          <p className="text-2xl font-bold text-gray-800 dark:text-white mt-2">
             {stats.menus_count ?? 0}
           </p>
         </div>
-        <div className="p-4 bg-cyan-100 rounded-lg shadow">
+        <div className="p-4  rounded-lg shadow text-white dark:bg-gray-800 bg-cyan-100 dark:text-white">
           <div className="flex items-center mb-1">
             <i className="fas fa-calendar-alt text-cyan-600 mr-2"></i>
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
               Monthly Orders
             </h2>
           </div>
-          <p className="text-2xl font-bold text-cyan-600 mt-2">
+          <p className="text-2xl font-bold text-gray-800 dark:text-white mt-2">
             {stats.monthly_orders ?? 0}
           </p>
         </div>
 
-        <div className="p-4 bg-green-100 rounded-lg shadow">
+        <div className="p-4  rounded-lg shadow text-white dark:bg-gray-800 bg-green-100 dark:text-white">
           <div className="flex items-center mb-1">
             <i className="fas fa-shopping-cart text-green-600 mr-2"></i>
-            <h2 className="text-lg font-semibold text-gray-800">Total Orders</h2>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Total Orders</h2>
           </div>
-          <p className="text-2xl font-bold text-green-600 mt-2">
+          <p className="text-2xl font-bold text-gray-800 dark:text-white mt-2">
             {stats.total_orders ?? 0}
           </p>
         </div>
-        <div className="p-4 bg-yellow-100 rounded-lg shadow">
+        <div className="p-4  rounded-lg shadow text-gray-800 bg-yellow-100 dark:bg-gray-800 dark:text-white">
 
           <div className="flex items-center mb-1">
             <i class="fa-regular fa-user text-yellow-600 mr-2"></i>
-            <h2 className="text-lg font-semibold text-gray-800">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
               Total Registrations
             </h2>
           </div>
 
-          <p className="text-2xl font-bold text-yellow-600 mt-2">
+          <p className="text-2xl font-bold text-gray-800 dark:text-white mt-2">
             {stats.total_employees ?? 0}
           </p>
         </div>
       </div>
 
-
-      <div className='w-full mb-4'>
+            <MonthlyEmpOrderChart data={data} />
+      {/* <div className='w-full mb-4'>
         <Report />
-      </div>
+      </div> */}
       <div className="flex  flex-wrap gap-4 w-full mb-4">
 
-         <div className="p-4  rounded-lg shadow mb-6 w-[400px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+         <div className="p-4  rounded-lg shadow mb-6 w-[480px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
           <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">Recent Orders</h2>
-          <ul className="divide-y ">
+          <ul className="divide-y">
             {data?.slice(0, 5).map((order, idx) => (
               <li key={idx} className="py-2 flex justify-between text-sm">
                 <div className="flex flex-col">
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
             ))}
           </ul>
         </div>
-        <div className="p-4 rounded-lg shadow mb-6 w-[550px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+        <div className="p-4 rounded-lg shadow mb-6 w-[480px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
           <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">Upcoming Events</h2>
           <ul className="space-y-2 text-sm">
             {announcement?.map((announcement, idx) => (
@@ -136,7 +136,6 @@ const AdminDashboard = () => {
        
 
       </div>
-       <MealAttendanceDonut/>
 
       {/* <MenuOrderPie data={data}/> */}
 
@@ -145,7 +144,7 @@ const AdminDashboard = () => {
 
 
 
-    </div>
+    </>
   );
 };
 
