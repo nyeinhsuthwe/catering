@@ -46,7 +46,7 @@ const SendInvoice = () => {
             toast.success("Invoice sent successfully!");
         },
         onError: (error) => {
-            const errorMessage = error?.response?.data?.message || "Sending failed!";
+            const errorMessage = error?.response?.data?.message || "Sending Failed!";
             toast.error(errorMessage);
         },
     });

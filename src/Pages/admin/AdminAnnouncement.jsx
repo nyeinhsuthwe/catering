@@ -1,34 +1,40 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 import { FileInput, Label } from "flowbite-react";
 import { useApiMutation } from "../../hooks/useMutation";
 import { useApiQuery } from "../../hooks/useQuery";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-import Holiday from './Holiday';
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow, Pagination } from "flowbite-react";
+import Holiday from "./Holiday";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+  Pagination,
+} from "flowbite-react";
 import { Button, Modal, ModalBody, ModalHeader } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const AdminAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const queryClient = useQueryClient();
 
-
   const [announcement, setAnnouncement] = useState({
     date: "",
-    text: ""
+    text: "",
   });
   const mutation = useApiMutation({
-
     onSuccess: (data) => {
       toast.success("Announcement created successfully!");
       console.log("successful:", data);
       queryClient.invalidateQueries({ queryKey: ["announcements"] });
       // Reset form
-      setAnnouncement({ date: '', text: '', title: '' });
-      setInput('');
+      setAnnouncement({ date: "", text: "", title: "" });
+      setInput("");
     },
     onError: (error) => {
       toast.dismiss();
@@ -39,7 +45,6 @@ const AdminAnnouncement = () => {
   });
 
   const createAnnouncement = async () => {
-
     mutation.mutate({
       endpoint: "/announcement/create",
       method: "POST",
@@ -47,11 +52,9 @@ const AdminAnnouncement = () => {
         date: announcement.date,
         text: announcement.text,
         title: announcement.title,
-      }
-
+      },
     });
   };
-
 
   const { data: announce } = useApiQuery(
     {
@@ -71,9 +74,8 @@ const AdminAnnouncement = () => {
   );
   const deleteMutation = useApiMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['announcements'] })
+      queryClient.invalidateQueries({ queryKey: ["announcements"] });
       toast.success("successfully deleted!");
-
     },
     onError: (error) => {
       console.error(
@@ -86,7 +88,6 @@ const AdminAnnouncement = () => {
     setDeleteId(id);
     setOpenDeleteModal(true);
   };
-
 
   //For Updating Announcement
   const updateMutation = useApiMutation({
@@ -133,8 +134,6 @@ const AdminAnnouncement = () => {
 
   return (
     <div className="p-6 rounded-lg shadow-sm text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
-
-
       <div className="max-w-md mb-2 ">
         <Label className="mb-2 block" htmlFor="date">
           Select Announcement Date
@@ -157,13 +156,14 @@ const AdminAnnouncement = () => {
             setAnnouncement({ ...announcement, title: e.target.value })
           }
         />
-
       </div>
 
-
       <div className="max-w-md mb-2">
-        <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          {editIndex !== null ? 'Edit Announcement' : 'New Announcement'}
+        <label
+          htmlFor="message"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          {editIndex !== null ? "Edit Announcement" : "New Announcement"}
         </label>
         <textarea
           id="message"
@@ -172,26 +172,22 @@ const AdminAnnouncement = () => {
                     focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600
                     dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Write your announcement here..."
-
           value={announcement.text}
           onChange={(e) =>
             setAnnouncement({ ...announcement, text: e.target.value })
           }
         ></textarea>
         <button
-
           className="mt-2 px-4 py-2  text-white rounded bg-yellow-400 dark:bg-yellow-400 hover:bg-yellow-500 dark:hover:bg-yellow-500"
           onClick={() => {
             if (editIndex !== null) {
               updateAnnouncement();
             } else {
               createAnnouncement();
-
             }
-          }
-          }
+          }}
         >
-          {editIndex !== null ? 'Update' : 'Add'}
+          {editIndex !== null ? "Update" : "Add"}
         </button>
 
         <button
@@ -203,9 +199,6 @@ const AdminAnnouncement = () => {
         >
           Cancel
         </button>
-
-
-
       </div>
       <div className="overflow-x-auto bg-white text-gray-700 dark:bg-gray-800 dark:text-white p-4 rounded">
         <div className="flex justify-end items-center mb-4">
@@ -235,7 +228,6 @@ const AdminAnnouncement = () => {
             <TableHeadCell>Title</TableHeadCell>
             <TableHeadCell>Description</TableHeadCell>
             <TableHeadCell>Actions</TableHeadCell>
-
           </TableHead>
           <TableBody className="divide-y">
             {(paginatedData || []).map((row, index) => (
@@ -314,14 +306,19 @@ const AdminAnnouncement = () => {
                       endpoint: `announcement/destroy/${deleteId}`,
                       method: "DELETE",
                     });
-                    console.log(`Deleting Announcement at: announcement/destroy/${deleteId}`);
+                    console.log(
+                      `Deleting Announcement at: announcement/destroy/${deleteId}`
+                    );
                   }
                   setOpenDeleteModal(false);
                 }}
               >
                 Yes, I'm sure
               </Button>
-              <Button color="alternative" onClick={() => setOpenDeleteModal(false)}>
+              <Button
+                color="alternative"
+                onClick={() => setOpenDeleteModal(false)}
+              >
                 No, cancel
               </Button>
             </div>
@@ -330,8 +327,6 @@ const AdminAnnouncement = () => {
       </Modal>
 
       <Holiday />
-
-
     </div>
   );
 };
