@@ -142,9 +142,9 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
 
         {/* Pie Chart */}
         <div className=" w-[480px]  rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
-          <h3 className="text-lg font-semibold mb-2">
+          {/* <h3 className="text-lg font-semibold mb-2">
             Menu Ordered Dishes by Employee
-          </h3>
+          </h3> */}
           {/* <MenuOrderPie detailData={filteredData} /> */}
           <MenuOrderBar detailData={filteredData} />
         </div>
