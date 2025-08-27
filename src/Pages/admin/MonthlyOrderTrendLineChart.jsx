@@ -24,7 +24,7 @@ const MonthlyOrderTrend = () => {
 
   // ---- Transform API data into monthly counts ----
   const monthlyOrderMap = data.reduce((acc, curr) => {
-    if (!curr.date) return acc; // skip if no date
+    if (!curr.date) return acc; 
 
     const dateObj = new Date(curr.date);
     const monthKey = dateObj.toLocaleString("default", {

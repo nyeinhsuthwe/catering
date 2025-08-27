@@ -69,85 +69,46 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
   }
 
   return (
-    <>
-      <div className="mb-6 flex flex-wrap items-center gap-4  ">
-        <select
-          value={selectedEmp}
-          onChange={(e) => setSelectedEmp(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-50 text-gray-800 dark:bg-gray-800 bg-white dark:text-white"
-        >
-          <option value="" className="text-gray-800 dark:text-white  ">
-            All Employees
-          </option>
-          {uniqueNames.map((name) => (
-            <option
-              key={name}
-              className="text-gray-800 dark:text-white"
-              value={name}
-            >
-              {name}
-            </option>
-          ))}
-        </select>
+    <div className="flex flex-wrap gap-4 w-full mb-4">
+      {/* Bar Chart */}
+      <Card className="w-[480px] rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+        <h3 className="text-lg text-gray-700 font-semibold mb-2 dark:text-white ">Monthly Employee Order Chart</h3>
+        
+        {chartData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={350}>
+            <BarChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis
+                label={{
+                  value: "Menu Orders",
+                  angle: -90,
+                  position: "insideLeft",
+                }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#333",
+                  borderRadius: "8px",
+                  color: "#fff",
+                  border: "none",
+                }}
+                labelStyle={{ color: "#fff", fontWeight: "bold" }}
+                itemStyle={{ color: "#fff" }}
+              />
+              <Bar dataKey="menuCount" fill="#0049FF" />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="text-gray-700 dark:text-white text-center">
+            No data to display
+          </p>
+        )}
+      </Card>
 
-        <input
-          type="month"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          className="border px-3 py-2 rounded ml-2 text-gray-800 dark:text-white dark:bg-gray-800 bg-white"
-        />
-      </div>
-
-      <div className="flex  flex-wrap gap-4 w-full mb-4">
-        {/* Bar Chart */}
-        <div className="w-[480px]  rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
-          {/* w-[400px]   */}
-          <h2 className="text-xl font-semibold">
-            Monthly Employee Order Chart
-          </h2>
-          {/* <Link to="viewEmpOrderDetail">
-            <Button>Details</Button>
-          </Link> */}
-          {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis
-                  label={{
-                    value: "Menu Orders",
-                    angle: -90,
-                    position: "insideLeft",
-                  }}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#333",
-                    borderRadius: "8px",
-                    color: "#fff",
-                    border: "none",
-                  }}
-                  labelStyle={{ color: "#fff", fontWeight: "bold" }}
-                  itemStyle={{ color: "#fff" }}
-                />
-                <Bar dataKey="menuCount" fill="#0049FF" />{" "}
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p className="text-gray-700 dark:text-white text-center">
-              No data to display for this Month
-            </p>
-          )}
-        </div>
-
-        {/* Pie Chart */}
-        <div className=" w-[480px]  rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
-          {/* <h3 className="text-lg font-semibold mb-2">
-            Menu Ordered Dishes by Employee
-          </h3> */}
-          {/* <MenuOrderPie detailData={filteredData} /> */}
-          <MenuOrderBar detailData={filteredData} />
-        </div>
+      
+      <div>
+        <MenuOrderBar detailData={data} />
       </div>
     </>
   );

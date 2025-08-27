@@ -100,12 +100,7 @@ const Report = () => {
 
         
          <RatingPieChart />
-        {/* <Card>
-          <MenuPopularityChart />
-        </Card>
-        <Card>
-          <SatisfactionChart />
-        </Card> */}
+
       </div>
       {/* <MenuOrderPie detailData={filteredData} /> */}
     </>

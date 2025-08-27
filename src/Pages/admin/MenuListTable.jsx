@@ -160,6 +160,7 @@ const MenuListTable = () => {
   return (
     <div className="p-6 mb-3 rounded-lg shadow-md text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
       <>
+      {/* //Menu List Table */}
         <h2 className="text-xl font-bold mb-4">Menu Lists</h2>
 
         {/* 🔹 Filters */}
