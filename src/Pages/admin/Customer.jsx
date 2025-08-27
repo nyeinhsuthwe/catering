@@ -322,6 +322,7 @@ const Customer = () => {
         )}
 
         {/* Delete emp  */}
+        
         <Modal
           show={openDeleteModal}
           size="md"

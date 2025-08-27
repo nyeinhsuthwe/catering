@@ -16,7 +16,7 @@ const COLORS = [
   "#FFBB28",
   "#FFBB28",
   "#FFBB28",
-  "#FFBB28",
+  "#FFBB22",
 ];
 
 const MenuOrderBar = ({ detailData }) => {

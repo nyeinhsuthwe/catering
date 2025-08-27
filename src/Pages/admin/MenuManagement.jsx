@@ -18,7 +18,6 @@
 
 //   const { menuLists, setMenuLists } = useMenuStore();
 
-
 //   // Create a new food item
 //   const mutation = useApiMutation({
 //     onSuccess: (data) => {
@@ -70,8 +69,6 @@
 //     name: "menus",
 //   });
 
-
-
 //   //edit menu price and date to update
 //   const updateMenuMutation = useApiMutation({
 //     onSuccess: () => {
@@ -89,12 +86,6 @@
 //       console.error("Upload failed:", error);
 //     },
 //   });
-
-
-
-
-
-
 
 //   const onSubmit = (data) => {
 //     // toast.loading("Updating Menu");
@@ -117,7 +108,7 @@
 
 //       updateMenuMutation.mutate({
 //         endpoint: `/foodmonth/update/${menuToEdit.date}`, // Or ID if preferred
-//         method: "PUT", 
+//         method: "PUT",
 //         body: {
 //           items: newMenus,
 //           price: data.price,
@@ -167,8 +158,6 @@
 //     }
 //   };
 
-
-
 //   const handleAddFood = () => {
 //     if (!newFoodName.trim()) {
 //       alert("Please enter a valid food name.");
@@ -187,7 +176,6 @@
 //     onSuccess: () => {
 //       queryClient.invalidateQueries({ queryKey: ['foodmonthprice'] })
 //       toast.success("successfully updated!");
-
 
 //     },
 //     onError: (error) => {
@@ -219,13 +207,6 @@
 //     setEditIndex(selectedMenu.id);
 //   };
 
-
-
-
-
-
-
-
 //   const deleteMutation = useApiMutation({
 //     onSuccess: () => {
 //       queryClient.invalidateQueries({ queryKey: ['foodmonthprice'] })
@@ -239,7 +220,6 @@
 //       );
 //     },
 //   });
-
 
 //   const handleDelete = (date) => {
 //     const confirmed = window.confirm("Are you sure you want to delete?");
@@ -287,8 +267,6 @@
 //             onClick={() => handleEdit(row)}
 //             className=" hover:text-blue-800"
 //           >
-
-
 
 //             <i class="fas fa-edit text-blue-600 cursor-pointer ml-4"></i>
 //           </button>
@@ -383,11 +361,9 @@
 //               },
 //             }}
 
-
 //           />
 //         </div>
 //       </div>
-
 
 //       <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
 //         <h3 className="text-lg font-semibold mb-4">
@@ -440,7 +416,6 @@
 //                     )}
 //                   />
 
-
 //                 </div>
 
 //                 <div>
@@ -491,8 +466,6 @@
 //               {editIndex !== null ? "Update Menu" : "Add Menu"}
 //             </button>
 
-
-
 //             <button
 //               type="button"
 //               onClick={() => {
@@ -503,7 +476,6 @@
 //             >
 //               Cancel Edit
 //             </button>
-
 
 //           </div>
 

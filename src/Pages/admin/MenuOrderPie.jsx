@@ -51,4 +51,5 @@ const MenuOrderPie = ({ detailData }) => {
     );
 };
 
+
 export default MenuOrderPie;

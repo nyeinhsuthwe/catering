@@ -85,6 +85,7 @@ return (
       Change Your Password
     </p>
 
+  {/* Card */}
     <Card className="max-w-lg mx-auto">
       <form
         className="flex mx-auto flex-col gap-4 w-100 mt-4 mb-4"

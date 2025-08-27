@@ -24,13 +24,7 @@ const MenuUpdate = () => {
     }
   );
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-  } = useForm({
+  const { control, register, handleSubmit, reset, setValue } = useForm({
     defaultValues: {
       price: "",
       menus: [{ food_name: [], created_at: "" }],
@@ -45,7 +39,7 @@ const MenuUpdate = () => {
   const updateMenuMutation = useApiMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["foodmonthprice"] });
-            navigate("/admin/menu");
+      navigate("/admin/menu");
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Update failed.");
@@ -74,57 +68,59 @@ const MenuUpdate = () => {
   }, [selectedMenu, foodLists, setValue, reset]);
 
   const onSubmit = (data) => {
-  if (!data.price || !data.menus.length) {
-    toast.error("Please fill all required fields");
-    return;
-  }
+    if (!data.price || !data.menus.length) {
+      toast.error("Please fill all required fields");
+      return;
+    }
 
-  const updatedMenus = data.menus.flatMap((menu) =>
-    menu.food_name.map((food) => ({
-      food_name: typeof food === "string" ? food : food.name,
-      price: parseFloat(data.price),
-      date: menu.created_at,
-    }))
-  );
-
-  let successCount = 0;
-  let failCount = 0;
-
-  updatedMenus.forEach((menu) => {
-    updateMenuMutation.mutate(
-      {
-        endpoint: `/foodmonth/update/${menu.date}`,
-        method: "PUT",
-        body: {
-          food_name: menu.food_name,
-          price: menu.price,
-          date: menu.date,
-        },
-      },
-      {
-        onSuccess: () => {
-          successCount++;
-          if (successCount + failCount === updatedMenus.length) {
-            toast.success("All menus updated successfully!");
-            navigate("/admin/menu");
-          }
-        },
-        onError: (error) => {
-          failCount++;
-          console.error("Update failed:", error);
-          toast.error(
-            error?.response?.data?.message || `Failed to update menu for ${menu.date}`
-          );
-        },
-      }
+    const updatedMenus = data.menus.flatMap((menu) =>
+      menu.food_name.map((food) => ({
+        food_name: typeof food === "string" ? food : food.name,
+        price: parseFloat(data.price),
+        date: menu.created_at,
+      }))
     );
-  });
-};
 
+    let successCount = 0;
+    let failCount = 0;
+
+    updatedMenus.forEach((menu) => {
+      updateMenuMutation.mutate(
+        {
+          endpoint: `/foodmonth/update/${menu.date}`,
+          method: "PUT",
+          body: {
+            food_name: menu.food_name,
+            price: menu.price,
+            date: menu.date,
+          },
+        },
+        {
+          onSuccess: () => {
+            successCount++;
+            if (successCount + failCount === updatedMenus.length) {
+              toast.success("All menus updated successfully!");
+              navigate("/admin/menu");
+            }
+          },
+          onError: (error) => {
+            failCount++;
+            console.error("Update failed:", error);
+            toast.error(
+              error?.response?.data?.message ||
+                `Failed to update menu for ${menu.date}`
+            );
+          },
+        }
+      );
+    });
+  };
 
   return (
     <div className=" p-6 rounded-lg shadow-sm text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
-      <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-white">Edit Menu</h2>
+      <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-white">
+        Edit Menu
+      </h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <label className="block mb-1 text-sm font-medium">Price</label>

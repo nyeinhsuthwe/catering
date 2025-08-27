@@ -7,7 +7,15 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
-import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Pagination } from "flowbite-react";
+import {
+  Table,
+  TableHead,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell,
+  Pagination,
+} from "flowbite-react";
 import { Button, Modal, ModalBody, ModalHeader } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
@@ -17,7 +25,6 @@ const MenuListTable = () => {
   const queryClient = useQueryClient();
   const { reset } = useForm();
 
-
   // Fetch food month data
   const { data: foodMonthCreate } = useApiQuery(
     {
@@ -25,7 +32,7 @@ const MenuListTable = () => {
       queryKey: ["foodmonthprice"],
     },
     {
-      onSuccess: () => { },
+      onSuccess: () => {},
     }
   );
 
@@ -66,7 +73,8 @@ const MenuListTable = () => {
         onError: (error) => {
           toast.dismiss();
           toast.error(
-            error?.response?.data?.message || "Creation failed. Please try again."
+            error?.response?.data?.message ||
+              "Creation failed. Please try again."
           );
         },
       }
@@ -79,7 +87,10 @@ const MenuListTable = () => {
       toast.success("Successfully deleted!");
     },
     onError: (error) => {
-      console.error("Delete failed:", error?.response?.data?.message || error.message);
+      console.error(
+        "Delete failed:",
+        error?.response?.data?.message || error.message
+      );
     },
   });
   const handleDeleteClick = (id) => {
@@ -133,13 +144,10 @@ const MenuListTable = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-
   return (
-
     <div className="p-6 mb-3 rounded-lg shadow-md text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
-
       <>
-      {/* //Menu List Table */}
+        {/* //Menu List Table */}
         <h2 className="text-xl font-bold mb-4">Menu Lists</h2>
         <div className="flex justify-end items-center mb-4">
           <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
@@ -171,7 +179,10 @@ const MenuListTable = () => {
           <TableBody>
             {filteredData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan="4" className="text-center py-6 text-gray-500">
+                <TableCell
+                  colSpan="4"
+                  className="text-center py-6 text-gray-500"
+                >
                   No menu records found.
                 </TableCell>
               </TableRow>
@@ -240,17 +251,17 @@ const MenuListTable = () => {
                 >
                   Yes, I'm sure
                 </Button>
-                <Button color="alternative" onClick={() => setOpenDeleteModal(false)}>
+                <Button
+                  color="alternative"
+                  onClick={() => setOpenDeleteModal(false)}
+                >
                   No, cancel
                 </Button>
               </div>
             </div>
           </ModalBody>
         </Modal>
-
-
       </>
-
     </div>
   );
 };

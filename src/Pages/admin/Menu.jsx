@@ -1,18 +1,15 @@
 // Menu.jsx
-import React from 'react';
-import CreateNewMenu from './CreateNewMenu';
-import { useQueryClient } from '@tanstack/react-query';
-import MenuListTable from './MenuListTable';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import CreateNewMenu from "./CreateNewMenu";
+import { useQueryClient } from "@tanstack/react-query";
+import MenuListTable from "./MenuListTable";
+import { useNavigate } from "react-router-dom";
 
-import AddNewMenu from './AddNewMenu';
-import MenuUpdate from './MenuUpdate';
+import AddNewMenu from "./AddNewMenu";
+import MenuUpdate from "./MenuUpdate";
 const Menu = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-
-
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -25,7 +22,6 @@ const Menu = () => {
         <MenuListTable />
         <AddNewMenu />
       </div>
-      
     </div>
   );
 };

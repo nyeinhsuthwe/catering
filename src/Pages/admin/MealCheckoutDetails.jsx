@@ -121,6 +121,7 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
           </select>
         </div>
 
+
         <Table striped>
           <TableHead>
             <TableHeadCell>No</TableHeadCell>
