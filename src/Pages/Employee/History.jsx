@@ -63,12 +63,12 @@ const History = () => {
   const checkoutMutation = useApiMutation({
     onSuccess: (data) => {
       console.log("Checkout successful:", data);
-      toast.success("Checkout successful!");
+      toast.success("Order successful!");
       unselectEvents();
     },
     onError: (error) => {
       console.error("Checkout failed:", error);
-      toast.error("Checkout failed. Please try again.");
+      toast.error("Order failed. Please try again.");
     },
   });
 
