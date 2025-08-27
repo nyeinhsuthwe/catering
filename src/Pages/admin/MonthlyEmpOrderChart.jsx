@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -9,28 +9,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { format, parseISO } from "date-fns";
-import MenuOrderPie from "./MenuOrderPie";
 import { useApiQuery } from "../../hooks/useQuery";
-import FeedbackRecord from "./FeedbackRecord";
-import { Button, Card } from "flowbite-react";
-import { Link } from "react-router-dom";
 import MenuOrderBar from "./MenuOrderBar";
+import { Card } from "flowbite-react";
 
 const MonthlyEmpOrderChart = ({ data = [] }) => {
-  const [selectedEmp, setSelectedEmp] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
-
-  // Filter by employee and date
-  const filteredData = data.filter((order) => {
-    const matchesName = selectedEmp ? order.emp_name === selectedEmp : true;
-    const matchesDate = selectedDate
-      ? order.date?.startsWith(selectedDate)
-      : true;
-    return matchesName && matchesDate;
-  });
-
-  // Group by month and count menu orders
-  const monthlyMenuCount = filteredData.reduce((acc, order) => {
+  // Group by month and count menu orders (no filters)
+  const monthlyMenuCount = data.reduce((acc, order) => {
     try {
       const rawDate = order.date;
       const parsedDate = parseISO(rawDate);
@@ -49,8 +34,6 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
       month: format(parseISO(`${monthKey}-01`), "MMM"),
       menuCount: count,
     }));
-
-  const uniqueNames = [...new Set(data.map((d) => d.emp_name))];
 
   const { data: employeeMenuOrders } = useApiQuery(
     {
@@ -108,7 +91,6 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
         )}
       </Card>
 
-      
       <div>
         <MenuOrderBar detailData={data} />
       </div>

@@ -38,8 +38,8 @@ const MenuOrderBar = ({ detailData }) => {
   }
 
   return (
-    <Card className="w-full">
-      <h3 className="text-lg font-semibold mb-2 dark:text-white">
+    <Card className=" w-[480px] rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+      <h3 className="text-lg font-semibold mb-2 dark:text-white text-gray-700">
         Menu Popularity Report
       </h3>
       <ResponsiveContainer width="100%" height={350}>
