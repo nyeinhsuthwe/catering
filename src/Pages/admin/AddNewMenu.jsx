@@ -213,6 +213,7 @@ const AddNewMenu = () => {
         </div>
       </form>
     </div>
+    //Add menu
   );
 };
 

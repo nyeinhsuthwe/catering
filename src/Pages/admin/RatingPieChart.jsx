@@ -160,10 +160,7 @@ const FeedbackBarChart = () => {
       <div className="w-full h-72">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
-            <XAxis dataKey="rating" 
-            label={{value: "Ratings",
-              angle: 0,
-            }}/>
+            <XAxis dataKey="rating" label={{ value: "Ratings", angle: 0 }} />
             <YAxis
               allowDecimals={false}
               label={{

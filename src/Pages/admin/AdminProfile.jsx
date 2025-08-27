@@ -44,6 +44,7 @@ const AdminProfile = () => {
     if (isLoading) return <div>Loading...</div>;
     if (!profile) return <div>No profile data available.</div>;
 
+    //Admin Profile
     return (
         <div className="p-6 max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-700  dark:text-white mb-6">Your Profile</h2>

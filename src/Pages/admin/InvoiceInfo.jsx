@@ -150,7 +150,6 @@ const InvoiceInfo = () => {
       </div>
     </div>
 
-
   );
 };
 

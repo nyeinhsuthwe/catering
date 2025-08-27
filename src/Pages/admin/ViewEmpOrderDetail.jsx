@@ -1,36 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Table,
   TableHead,
   TableBody,
   TableRow,
   TableCell,
-  TableHeadCell,Pagination
-} from 'flowbite-react';
+  TableHeadCell,
+  Pagination,
+} from "flowbite-react";
 // import MenuOrderPie from './MenuOrderPie'; // Uncomment if needed
 
 const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState("");
 
   // Filter employee orders
-  const empOrders = data.filter(d => d.emp_id === empId);
+  const empOrders = data.filter((d) => d.emp_id === empId);
 
   const detailData = selectedMonth
-    ? empOrders.filter(order => {
-      const orderDate = new Date(order.date);
-      const month = String(orderDate.getMonth() + 1).padStart(2, '0');
-      const year = orderDate.getFullYear();
-      return `${year}-${month}` === selectedMonth;
-    })
+    ? empOrders.filter((order) => {
+        const orderDate = new Date(order.date);
+        const month = String(orderDate.getMonth() + 1).padStart(2, "0");
+        const year = orderDate.getFullYear();
+        return `${year}-${month}` === selectedMonth;
+      })
     : empOrders;
 
-  const totalAmount = detailData.reduce((sum, item) => sum + parseFloat(item.price || 0), 0);
+  const totalAmount = detailData.reduce(
+    (sum, item) => sum + parseFloat(item.price || 0),
+    0
+  );
 
-   //pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
-    //Pagination
+  //Pagination
   const onPageChange = (page) => setCurrentPage(page);
   const totalItems = detailData.length;
   const paginatedData = detailData.slice(
@@ -61,24 +65,24 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
 
       <div className="overflow-x-auto">
         <div className="flex justify-end items-center mb-4">
-            <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
-              Items per page:
-            </label>
-            <select
-              value={itemsPerPage}
-              onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
-                setCurrentPage(1); // reset to first page when limit changes
-              }}
-              className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
-            >
-              {[1, 5, 10, 15, 20, 30].map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-          </div>
+          <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
+            Items per page:
+          </label>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1); // reset to first page when limit changes
+            }}
+            className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
+          >
+            {[1, 5, 10, 15, 20, 30].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
         <Table striped hoverable>
           <TableHead className="bg-gray-100 text-sm">
             <TableHeadCell>No.</TableHeadCell>
@@ -90,7 +94,7 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
           </TableHead>
           <TableBody>
             {detailData.length > 0 ? (
-             paginatedData.map((row, index) => (
+              paginatedData.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{row.emp_id}</TableCell>
@@ -102,7 +106,10 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-gray-500 py-6">
+                <TableCell
+                  colSpan={6}
+                  className="text-center text-gray-500 py-6"
+                >
                   No order records found.
                 </TableCell>
               </TableRow>
@@ -110,23 +117,22 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
           </TableBody>
         </Table>
         {totalItems > itemsPerPage && (
-                  <div className="flex overflow-x-auto justify-center mt-4">
-                    <Pagination
-                      layout="table"
-                      currentPage={currentPage}
-                      totalItems={totalItems}
-                      itemsPerPage={itemsPerPage}
-                      onPageChange={onPageChange}
-                      showIcons
-                    />
-                  </div>
-                )}
+          <div className="flex overflow-x-auto justify-center mt-4">
+            <Pagination
+              layout="table"
+              currentPage={currentPage}
+              totalItems={totalItems}
+              itemsPerPage={itemsPerPage}
+              onPageChange={onPageChange}
+              showIcons
+            />
+          </div>
+        )}
       </div>
 
       <div className="mt-4 text-right font-semibold text-lg">
         Total Amount: <span className="text-green-600">{totalAmount}</span>
       </div>
-
     </div>
   );
 };

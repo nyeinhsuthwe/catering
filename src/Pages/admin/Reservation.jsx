@@ -1,16 +1,16 @@
-import { useApiQuery } from '../../hooks/useQuery'
-import EmployeeMealAttendance from './EmployeeMealAttendance';
-import ViewEmpOrderDetail from './ViewEmpOrderDetail';
-import { useState } from 'react';
+import { useApiQuery } from "../../hooks/useQuery";
+import EmployeeMealAttendance from "./EmployeeMealAttendance";
+import ViewEmpOrderDetail from "./ViewEmpOrderDetail";
+import { useState } from "react";
 import {
   Table,
   TableHead,
   TableHeadCell,
   TableBody,
   TableRow,
-  TableCell, Pagination
+  TableCell,
+  Pagination,
 } from "flowbite-react";
-
 
 const Reservation = () => {
   const { data = [] } = useApiQuery(
@@ -24,26 +24,24 @@ const Reservation = () => {
   );
   console.log("Employee Order Data:", data);
 
-
   // Get unique employees (one row per emp_id)
   const groupData = Array.from(
-    new Map(data.map(item => [item.emp_id, item])).values()
+    new Map(data.map((item) => [item.emp_id, item])).values()
   );
   const [selectedEmpId, setSelectedEmpId] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
 
   //pagination
-    const [currentPage, setCurrentPage] = useState(1);
-     const [itemsPerPage, setItemsPerPage] = useState(5);
-  
-     //Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  //Pagination
   const onPageChange = (page) => setCurrentPage(page);
   const totalItems = groupData.length;
   const paginatedData = groupData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  
 
   return (
     <div className="p-6  rounded-lg shadow-md text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
@@ -80,7 +78,10 @@ const Reservation = () => {
             <TableBody>
               {groupData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan="4" className="text-center py-6 text-gray-500">
+                  <TableCell
+                    colSpan="4"
+                    className="text-center py-6 text-gray-500"
+                  >
                     No reservation records found.
                   </TableCell>
                 </TableRow>
@@ -108,19 +109,17 @@ const Reservation = () => {
           </Table>
 
           {totalItems > itemsPerPage && (
-                    <div className="flex overflow-x-auto justify-center mt-4">
-                      <Pagination
-                        layout="table"
-                        currentPage={currentPage}
-                        totalItems={totalItems}
-                        itemsPerPage={itemsPerPage}
-                        onPageChange={onPageChange}
-                        showIcons
-                      />
-                    </div>
-                  )}
-
-
+            <div className="flex overflow-x-auto justify-center mt-4">
+              <Pagination
+                layout="table"
+                currentPage={currentPage}
+                totalItems={totalItems}
+                itemsPerPage={itemsPerPage}
+                onPageChange={onPageChange}
+                showIcons
+              />
+            </div>
+          )}
 
           <EmployeeMealAttendance />
         </>

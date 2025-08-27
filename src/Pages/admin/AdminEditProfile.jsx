@@ -52,6 +52,7 @@ const AdminEditProfile = () => {
     });
   };
 
+  //Edit Profile
   return (
     <div className="p-6 max-w-3xl mx-auto ">
       <h2 className="text-xl font-bold mb-6 text-gray-700  dark:text-white">Edit Your Profile</h2>

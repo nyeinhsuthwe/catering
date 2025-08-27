@@ -11,12 +11,12 @@ import {
 } from "recharts";
 
 const COLORS = [
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB22",
 ];
 
 const MenuOrderBar = ({ detailData }) => {
