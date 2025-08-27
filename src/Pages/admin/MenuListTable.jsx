@@ -5,18 +5,28 @@ import { useApiQuery } from "../../hooks/useQuery";
 import useMenuStore from "../../store/menuStore";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
-import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Pagination } from "flowbite-react";
-import { Button, Modal, ModalBody, ModalHeader } from "flowbite-react";
+import {
+  Table,
+  TableHead,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell,
+  Pagination,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+} from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const MenuListTable = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState(""); // 🔹 Month filter
   const queryClient = useQueryClient();
   const { reset } = useForm();
-
 
   // Fetch food month data
   const { data: foodMonthCreate } = useApiQuery(
@@ -25,7 +35,7 @@ const MenuListTable = () => {
       queryKey: ["foodmonthprice"],
     },
     {
-      onSuccess: () => { },
+      onSuccess: () => {},
     }
   );
 
@@ -66,7 +76,8 @@ const MenuListTable = () => {
         onError: (error) => {
           toast.dismiss();
           toast.error(
-            error?.response?.data?.message || "Creation failed. Please try again."
+            error?.response?.data?.message ||
+              "Creation failed. Please try again."
           );
         },
       }
@@ -79,7 +90,10 @@ const MenuListTable = () => {
       toast.success("Successfully deleted!");
     },
     onError: (error) => {
-      console.error("Delete failed:", error?.response?.data?.message || error.message);
+      console.error(
+        "Delete failed:",
+        error?.response?.data?.message || error.message
+      );
     },
   });
   const handleDeleteClick = (id) => {
@@ -114,9 +128,18 @@ const MenuListTable = () => {
     navigate("/admin/menu/edit-menu", { state: groupedMenu });
   };
 
-  const filteredData = (foodMonthCreate || []).filter((item) =>
-    item.food_name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // 🔹 Filtering (search + month)
+  const filteredData = (foodMonthCreate || [])
+    .filter((item) =>
+      item.food_name.toLowerCase().includes(searchText.toLowerCase())
+    )
+    .filter((item) => {
+      if (!selectedMonth) return true;
+      const itemMonth = new Date(item.date).toLocaleString("default", {
+        month: "long",
+      }); // e.g., "January"
+      return itemMonth === selectedMonth;
+    });
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -129,36 +152,71 @@ const MenuListTable = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
   //deleteMenu
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
-
   return (
-
     <div className="p-6 mb-3 rounded-lg shadow-md text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
-
       <>
         <h2 className="text-xl font-bold mb-4">Menu Lists</h2>
-        <div className="flex justify-end items-center mb-4">
-          <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
-            Items per page:
-          </label>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => {
-              setItemsPerPage(Number(e.target.value));
-              setCurrentPage(1); // reset to first page when limit changes
-            }}
-            className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800"
-          >
-            {[1, 5, 10, 15, 20, 30].map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
+
+        {/* 🔹 Filters */}
+        <div className="flex justify-between items-center mb-4">
+          {/* Month filter */}
+          <div className="flex items-center gap-3">
+            <label className="font-medium text-sm">Filter by Month:</label>
+            <select
+              value={selectedMonth}
+              onChange={(e) => {
+                setSelectedMonth(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800 px-6 py-2"
+            >
+              <option value="">All</option>
+              {[
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ].map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Items per page */}
+          <div className="flex items-center">
+            <label className="mr-2 font-medium text-sm">Items per page:</label>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1); // reset to first page when limit changes
+              }}
+              className="border border-gray-300 rounded p-2 text-sm dark:bg-gray-800 bg-white dark:text-white text-gray-800 px-6 py-2"
+            >
+              {[1, 5, 10, 15, 20, 30].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
         <Table hoverable striped>
           <TableHead>
             <TableHeadCell>No.</TableHeadCell>
@@ -170,7 +228,10 @@ const MenuListTable = () => {
           <TableBody>
             {filteredData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan="4" className="text-center py-6 text-gray-500">
+                <TableCell
+                  colSpan="5"
+                  className="text-center py-6 text-gray-500"
+                >
                   No menu records found.
                 </TableCell>
               </TableRow>
@@ -180,7 +241,11 @@ const MenuListTable = () => {
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{row.food_name}</TableCell>
                   <TableCell>{row.price}</TableCell>
-                  <TableCell>{row.date}</TableCell>
+                  <TableCell>
+                    {new Date(row.date).toLocaleString("default", {
+                      month: "long",
+                    })}
+                  </TableCell>
                   <TableCell>
                     <div className="space-x-2">
                       <button onClick={() => handleEdit(row)}>
@@ -197,6 +262,7 @@ const MenuListTable = () => {
             )}
           </TableBody>
         </Table>
+
         {totalItems > itemsPerPage && (
           <div className="flex overflow-x-auto justify-center mt-4">
             <Pagination
@@ -210,6 +276,7 @@ const MenuListTable = () => {
           </div>
         )}
 
+        {/* Delete Modal */}
         <Modal
           show={openDeleteModal}
           size="md"
@@ -239,17 +306,17 @@ const MenuListTable = () => {
                 >
                   Yes, I'm sure
                 </Button>
-                <Button color="alternative" onClick={() => setOpenDeleteModal(false)}>
+                <Button
+                  color="alternative"
+                  onClick={() => setOpenDeleteModal(false)}
+                >
                   No, cancel
                 </Button>
               </div>
             </div>
           </ModalBody>
         </Modal>
-
-
       </>
-
     </div>
   );
 };

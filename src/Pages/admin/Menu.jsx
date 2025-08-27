@@ -16,7 +16,7 @@ const Menu = () => {
 
   return (
     <div className="max-w-5xl mx-auto">
-
+      {/* create new food */}
       <CreateNewMenu />
       <h2 className="text-2xl font-bold text-gray-800 mb-6 dark:text-white">
         Admin Menu Management
