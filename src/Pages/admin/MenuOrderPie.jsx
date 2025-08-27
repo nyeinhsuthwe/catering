@@ -25,10 +25,6 @@ const MenuOrderPie = ({ detailData }) => {
 
     return (
           <>
-            
-            {/* <Button size="sm" onClick={() => navigate('menuListTable')} >
-                               Details
-                              </Button> */}
             <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                     <Pie
@@ -54,5 +50,6 @@ const MenuOrderPie = ({ detailData }) => {
         </>
     );
 };
+
 
 export default MenuOrderPie;

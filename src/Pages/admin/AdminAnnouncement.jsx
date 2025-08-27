@@ -132,6 +132,7 @@ const AdminAnnouncement = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Anouncement
   return (
     <div className="p-6 rounded-lg shadow-sm text-gray-700 dark:bg-gray-700 bg-white dark:text-white">
       <div className="max-w-md mb-2 ">

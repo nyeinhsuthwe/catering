@@ -92,20 +92,12 @@ const Report = () => {
           month={selectedMonth}
         />
         {/* <RatingPieChart /> */}
-        <MonthlyOrderTrend/>
+        <MonthlyOrderTrend />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <MenuOrderBar detailData={data} />
 
-          <MenuOrderBar detailData={data} />
-
-        
-         <RatingPieChart />
-        {/* <Card>
-          <MenuPopularityChart />
-        </Card>
-        <Card>
-          <SatisfactionChart />
-        </Card> */}
+        <RatingPieChart />
       </div>
       {/* <MenuOrderPie detailData={filteredData} /> */}
     </>

@@ -41,6 +41,7 @@ const CreateNewMenu = () => {
     setNewFoodName("");
   };
 
+  //Create new menu
   return (
     <div className="flex justify-end mb-4">
       <Popover

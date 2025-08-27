@@ -11,12 +11,12 @@ import {
 } from "recharts";
 
 const COLORS = [
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
-  "#0088FE",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB28",
+  "#FFBB28",
 ];
 
 const MenuOrderBar = ({ detailData }) => {
@@ -37,11 +37,9 @@ const MenuOrderBar = ({ detailData }) => {
     );
   }
 
-  // const COLORS = ['#0062FF', '#00AAFF', '#FF9200', '#FFD000', '#36A2EB', '#9966FF'];
-
   return (
-    <Card className="w-full">
-      <h3 className="text-lg font-semibold mb-2 dark:text-white">
+    <Card className=" w-[480px] rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+      <h3 className="text-lg font-semibold mb-2 dark:text-white text-gray-700">
         Menu Popularity Report
       </h3>
       <ResponsiveContainer width="100%" height={350}>
