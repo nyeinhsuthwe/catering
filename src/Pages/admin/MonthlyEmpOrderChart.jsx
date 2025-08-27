@@ -12,7 +12,7 @@ import { format, parseISO } from "date-fns";
 import MenuOrderPie from "./MenuOrderPie";
 import { useApiQuery } from "../../hooks/useQuery";
 import FeedbackRecord from "./FeedbackRecord";
-import { Button } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import { Link } from "react-router-dom";
 import MenuOrderBar from "./MenuOrderBar";
 
@@ -110,7 +110,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
       <div>
         <MenuOrderBar detailData={data} />
       </div>
-    </>
+    </div>
   );
 };
 
