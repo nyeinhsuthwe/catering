@@ -16,7 +16,7 @@ const COLORS = [
   "#FFBB28",
   "#FFBB28",
   "#FFBB28",
-  "#FFBB22",
+  "#FFBB28",
 ];
 
 const MenuOrderBar = ({ detailData }) => {
@@ -36,7 +36,6 @@ const MenuOrderBar = ({ detailData }) => {
       <p className="text-gray-700 dark:text-white mt-4">No orders available</p>
     );
   }
-
 
   return (
     <Card className=" w-[480px] rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">

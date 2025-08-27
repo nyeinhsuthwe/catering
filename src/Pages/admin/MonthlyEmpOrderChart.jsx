@@ -56,7 +56,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
       {/* Bar Chart */}
       <Card className="w-[480px] rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
         <h3 className="text-lg text-gray-700 font-semibold mb-2 dark:text-white ">
-          Monthly Employee Order Chart
+          Monthly Employee Order Chart 
         </h3>
 
         {chartData.length > 0 ? (
