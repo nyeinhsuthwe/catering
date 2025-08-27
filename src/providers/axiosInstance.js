@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
 export const api = axios.create({
-  baseURL: "http://192.168.100.192:8000/api/",
+  baseURL: "http://192.168.100.7:8000/api/",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

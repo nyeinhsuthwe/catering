@@ -93,12 +93,8 @@ const AdminDashboard = () => {
       </div>
 
             <MonthlyEmpOrderChart data={data} />
-      {/* <div className='w-full mb-4'>
-        <Report />
-      </div> */}
-      <div className="flex  flex-wrap gap-4 w-full mb-4">
-
-         <div className="p-4  rounded-lg shadow mb-6 w-[480px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
+      <div className="flex flex-wrap gap-4 w-full mb-4">
+        <div className="p-4 rounded-lg shadow mb-6 w-[480px] text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
           <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">Recent Orders</h2>
           <ul className="divide-y">
             {data?.slice(0, 5).map((order, idx) => (
@@ -107,9 +103,9 @@ const AdminDashboard = () => {
                   <span className="font-medium text-gray-700 dark:text-white">{order.emp_name}</span>
                   <span className="text-gray-500">{order.food_name}</span>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col items-end">
                   <span className="font-medium text-gray-700 dark:text-white">{order.date}</span>
-                  <span className='text-gray-500'>{order.price}</span>
+                  <span className="text-gray-500">{order.price}</span>
                 </div>
               </li>
             ))}
@@ -119,25 +115,15 @@ const AdminDashboard = () => {
           <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-2">Upcoming Events</h2>
           <ul className="space-y-2 text-sm">
             {announcement?.map((announcement, idx) => (
-              <li key={idx} className='py-2 flex justify-between text-sm'>
-                <div className="flex flex-col ">
-                <span>{announcement.date}  </span> 
-                
-                </div>
-                <div className="flex flex-col ">
-                <span className="">{announcement.title}</span>
-                <span className="">{announcement.text}</span>
-                </div>
+              <li key={idx} className="py-2 flex flex-col text-sm">
+                <span className="text-gray-500 mb-1">{announcement.date}</span>
+                <span className="font-semibold text-gray-700 dark:text-white">{announcement.title}</span>
+                <span className="text-gray-600 dark:text-gray-300">{announcement.text}</span>
               </li>
             ))}
           </ul>
         </div>
-
-       
-
       </div>
-
-      {/* <MenuOrderPie data={data}/> */}
 
 
 

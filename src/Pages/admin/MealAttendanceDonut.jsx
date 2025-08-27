@@ -37,9 +37,9 @@ const MealAttendanceDonut = ({ employeeId, month }) => {
 
   return (
     <Card className="w-full mx-auto">
-      <h5 className="text-xl font-bold text-center text-gray-700 dark:text-white mb-4">
+      <h3 className="text-xl font-bold text-center text-gray-700 dark:text-white mb-4">
         Employee Meal Attendance
-      </h5>
+      </h3>
 
       {present + absent > 0 ? (
         <PieChart width={320} height={250}>

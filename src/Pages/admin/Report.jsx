@@ -90,6 +90,7 @@ const Report = () => {
         <MealAttendanceDonut
           employeeId={selectedEmployeeId}
           month={selectedMonth}
+          
         />
         {/* <RatingPieChart /> */}
         <MonthlyOrderTrend/>

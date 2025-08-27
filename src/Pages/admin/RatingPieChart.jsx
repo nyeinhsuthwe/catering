@@ -146,7 +146,7 @@ const FeedbackBarChart = () => {
     <Card className="w-full">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-bold tracking-tight text-gray-700 dark:text-white">
+        <h3 className="text-lg font-simibold text-gray-700 dark:text-white">
           Employee Feedback & Satisfaction
         </h3>
         <Link to="/admin/feedbackTable">
@@ -158,7 +158,7 @@ const FeedbackBarChart = () => {
 
       {/* Bar Chart */}
       <div className="w-full h-72">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={350}>
           <BarChart data={chartData}>
             <XAxis dataKey="rating" 
             label={{value: "Ratings",

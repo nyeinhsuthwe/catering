@@ -53,8 +53,8 @@ const MonthlyOrderTrend = () => {
 
   return (
     <Card className="w-full">
-      <h3 className="text-lg font-semibold mb-4 dark:text-white">Monthly Order Trend</h3>
-      <ResponsiveContainer width="100%" height={350}>
+      <h3 className="text-lg font-semibold mb-4 dark:text-white text-gray-700">Monthly Order Trend</h3>
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={chartData}
           margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
