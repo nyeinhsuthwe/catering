@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -6,14 +6,14 @@ import {
   TableHead,
   TableHeadCell,
   TableRow,
-  Pagination
-} from 'flowbite-react';
+  Pagination,
+} from "flowbite-react";
 
 const MealCheckoutDetails = ({ empId, onBack, data }) => {
   const [filters, setFilters] = useState({
-    status: '',
-    month: '',
-    checkOut: ''
+    status: "",
+    month: "",
+    checkOut: "",
   });
 
   if (!data) return <p>Loading...</p>;
@@ -24,16 +24,20 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
   };
 
   const filteredData = useMemo(() => {
-    const selectedEmployee = data.find(emp => emp.emp_id === empId);
+    const selectedEmployee = data.find((emp) => emp.emp_id === empId);
     if (!selectedEmployee) return [];
 
     return selectedEmployee.attendances
       .filter((att) => {
-        const matchStatus = filters.status ? att.status === filters.status : true;
-        const matchMonth = filters.month ? att.date.startsWith(filters.month) : true; // filter by month
+        const matchStatus = filters.status
+          ? att.status === filters.status
+          : true;
+        const matchMonth = filters.month
+          ? att.date.startsWith(filters.month)
+          : true; // filter by month
         const matchCheckOut =
-          filters.checkOut !== ''
-            ? att.check_out === (filters.checkOut === 'true')
+          filters.checkOut !== ""
+            ? att.check_out === (filters.checkOut === "true")
             : true;
         return matchStatus && matchMonth && matchCheckOut;
       })
@@ -128,12 +132,15 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
             <TableHeadCell>Date</TableHeadCell>
             <TableHeadCell>Food</TableHeadCell>
             <TableHeadCell>Price</TableHeadCell>
-            <TableHeadCell>Status</TableHeadCell>
             <TableHeadCell>Checkout </TableHeadCell>
+            <TableHeadCell>Status</TableHeadCell>
           </TableHead>
           <TableBody className="divide-y">
             {paginatedData.map((row, index) => (
-              <TableRow key={row.emp_id + index} className="bg-white dark:border-gray-700 dark:bg-gray-800 border-0">
+              <TableRow
+                key={row.emp_id + index}
+                className="bg-white dark:border-gray-700 dark:bg-gray-800 border-0"
+              >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{row.emp_id}</TableCell>
                 <TableCell>{row.emp_name}</TableCell>
@@ -141,8 +148,15 @@ const MealCheckoutDetails = ({ empId, onBack, data }) => {
                 <TableCell>{row.date}</TableCell>
                 <TableCell>{row.food_name}</TableCell>
                 <TableCell>{row.price}</TableCell>
+
+                <TableCell className="text-center">
+                  {row.check_out ? (
+                    <i className="fas fa-check-circle text-green-500 text-lg"></i>
+                  ) : (
+                    <i className="fas fa-times-circle text-red-500 text-lg"></i>
+                  )}
+                </TableCell>
                 <TableCell>{row.status}</TableCell>
-                <TableCell>{String(row.check_out)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
