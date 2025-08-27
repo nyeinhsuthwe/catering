@@ -1,4 +1,4 @@
-import { createBrowserRouter , Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import AuthLayout from "../Layout/Authlayout";
 import ProtectedRoute from "../hooks/useProtectedRoute";
 import AdminLayout from "../Layout/AdminLayout";
@@ -77,27 +77,27 @@ const router = createBrowserRouter([
       },
       {
         path: "record",
-        element: <Record/>
+        element: <Record />
       },
       {
         path: "announcement",
-        element: <Announce/>
+        element: <Announce />
       },
       {
         path: "voucher",
-        element: <Voucher/>
+        element: <Voucher />
       },
       {
         path: "terms-conditions",
-        element: <TermsConditions/>
+        element: <TermsConditions />
       },
       {
         path: "password",
-        element: <Password/>
+        element: <Password />
       },
       {
         path: "mail-testing",
-        element: <MailTesting/>
+        element: <MailTesting />
       }
     ],
   },
@@ -133,14 +133,14 @@ const router = createBrowserRouter([
         path: "login",
         element: <Login />,
       },
-           
+
       {
         path: "adminAnnouncement",
         element: <AdminAnnouncement />,
       },
       {
         path: "report",
-        element: <Report/>,
+        element: <Report />,
       },
       {
         path: "feedback",
@@ -160,16 +160,16 @@ const router = createBrowserRouter([
       },
       {
         path: "adminProfile",
-        element: <AdminProfile/>
+        element: <AdminProfile />
 
       },
       {
         path: "/admin/adminProfile/adminEditProfile",
-        element: <AdminEditProfile/>
+        element: <AdminEditProfile />
       },
       {
         path: "/admin/adminProfile/adminResetPassword",
-        element: <AdminResetPassword/>
+        element: <AdminResetPassword />
       },
       // {
       //   path: "/admin/adminProfile/order",
@@ -177,39 +177,39 @@ const router = createBrowserRouter([
       // }
       {
         path: "invoiceInfo",
-        element: <InvoiceInfo/>
+        element: <InvoiceInfo />
       },
       {
         path: "viewEmpOrderDetail",
-        element: <ViewEmpOrderDetail/>
+        element: <ViewEmpOrderDetail />
       },
       {
         path: "/admin/invoiceInfo/sendInvoice",
-        element: <SendInvoice/>
+        element: <SendInvoice />
       },
       {
         path: "menuOrderBar",
-        element: <MenuOrderBar/>
+        element: <MenuOrderBar />
       },
-      
+
       {
         path: "menuOrderPie",
-        element: <MenuOrderPie/>
+        element: <MenuOrderPie />
       },
       {
         path: "mealAttendanceDonut",
-        element: <MealAttendanceDonut/>
+        element: <MealAttendanceDonut />
       },
       {
         path: "ratingPieChart",
-        element: <RatingPieChart/>
+        element: <RatingPieChart />
       },
-     
 
 
-     
-     
-  
+
+
+
+
     ],
   },
 ]);

@@ -174,7 +174,7 @@ const MyCalendar = () => {
       clickedDate.getFullYear() === nextMonthDate.getFullYear();
     const isWeekend = [0, 6].includes(clickedDate.getDay());
 
-    if (!isSameMonth || isWeekend) return;
+    if (isSameMonth || isWeekend) return;
 
     const foundEvent = events.find(
       (e) => new Date(e.start).toDateString() === clickedDate.toDateString()

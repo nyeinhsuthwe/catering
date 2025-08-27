@@ -181,7 +181,7 @@ console.log("data", data);
                   </TableCell>
                   <TableCell>
                     {dayjs(record.date).isSame(dayjs(), "day") ? (
-                      dayjs().hour() >= 10 ? (
+                      dayjs().hour() >= 9 ? (
                         <button
                           className="w-8 h-8 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center bg-yellow-500 rounded disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white disabled:text-gray-400 active:scale-0.95 transition-transform duration-200"
                           onClick={() => handleCheckout(record.date, record.id)}
