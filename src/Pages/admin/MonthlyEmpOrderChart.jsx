@@ -89,7 +89,7 @@ const MonthlyEmpOrderChart = ({ data = [] }) => {
         )}
       </Card>
 
-      {/* Pie/Bar Chart */}
+      
       <div>
         <MenuOrderBar detailData={data} />
       </div>

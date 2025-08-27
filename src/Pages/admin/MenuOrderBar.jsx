@@ -37,7 +37,6 @@ const MenuOrderBar = ({ detailData }) => {
     );
   }
 
-  // const COLORS = ['#0062FF', '#00AAFF', '#FF9200', '#FFD000', '#36A2EB', '#9966FF'];
 
   return (
     <Card className=" w-[480px] rounded shadow p-4 text-gray-800 dark:bg-gray-800 bg-white dark:text-white">

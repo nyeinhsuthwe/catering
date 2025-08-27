@@ -127,8 +127,6 @@ const ViewEmpOrderDetail = ({ data, empId, onBack }) => {
         Total Amount: <span className="text-green-600">{totalAmount}</span>
       </div>
 
-      {/* Optional: Add pie chart */}
-      {/* <MenuOrderPie detailData={detailData} /> */}
     </div>
   );
 };

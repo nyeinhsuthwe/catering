@@ -139,6 +139,7 @@ const MenuListTable = () => {
     <div className="p-6 mb-3 rounded-lg shadow-md text-gray-800 dark:bg-gray-800 bg-white dark:text-white">
 
       <>
+      {/* //Menu List Table */}
         <h2 className="text-xl font-bold mb-4">Menu Lists</h2>
         <div className="flex justify-end items-center mb-4">
           <label className="mr-2 font-medium text-sm dark:text-white text-gray-700">
