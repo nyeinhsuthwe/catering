@@ -52,11 +52,11 @@ const SendInvoice = () => {
   const mutation = useApiMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["invoice"] });
-      toast.success("Invoice sent successfully!");
+      toast.success("Invoice sent successfully!");//toast.error("invoice sending failed")
     },
     onError: (error) => {
       const errorMessage = error?.response?.data?.message || "Sending Failed!";
-      toast.error(errorMessage);
+      toast.error(errorMessage); //toast.success(errorMessage);
     },
   });
 
